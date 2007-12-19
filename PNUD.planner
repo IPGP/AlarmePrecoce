@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<project name="" company="" manager="" phase="" project-start="20071212T000000Z" mrproject-version="2" calendar="1">
+  <properties/>
+  <phases/>
+  <calendars>
+    <day-types>
+      <day-type id="0" name="Working" description="A default working day"/>
+      <day-type id="1" name="Nonworking" description="A default non working day"/>
+      <day-type id="2" name="Use base" description="Use day from base calendar"/>
+    </day-types>
+    <calendar id="1" name="Default">
+      <default-week mon="0" tue="0" wed="0" thu="0" fri="0" sat="1" sun="1"/>
+      <overridden-day-types>
+        <overridden-day-type id="0">
+          <interval start="0800" end="1200"/>
+          <interval start="1300" end="1700"/>
+        </overridden-day-type>
+      </overridden-day-types>
+      <days/>
+    </calendar>
+  </calendars>
+  <tasks>
+    <task id="1" name="Mat&#xE9;riel" note="" work="36000" start="20071212T000000Z" end="20071214T090000Z" work-start="20071212T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="2" name="R&#xE9;ception Mat&#xE9;riel" note="" work="3600" start="20071212T000000Z" end="20071212T090000Z" work-start="20071212T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="3" name="Montage du serveur + carte modem" note="&#10;" work="3600" start="20071213T000000Z" end="20071213T090000Z" work-start="20071213T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="must-start-on" time="20071213T000000Z"/>
+      </task>
+      <task id="4" name="Test Mat&#xE9;riel" note="" work="28800" start="20071213T090000Z" end="20071214T090000Z" work-start="20071213T090000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="3" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="5" name="OS + Logiciels" note="" work="18000" start="20071214T090000Z" end="20071214T150000Z" work-start="20071214T090000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="6" name="Installation Windows 2003 Server" note="" work="7200" start="20071214T090000Z" end="20071214T110000Z" work-start="20071214T090000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="4" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="7" name="Install Voicent Gateway" note="" work="3600" start="20071214T110000Z" end="20071214T120000Z" work-start="20071214T110000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="6" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="8" name="Test  Fonctionalit&#xE9; t&#xE9;l&#xE9;phone" note="" work="7200" start="20071214T120000Z" end="20071214T150000Z" work-start="20071214T120000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="7" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="9" name="D&#xE9;veloppement" note="" work="201600" start="20071212T000000Z" end="20071220T170000Z" work-start="20071212T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="10" name="Analyse des besoins" note="" work="28800" start="20071212T000000Z" end="20071212T170000Z" work-start="20071212T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="11" name="Sp&#xE9;cifications d'ensemble" note="" work="28800" start="20071212T170000Z" end="20071213T170000Z" work-start="20071213T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="10" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="12" name="Sp&#xE9;cifications d&#xE9;taill&#xE9;es" note="" work="28800" start="20071213T170000Z" end="20071214T170000Z" work-start="20071214T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="11" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="13" name="Conception d'ensemble" note="" work="28800" start="20071214T170000Z" end="20071217T170000Z" work-start="20071217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="12" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="14" name="Conception d&#xE9;taill&#xE9;e" note="" work="28800" start="20071217T170000Z" end="20071218T170000Z" work-start="20071218T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="13" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="15" name="Codage" note="" work="28800" start="20071218T170000Z" end="20071219T170000Z" work-start="20071219T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="14" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="16" name="Tests unitaires" note="" work="28800" start="20071219T170000Z" end="20071220T170000Z" work-start="20071220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="15" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+  </tasks>
+  <resource-groups/>
+  <resources>
+    <resource id="1" name="Patrice Boissier" short-name="P.B." type="1" units="0" email="boissier@ipgp.jussieu.fr" note="" std-rate="0"/>
+  </resources>
+  <allocations>
+    <allocation task-id="1" resource-id="1" units="100"/>
+    <allocation task-id="2" resource-id="1" units="100"/>
+    <allocation task-id="3" resource-id="1" units="100"/>
+    <allocation task-id="4" resource-id="1" units="100"/>
+    <allocation task-id="5" resource-id="1" units="100"/>
+    <allocation task-id="6" resource-id="1" units="100"/>
+    <allocation task-id="7" resource-id="1" units="100"/>
+    <allocation task-id="8" resource-id="1" units="100"/>
+    <allocation task-id="9" resource-id="1" units="100"/>
+    <allocation task-id="10" resource-id="1" units="100"/>
+    <allocation task-id="11" resource-id="1" units="100"/>
+    <allocation task-id="12" resource-id="1" units="100"/>
+    <allocation task-id="13" resource-id="1" units="100"/>
+    <allocation task-id="14" resource-id="1" units="100"/>
+    <allocation task-id="15" resource-id="1" units="100"/>
+    <allocation task-id="16" resource-id="1" units="100"/>
+  </allocations>
+</project>
