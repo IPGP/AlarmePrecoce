@@ -29,7 +29,6 @@
 package com.voicent.webalert;
 
 
-
 public interface BroadcastList
 {
     public static final String NAME = "name";
