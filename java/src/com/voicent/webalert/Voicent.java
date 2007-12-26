@@ -27,6 +27,7 @@ package com.voicent.webalert;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
+import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
 import java.io.InputStream;
 
@@ -64,24 +65,29 @@ public class Voicent
     */
     public String callText(String phoneno, String text, boolean selfdelete)
     {
+    	
         // call request url
         String urlstr = "/ocall/callreqHandler.jsp";
 
         // setting the http post string
         String poststr = "info=";
-        poststr += URLEncoder.encode("Simple Text Call " + phoneno);
+    	try {
+    		poststr += URLEncoder.encode("Simple Text Call " + phoneno, "UTF-8");
 
-        poststr += "&phoneno=";
-        poststr += phoneno;
+    		poststr += "&phoneno=";
+    		poststr += phoneno;
 
-        poststr += "&firstocc=10";
+    		poststr += "&firstocc=10";
 
-        poststr += "&selfdelete=";
-        poststr += (selfdelete ? "1" : "0");
+    		poststr += "&selfdelete=";
+    		poststr += (selfdelete ? "1" : "0");
 
-        poststr += "&txt=";
-        poststr += URLEncoder.encode(text);
+    		poststr += "&txt=";
+    		poststr += URLEncoder.encode(text, "UTF-8");
 
+    	} catch (UnsupportedEncodingException uee) {
+    		uee.printStackTrace();
+    	}
         // Send Call Request
         String rcstr = postToGateway(urlstr, poststr);
 
