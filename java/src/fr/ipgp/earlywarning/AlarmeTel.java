@@ -8,6 +8,7 @@ import java.io.*;
 
 
 public class AlarmeTel {
+	
   public static void main(String args[]) throws InterruptedException {
 
   File listeAppel = new File("c:/temp/testctf.voc");
@@ -15,7 +16,7 @@ public class AlarmeTel {
     listeAppel.delete();
   }
 
-  FileChannel in = null; // canal d'entrée
+  FileChannel in = null; // canal d'entrï¿½e
   FileChannel out = null; // canal de sortie
  
   try {
