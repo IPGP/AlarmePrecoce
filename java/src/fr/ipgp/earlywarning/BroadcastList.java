@@ -26,7 +26,7 @@
  * In this sample, we use a file based call list.
  */
 
-package com.voicent.webalert;
+package fr.ipgp.earlywarning;
 
 
 public interface BroadcastList

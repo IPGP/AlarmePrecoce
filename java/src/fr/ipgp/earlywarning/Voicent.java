@@ -22,7 +22,7 @@
  * this class is listed online under the simple call interface java
  */
  
-package com.voicent.webalert;
+package fr.ipgp.earlywarning;
 
 import java.net.URL;
 import java.net.URLEncoder;

@@ -1,3 +1,5 @@
+package fr.ipgp.earlywarning;
+
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
@@ -5,12 +7,12 @@ import java.io.PrintWriter;
 import java.io.InputStream;
 
 
-public class Voicent
+public class Voicent2
 {
   /**
    * Constructor with default localhost:8155
    */
-  public Voicent()
+  public Voicent2()
   {
     host_ = "localhost";
     port_ = 8155;
@@ -21,7 +23,7 @@ public class Voicent
    * @param host Voicent gateway host machine
    * @param port Voicent gateway port number
    */
-  public Voicent(String host, int port)
+  public Voicent2(String host, int port)
   {
     host_ = host;
     port_ = port;
