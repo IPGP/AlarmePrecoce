@@ -21,7 +21,7 @@
  * ----------------------------------------------------------------------
  */
  
-package com.voicent.webalert;
+package fr.ipgp.earlywarning;
 
 import java.io.File;
 import java.io.FileReader;
