@@ -21,7 +21,7 @@
  * ----------------------------------------------------------------------
  */
  
-package com.voicent.webalert;
+package fr.ipgp.earlywarning;
 
 
 public class BroadcastManager

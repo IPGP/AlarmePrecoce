@@ -1,3 +1,5 @@
+package fr.ipgp.earlywarning;
+
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
