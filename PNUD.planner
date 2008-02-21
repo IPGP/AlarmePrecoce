@@ -48,34 +48,36 @@
         </predecessors>
       </task>
     </task>
-    <task id="9" name="D&#xE9;veloppement" note="" work="201600" start="20071212T000000Z" end="20071220T170000Z" work-start="20071212T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="10" name="Analyse des besoins" note="" work="28800" start="20071212T000000Z" end="20071212T170000Z" work-start="20071212T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
-      <task id="11" name="Sp&#xE9;cifications d'ensemble" note="" work="28800" start="20071212T170000Z" end="20071213T170000Z" work-start="20071213T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    <task id="9" name="D&#xE9;veloppement" note="" work="201600" start="20080221T000000Z" end="20080229T170000Z" work-start="20080221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="10" name="Analyse des besoins" note="" work="28800" start="20080221T000000Z" end="20080221T170000Z" work-start="20080221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="must-start-on" time="20080221T000000Z"/>
+      </task>
+      <task id="11" name="Sp&#xE9;cifications d'ensemble" note="" work="28800" start="20080221T170000Z" end="20080222T170000Z" work-start="20080222T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="10" type="FS"/>
         </predecessors>
       </task>
-      <task id="12" name="Sp&#xE9;cifications d&#xE9;taill&#xE9;es" note="" work="28800" start="20071213T170000Z" end="20071214T170000Z" work-start="20071214T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="12" name="Sp&#xE9;cifications d&#xE9;taill&#xE9;es" note="" work="28800" start="20080222T170000Z" end="20080225T170000Z" work-start="20080225T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="11" type="FS"/>
         </predecessors>
       </task>
-      <task id="13" name="Conception d'ensemble" note="" work="28800" start="20071214T170000Z" end="20071217T170000Z" work-start="20071217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="13" name="Conception d'ensemble" note="" work="28800" start="20080225T170000Z" end="20080226T170000Z" work-start="20080226T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="12" type="FS"/>
         </predecessors>
       </task>
-      <task id="14" name="Conception d&#xE9;taill&#xE9;e" note="" work="28800" start="20071217T170000Z" end="20071218T170000Z" work-start="20071218T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="14" name="Conception d&#xE9;taill&#xE9;e" note="" work="28800" start="20080226T170000Z" end="20080227T170000Z" work-start="20080227T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="13" type="FS"/>
         </predecessors>
       </task>
-      <task id="15" name="Codage" note="" work="28800" start="20071218T170000Z" end="20071219T170000Z" work-start="20071219T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="15" name="Codage" note="" work="28800" start="20080227T170000Z" end="20080228T170000Z" work-start="20080228T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="14" type="FS"/>
         </predecessors>
       </task>
-      <task id="16" name="Tests unitaires" note="" work="28800" start="20071219T170000Z" end="20071220T170000Z" work-start="20071220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="16" name="Tests unitaires" note="" work="28800" start="20080228T170000Z" end="20080229T170000Z" work-start="20080229T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="15" type="FS"/>
         </predecessors>
