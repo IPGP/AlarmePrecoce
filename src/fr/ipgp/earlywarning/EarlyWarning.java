@@ -5,6 +5,7 @@ package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import java.io.IOException;
+import org.apache.commons.configuration.*;
 /**
  * @author Patrice Boissier
  *
