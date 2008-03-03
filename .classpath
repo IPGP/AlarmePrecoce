@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/boissier/Desktop/commons-configuration-1.5/commons-configuration-1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/boissier/Desktop/commons-configuration-1.5/commons-configuration-1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/boissier/Desktop/commons-lang-2.3/commons-lang-2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
