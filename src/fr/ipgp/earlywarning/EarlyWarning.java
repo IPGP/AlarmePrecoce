@@ -45,6 +45,11 @@ public class EarlyWarning {
 		{
 		    XMLConfiguration config = new XMLConfiguration("./resources/configuration.xml");
 		    // do something with config
+			String backColor = config.getString("colors.background");
+			String textColor = config.getString("colors.text");
+			String linkNormal = config.getString("colors.link[@normal]");
+			String defColor = config.getString("colors.default");
+			int rowsPerPage = config.getInt("rowsPerPage");
 		}
 		catch(ConfigurationException cex)
 		{
