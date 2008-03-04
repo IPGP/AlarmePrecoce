@@ -2,28 +2,48 @@ package fr.ipgp.earlywarning.test;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TriggerSender {
 
+	private static byte[] message = null;
+	private static int port = 4445;
+	private static InetAddress address = null;
+	private static DatagramSocket socket = null;
+	private static DatagramPacket packet = null;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-		try	{
-			// get a datagram socket
-			DatagramSocket socket = new DatagramSocket();
+		try {
+			address = InetAddress.getByName("localhost");
+		} catch (UnknownHostException uhe) {
+			uhe.printStackTrace();
+		}
+		
+		message = new byte[256];
+		
+		// preparation de la date
+		Date date1 = new Date();
+		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		
+		String messageString = "Sismo " + simpleFormat.format(date1) + " Declenchement";
 			
-			// send request
-			byte[] buf = new byte[256];
-			String application = "TriggerSender";
-			buf = application.getBytes();
-			InetAddress address = InetAddress.getByName("localhost");
-			DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 4445);
+		message = new byte[messageString.length()];
+		message = messageString.getBytes();
+		try {
+			packet = new DatagramPacket(message, message.length, address, port);
+			socket = new DatagramSocket();
+		} catch (SocketException se) {
+			se.printStackTrace();
+		}
+		try {
 			socket.send(packet);
-			socket.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-		}		
+		}
+		socket.close();
 	}
 }
