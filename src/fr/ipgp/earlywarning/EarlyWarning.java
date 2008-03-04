@@ -6,13 +6,13 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import java.io.IOException;
 import org.apache.commons.configuration.*;
-import org.apache.commons.lang.*;
 /**
  * @author Patrice Boissier
  *
  */
 public class EarlyWarning {
 
+	private static XMLConfiguration config = null;
 	/**
 	 * @param args
 	 */
@@ -41,20 +41,17 @@ public class EarlyWarning {
 	}
 	
 	private static void readConfiguration() {
+
 		try
 		{
-		    XMLConfiguration config = new XMLConfiguration("./resources/configuration.xml");
-		    // do something with config
-			String backColor = config.getString("colors.background");
-			String textColor = config.getString("colors.text");
-			String linkNormal = config.getString("colors.link[@normal]");
-			String defColor = config.getString("colors.default");
-			int rowsPerPage = config.getInt("rowsPerPage");
+		    config = new XMLConfiguration("resources/configuration.xml");
 		}
 		catch(ConfigurationException cex)
 		{
-		    // something went wrong, e.g. the file was not found
+			cex.printStackTrace();
 		}
-
+		String port = config.getString("network.port");
+		System.out.println(port);
+		config.addProperty("network.address", (String) "195.83.188.8");
 	}
 }
