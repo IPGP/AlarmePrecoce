@@ -18,7 +18,7 @@ public class TriggerSender {
 	public static void main(String[] args) {
 
 		try {
-			address = InetAddress.getByName("localhost");
+			address = InetAddress.getByName("195.83.188.255");
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		}
