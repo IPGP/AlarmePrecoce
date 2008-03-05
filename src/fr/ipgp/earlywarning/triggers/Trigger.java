@@ -97,10 +97,14 @@ public class Trigger {
 	}
 
 	/**
-	 * @param properties the properties to set
+	 * @param key the property key to set
+	 * @param value the value to set for the key
 	 */
-	public void setProperties(Map properties) {
-		this.properties = properties;
+	public void setProperty(String key, Object value) {
+		if (properties == null) {
+            properties = new HashMap();
+        }
+		this.properties.put(key, value);
 	}
 
 	/**
