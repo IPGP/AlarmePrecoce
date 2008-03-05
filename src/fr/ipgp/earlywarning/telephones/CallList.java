@@ -8,6 +8,6 @@ package fr.ipgp.earlywarning.telephones;
  * @author Patrice Boissier
  *
  */
-public class CallList {
+public interface CallList {
 
 }
