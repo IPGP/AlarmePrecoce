@@ -1,13 +1,7 @@
-package fr.ipgp.earlywarning;
+package com.voicent.webalert;
 
-import java.net.URL;
-import java.net.URLEncoder;
-import java.net.HttpURLConnection;
-import java.io.PrintWriter;
-import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.io.*;
-
 
 public class AlarmeTel {
 	
