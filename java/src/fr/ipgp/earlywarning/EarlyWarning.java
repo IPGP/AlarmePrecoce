@@ -45,7 +45,9 @@ public class EarlyWarning {
 		}
 		catch(ConfigurationException cex)
 		{
+			System.out.println("Fichier de configuration absent ou illisible. Fin de l'application");
 			cex.printStackTrace();
+			System.exit(1);
 		}
 	}
 }
