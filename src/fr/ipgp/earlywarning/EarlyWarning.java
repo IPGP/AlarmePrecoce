@@ -12,7 +12,7 @@ import org.apache.commons.configuration.*;
  */
 public class EarlyWarning {
 
-	private static XMLConfiguration config = null;
+	private static XMLConfiguration configuration = null;
 	/**
 	 * @param args
 	 */
@@ -44,14 +44,14 @@ public class EarlyWarning {
 
 		try
 		{
-		    config = new XMLConfiguration("resources/configuration.xml");
+		    configuration = new XMLConfiguration("resources/configuration.xml");
 		}
 		catch(ConfigurationException cex)
 		{
 			cex.printStackTrace();
 		}
-		String port = config.getString("network.port");
+		String port = configuration.getString("network.port");
 		System.out.println(port);
-		config.addProperty("network.address", (String) "195.83.188.8");
+		configuration.addProperty("network.address", (String) "195.83.188.8");
 	}
 }

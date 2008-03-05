@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning;
+package com.voicent.webalert;
 
 import java.net.URL;
 import java.net.URLEncoder;
