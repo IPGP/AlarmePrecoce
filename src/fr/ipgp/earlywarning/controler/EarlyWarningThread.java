@@ -24,7 +24,7 @@ public class EarlyWarningThread extends Thread {
     }
     
     public void run() {
-    	System.out.println("Création du thread EarlyWarningThread");
+    	System.out.println("Creation du thread EarlyWarningThread");
         while (moreTriggers) {
         	System.out.println("En attente de trigger");
 
