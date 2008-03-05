@@ -36,8 +36,7 @@ public class EarlyWarningThread extends Thread {
             if (Thread.interrupted()) {
                 return;
             }
-            Trigger trigger = new Trigger(packet);
-            System.out.println(trigger.toString());
+            Trigger trigger = new Trigger(System.currentTimeMillis());
 
         }
         socket.close();

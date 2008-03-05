@@ -1,3 +1,7 @@
+/**
+ * Created Mar 5, 2008 3:00:05 PM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+ */
 package fr.ipgp.earlywarning.test;
 
 import java.io.*;
@@ -5,6 +9,10 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @author Patrice Boissier
+ *
+ */
 public class TriggerSender {
 
 	private static byte[] message = null;
@@ -12,9 +20,7 @@ public class TriggerSender {
 	private static InetAddress address = null;
 	private static DatagramSocket socket = null;
 	private static DatagramPacket packet = null;
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 
 		try {
