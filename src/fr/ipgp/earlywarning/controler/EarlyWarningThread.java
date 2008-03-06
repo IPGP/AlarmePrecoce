@@ -3,6 +3,7 @@ package fr.ipgp.earlywarning.controler;
 import java.io.*;
 import java.net.*;
 import fr.ipgp.earlywarning.triggers.*;
+import fr.ipgp.earlywarning.utilities.*;
 
 public class EarlyWarningThread extends Thread {
 	
@@ -36,8 +37,21 @@ public class EarlyWarningThread extends Thread {
             if (Thread.interrupted()) {
                 return;
             }
-            Trigger trigger = new Trigger(System.currentTimeMillis());
-
+            
+            //test
+            Trigger trigger1 = new Trigger(UniqueID.get(),1);
+            Trigger trigger2 = new Trigger(UniqueID.get(),1);
+            Trigger trigger3 = new Trigger(UniqueID.get(),1);
+            Trigger trigger4 = new Trigger(UniqueID.get(),1);
+            int[] test = {trigger1.compareTo(trigger2), trigger2.compareTo(trigger3), trigger3.compareTo(trigger4)};
+            String[] triggers = {trigger1.toString(), trigger2.toString(), trigger3.toString(), trigger4.toString()}; 
+            for (int i=0; i<3; i++) {
+            	if (test[i] > 0) {
+            		System.out.println(triggers[i]+" < "+triggers[i+1]);
+            	} else {
+            		System.out.println(triggers[i]+" > "+triggers[i+1]);
+            	}
+            }
         }
         socket.close();
     }
