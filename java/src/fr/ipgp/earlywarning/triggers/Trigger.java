@@ -149,12 +149,13 @@ public class Trigger implements Comparable {
 	 * @param trigger
 	 * @return
 	 */
-	public int compareTo(Trigger trigger) {
+	public int compareTo(Object o) {
+		Trigger trigger = (Trigger)o;
         int lastCmp = priority.compareTo(trigger.getPriority());
         return (lastCmp != 0 ? lastCmp :
             this.id.compareTo(trigger.id));
     }
-	
+
     public boolean equals(Object o) {
         if (!(o instanceof Trigger))
             return false;
