@@ -13,8 +13,9 @@ import fr.ipgp.earlywarning.messages.*;
  * @author Patrice Boissier
  *
  */
-public class Trigger {
-	private long id;
+public class Trigger implements Comparable {
+	private Long id;
+	private Integer priority;
 	private String type;
 	private InetAddress inetAddress;
 	private String application;
@@ -22,8 +23,25 @@ public class Trigger {
 	private WarningMessage message;
 	private Map properties;
 	
-	public Trigger (long id) {
+	public Trigger (Long id, Integer priority) {
+		if (id == null || priority == null)
+            throw new NullPointerException();
 		this.id = id;
+		this.priority = priority;
+	}
+	
+	/**
+	 * @return the priority
+	 */
+	public int getPriority() {
+		return priority;
+	}
+
+	/**
+	 * @param priority the priority to set
+	 */
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	/**
@@ -121,4 +139,34 @@ public class Trigger {
 		this.type = type;
 	}
 
+	
+	/**
+	 * The compareTo method compares the receiving object with the specified object and 
+	 * returns a negative integer, 0, or a positive integer depending on whether the 
+	 * receiving object is less than, equal to, or greater than the specified object.
+	 * If the specified object cannot be compared to the receiving object, the method 
+	 * throws a ClassCastException.
+	 * @param trigger
+	 * @return
+	 */
+	public int compareTo(Trigger trigger) {
+        int lastCmp = priority.compareTo(trigger.getPriority());
+        return (lastCmp != 0 ? lastCmp :
+            this.id.compareTo(trigger.id));
+    }
+	
+    public boolean equals(Object o) {
+        if (!(o instanceof Trigger))
+            return false;
+        Trigger trigger = (Trigger)o;
+        return trigger.id.equals(this.id) && trigger.priority.equals(this.priority);
+    }
+    
+    public int hashCode() {
+        return id.hashCode() + priority.hashCode();
+    }
+    
+    public String toString() {
+    	return id + " " + priority;
+        }
 }
