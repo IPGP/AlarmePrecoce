@@ -4,6 +4,10 @@
  */
 package fr.ipgp.earlywarning.controler;
 
+import java.io.IOException;
+
+import fr.ipgp.earlywarning.EarlyWarning;
+
 /**
  * 
  * @author Patrice Boissier
@@ -16,6 +20,17 @@ public class DataBaseHeartBeatThread extends Thread {
 	protected String user;
 	protected String password;
 	
-	
+	public DataBaseHeartBeatThread() throws IOException {
+    	this("DataBaseHeartBeatThread");
+    }
+
+    public DataBaseHeartBeatThread(String name) throws IOException {
+    	super(name);
+    	host = new String(EarlyWarning.configuration.getString("dbms.host"));
+    	port = EarlyWarning.configuration.getInt("dbms.port");
+    	database = new String(EarlyWarning.configuration.getString("dbms.database"));
+    	user = new String(EarlyWarning.configuration.getString("dbms.user"));
+    	password = new String(EarlyWarning.configuration.getString("dbms.paassword"));
+    }
 
 }
