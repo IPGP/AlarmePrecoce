@@ -10,4 +10,8 @@
     <user>fonctionnement</user>
     <password>olvssclr</password>
   </dbms>
+  <mailinglist>
+    <email>boissier@ipgp.jussieu.fr</email>
+    <email>arnaudl@ipgp.jussieu.fr</email>
+  </mailinglist>
 </earlywarning>
