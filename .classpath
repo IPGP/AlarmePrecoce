@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="resources/commons-collections-3.2/commons-collections-3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="resources/commons-digester-1.8/commons-digester-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="resources/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="resources/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,3 +1,7 @@
+/**
+ * Created Mar 01, 2008 11:01:05 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+ */
 package fr.ipgp.earlywarning.controler;
 
 import java.io.*;
@@ -5,6 +9,11 @@ import java.net.*;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.*;
 
+/**
+ * @author Patrice Boissier
+ * Thread that listen for incoming triggers from the network.
+ * When a trigger arrives, it is passed to the queue manager.
+ */
 public class EarlyWarningThread extends Thread {
 	
     protected DatagramSocket socket = null;
