@@ -16,45 +16,37 @@ import org.apache.log4j.*;
  */
 public class EarlyWarning {
 
-	public static XMLConfiguration configuration = null;
-	public static Logger applogger = Logger.getLogger ("EarlyWarning");
+	public static XMLConfiguration configuration;
+	public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
 	
 	public static void main(String[] args) throws IOException  {
 		
-		//TODO Add the logging facility
-
+		setLogger();
 		readConfiguration();
+		
+		appLogger.debug("Entering application.");
 		
 		Thread earlyWarningThread = new EarlyWarningThread();
 		earlyWarningThread.start();
-		
-//		System.out.println("Interruption du Thread");
-//		
-//		earlyWarningThread.interrupt();
-//		try {
-//			earlyWarningThread.join();
-//		} catch (InterruptedException ie) {
-//			ie.printStackTrace();
-//		}
-//		System.out.println("Thread terminé!");
-		
 	}
 	
 	/**
 	 * Reads XML configuration file and creates a XMLConfiguration object
+	 * The application log a fatal error and exists if the configuration file is missing
 	 */
 	private static void readConfiguration() {
-		try
-		{
-		    configuration = new XMLConfiguration("resources/configuration.xml");
-		}
-		catch(ConfigurationException cex)
-		{
-			System.out.println("Fichier de configuration absent ou illisible. Fin de l'application");
-			cex.printStackTrace();
+		try {
+		    configuration = new XMLConfiguration("resources/earlywarning.xml");
+		} catch(ConfigurationException cex) {
+			appLogger.fatal("Fichier de configuration absent ou illisible. Fin de l'application");
 			System.exit(1);
-			
-			//TODO Log exception
 		}
+	}
+	
+	/**
+	 * Configure Log4J
+	 */
+	private static void setLogger() {
+		PropertyConfigurator.configure("resources/log4j.properties");
 	}
 }
