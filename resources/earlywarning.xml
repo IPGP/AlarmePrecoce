@@ -3,4 +3,11 @@
   <network>
     <port>4445</port>
   </network>
+  <dbms>
+    <host>bory</host>
+    <port>5432</port>
+    <database>fovpf</database>
+    <user>fonctionnement</user>
+    <password>olvssclr</password>
+  </dbms>
 </earlywarning>

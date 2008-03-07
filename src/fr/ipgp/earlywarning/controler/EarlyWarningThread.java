@@ -48,6 +48,7 @@ public class EarlyWarningThread extends Thread {
             	EarlyWarning.appLogger.warn("Arret du thread");
                 return;
             }
+            System.out.println(packet.toString());
         }
         socket.close();
     }
