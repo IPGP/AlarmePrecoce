@@ -9,7 +9,7 @@ import java.io.IOException;
 import fr.ipgp.earlywarning.EarlyWarning;
 
 /**
- * 
+ * Sends heartbeat represented by an update in the "fonctionnement" database (for OVPF only!)
  * @author Patrice Boissier
  *
  */
