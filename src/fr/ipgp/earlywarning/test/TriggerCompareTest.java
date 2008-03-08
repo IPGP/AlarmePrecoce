@@ -14,16 +14,17 @@ public class TriggerCompareTest {
         Trigger trigger2 = new Trigger(UniqueID.get(),1);
         Trigger trigger3 = new Trigger(UniqueID.get(),2);
         Trigger trigger4 = new Trigger(UniqueID.get(),2);
+        boolean[] equalTest = {trigger1.equals(trigger2),trigger2.equals(trigger3),trigger3.equals(trigger3)};
         int[] test = {trigger1.compareTo(trigger2), trigger2.compareTo(trigger3), trigger3.compareTo(trigger3)};
         String[] triggers = {trigger1.toString(), trigger2.toString(), trigger3.toString(), trigger4.toString()}; 
         for (int i=0; i<3; i++) {
         	if (test[i] > 0) {
-        		System.out.println(triggers[i]+" < "+triggers[i+1]);
+        		System.out.println(triggers[i]+" < "+triggers[i+1] + " " + equalTest[i]);
         	} else {
         		if (test[i] == 0) {
-        			System.out.println(triggers[i]+" = "+triggers[i]);
+        			System.out.println(triggers[i]+" = "+triggers[i] + " " + equalTest[i]);
         		} else {
-        			System.out.println(triggers[i]+" > "+triggers[i+1]);
+        			System.out.println(triggers[i]+" > "+triggers[i+1] + " " + equalTest[i]);
         		}
         	}
         }
