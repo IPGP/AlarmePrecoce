@@ -9,7 +9,7 @@
     <database>fovpf</database>
     <user>fonctionnement</user>
     <password>olvssclr</password>
-  </dbms>
+    <use_heartbeat></use_heartbeat></dbms>
   <mailinglist>
     <email>boissier@ipgp.jussieu.fr</email>
     <email>arnaudl@ipgp.jussieu.fr</email>
