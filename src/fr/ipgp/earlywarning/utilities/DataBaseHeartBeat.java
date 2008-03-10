@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.utilities;
 
 import fr.ipgp.earlywarning.EarlyWarning;
+import org.apache.commons.configuration.*;
 import java.sql.*;
-import java.util.*;
 /**
  *  
  * @author Patrice Boissier
@@ -22,17 +22,16 @@ public class DataBaseHeartBeat {
 	private String editor;
 	protected int applicationNumber;
 	private Connection connection;
-	//private 
 	
-	public DataBaseHeartBeat() throws ClassNotFoundException {
-		host = new String(EarlyWarning.configuration.getString("dbms.host"));
-		port = EarlyWarning.configuration.getInt("dbms.port");
-		database = new String(EarlyWarning.configuration.getString("dbms.database"));
-		user = new String(EarlyWarning.configuration.getString("dbms.user"));
-		driver = new String(EarlyWarning.configuration.getString("dbms.driver"));
-		editor = new String(EarlyWarning.configuration.getString("dbms.editor"));
-		password = new String(EarlyWarning.configuration.getString("dbms.password"));
-		applicationNumber = EarlyWarning.configuration.getInt("heartbeat.num_appli");
+	public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException {
+		host = new String(configuration.getString("dbms.host"));
+		port = configuration.getInt("dbms.port");
+		database = new String(configuration.getString("dbms.database"));
+		user = new String(configuration.getString("dbms.user"));
+		driver = new String(configuration.getString("dbms.driver"));
+		editor = new String(configuration.getString("dbms.editor"));
+		password = new String(configuration.getString("dbms.password"));
+		applicationNumber = configuration.getInt("heartbeat.num_appli");
 		loadDriver();
 	}
 	
