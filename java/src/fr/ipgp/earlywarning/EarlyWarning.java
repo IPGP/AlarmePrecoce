@@ -17,7 +17,7 @@ import org.apache.log4j.*;
  */
 public class EarlyWarning {
 
-	public static XMLConfiguration configuration;
+	public static Configuration configuration;
 	public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
 	
 	public static void main(String[] args) throws IOException  {
