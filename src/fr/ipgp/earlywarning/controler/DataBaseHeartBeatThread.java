@@ -44,7 +44,6 @@ public class DataBaseHeartBeatThread extends Thread {
 		}
 		// Notify the start time
 		try {
-			//TODO change the DATE!!!!!
 			int result = dataBaseHeartBeat.sendHeartBeat(startMessage, DateFormater.toISO());
 			if (result == 0 )
 				EarlyWarning.appLogger.warn("Start message not sent to the database : update returned 0");
