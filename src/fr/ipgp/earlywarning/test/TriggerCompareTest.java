@@ -2,6 +2,9 @@ package fr.ipgp.earlywarning.test;
 
 import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.utilities.UniqueID;
+import fr.ipgp.earlywarning.telephones.*;
+import fr.ipgp.earlywarning.messages.*;
+import java.net.*;
 
 public class TriggerCompareTest {
 
@@ -9,6 +12,26 @@ public class TriggerCompareTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		long id = 1635132135;
+		Trigger trig = new Trigger(id,1);
+		System.out.println(trig.toString());
+		CallList callList = new TextCallList();
+		WarningMessage message = new TextWarningMessage();
+		InetAddress inetAddress;
+		try {
+			inetAddress = InetAddress.getByName("localhost");
+			trig.setInetAddress(inetAddress);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		trig.setApplication("Sismo");
+		trig.setCallList(callList);
+		trig.setMessage(message);
+		trig.setPriority(2);
+		System.out.println(trig.toString());
+		trig.setProperty("test", "Test Value");
+		trig.setType("Type");
+		
 
         Trigger trigger1 = new Trigger(UniqueID.get(),4);
         Trigger trigger2 = new Trigger(UniqueID.get(),1);
