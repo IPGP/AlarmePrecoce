@@ -4,9 +4,9 @@
  */
 package fr.ipgp.earlywarning.utilities;
 
-import fr.ipgp.earlywarning.EarlyWarning;
 import org.apache.commons.configuration.*;
 import java.sql.*;
+import java.util.NoSuchElementException;
 /**
  *  
  * @author Patrice Boissier
@@ -23,8 +23,9 @@ public class DataBaseHeartBeat {
 	protected int applicationNumber;
 	private Connection connection;
 	
-	public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException {
+	public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException, ConversionException, NoSuchElementException, NullPointerException {
 		host = new String(configuration.getString("dbms.host"));
+		System.out.println("Host : " + host);
 		port = configuration.getInt("dbms.port");
 		database = new String(configuration.getString("dbms.database"));
 		user = new String(configuration.getString("dbms.user"));

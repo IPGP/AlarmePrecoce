@@ -5,7 +5,9 @@
 package fr.ipgp.earlywarning.controler;
 
 import java.io.IOException;
+import org.apache.commons.configuration.*;
 import java.sql.*;
+import java.util.*;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.*;
 
@@ -21,11 +23,11 @@ public class DataBaseHeartBeatThread extends Thread {
 	protected int delay;
 	protected boolean moreHeartBeats = true;
 	
-	public DataBaseHeartBeatThread() throws IOException {
+	public DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
     	this("DataBaseHeartBeatThread");
     }
 
-    public DataBaseHeartBeatThread(String name) throws IOException {
+    public DataBaseHeartBeatThread(String name) throws IOException, ConversionException, NoSuchElementException {
     	super(name);
     	aliveMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_alive");
     	startMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_start");
@@ -41,6 +43,18 @@ public class DataBaseHeartBeatThread extends Thread {
 			EarlyWarning.appLogger.warn("Database driver not found. Database support disabled.");
 			EarlyWarning.appLogger.debug("Thread is stopping");
             return;
+		} catch (ConversionException ce) {
+			EarlyWarning.appLogger.warn("An element value has wrong type : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
+			EarlyWarning.appLogger.debug("Thread is stopping");
+            return;
+		} catch (NoSuchElementException nsee) {
+			EarlyWarning.appLogger.warn("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
+			EarlyWarning.appLogger.debug("Thread is stopping");
+            return;
+		} catch (NullPointerException npe) {
+			EarlyWarning.appLogger.warn("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
+			EarlyWarning.appLogger.debug("Thread is stopping");
+            return;			
 		}
 		// Notify the start time
 		try {
@@ -50,7 +64,7 @@ public class DataBaseHeartBeatThread extends Thread {
 			else
 				EarlyWarning.appLogger.debug("Start message sent. Database updated");
 		} catch (SQLException sqle) {
-			EarlyWarning.appLogger.warn("Database connection problem. HeartBeat not sent.");
+			EarlyWarning.appLogger.warn("Database connection problem. This could be a network problem or a configuration problem in dbms section of earlywarning.xml. HeartBeat not sent.");
 		}
 		
 		// HeartBeat notification
@@ -62,7 +76,7 @@ public class DataBaseHeartBeatThread extends Thread {
 				else
 					EarlyWarning.appLogger.debug("HeartBeat sent. Database updated");
 			} catch (SQLException sqle) {
-				EarlyWarning.appLogger.warn("Database connection problem. HeartBeat not sent.");
+				EarlyWarning.appLogger.warn("Database connection problem. This could be a network problem or a configuration problem in dbms section of earlywarning.xml. HeartBeat not sent.");
 			}
 			try {
 				Thread.sleep(1000*delay);
