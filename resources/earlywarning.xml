@@ -5,7 +5,7 @@
   </network>
   <dbms>
     <!-- Database support is only for Mysql and Postgresql -->
-    <host>localhost</host>
+    <host>toto</host>
     <!-- MySQL default port : 3306 -->
     <!-- PostgreSQL default port : 5432 -->
     <port>3306</port>

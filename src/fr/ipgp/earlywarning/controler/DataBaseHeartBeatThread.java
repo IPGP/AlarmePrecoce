@@ -52,7 +52,6 @@ public class DataBaseHeartBeatThread extends Thread {
 				EarlyWarning.appLogger.debug("Start message sent. Database updated");
 		} catch (SQLException sqle) {
 			EarlyWarning.appLogger.warn("Database connection problem. HeartBeat not sent.");
-			sqle.printStackTrace();
 		}
 		
 		// HeartBeat notification
