@@ -5,6 +5,7 @@
 package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
+import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import java.io.IOException;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
@@ -28,6 +29,9 @@ public class EarlyWarning {
 		
 		Thread earlyWarningThread = new EarlyWarningThread();
 		earlyWarningThread.start();
+		
+		Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
+		dataBaseHeartBeatThread.start();
 	}
 	
 	/**
