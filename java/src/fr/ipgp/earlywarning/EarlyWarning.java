@@ -7,6 +7,7 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import java.io.IOException;
+import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
 
@@ -30,9 +31,15 @@ public class EarlyWarning {
 		Thread earlyWarningThread = new EarlyWarningThread();
 		earlyWarningThread.start();
 		
-		if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-			Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
-			dataBaseHeartBeatThread.start();
+		try {
+			if (configuration.getBoolean("heartbeat.use_heartbeat")) {
+				Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
+				dataBaseHeartBeatThread.start();
+			}
+		} catch (ConversionException ce) {
+			appLogger.warn("use_heartbeat element value is not an integer : check earlywarning.xml configuration file");
+		}catch (NoSuchElementException nsee) {
+			appLogger.warn("use_heartbeat element value is undefined : check earlywarning.xml configuration file");	
 		}
 	}
 	
