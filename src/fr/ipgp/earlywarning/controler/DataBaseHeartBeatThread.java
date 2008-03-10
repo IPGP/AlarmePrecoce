@@ -16,6 +16,9 @@ import fr.ipgp.earlywarning.*;
  */
 public class DataBaseHeartBeatThread extends Thread {
 	protected DataBaseHeartBeat dataBaseHeartBeat;
+	protected int aliveMessage;
+	protected int startMessage;
+	protected int delay;
 	protected boolean moreHeartBeats = true;
 	
 	public DataBaseHeartBeatThread() throws IOException {
@@ -23,11 +26,15 @@ public class DataBaseHeartBeatThread extends Thread {
     }
 
     public DataBaseHeartBeatThread(String name) throws IOException {
-    	super(name);    	
+    	super(name);
+    	aliveMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_alive");
+    	startMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_start");
+    	delay = EarlyWarning.configuration.getInt("heartbeat.hearbeat_delay");
     }
     
     public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
+    	// Loading the driver
     	try {
 			dataBaseHeartBeat = new DataBaseHeartBeat();
 		} catch (ClassNotFoundException cnfe) {
@@ -35,16 +42,34 @@ public class DataBaseHeartBeatThread extends Thread {
 			EarlyWarning.appLogger.debug("Thread is stopping");
             return;
 		}
+		// Notify the start time
+		try {
+			//TODO change the DATE!!!!!
+			int result = dataBaseHeartBeat.sendHeartBeat(startMessage, DateFormater.toISO());
+			if (result == 0 )
+				EarlyWarning.appLogger.warn("Start message not sent to the database : update returned 0");
+			else
+				EarlyWarning.appLogger.debug("Start message sent. Database updated");
+		} catch (SQLException sqle) {
+			EarlyWarning.appLogger.warn("Database connection problem. HeartBeat not sent.");
+			sqle.printStackTrace();
+		}
+		
+		// HeartBeat notification
 		while(moreHeartBeats) {
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ie) {
-				EarlyWarning.appLogger.debug("Error while sleeping!");
-			}
-			try {
-				dataBaseHeartBeat.sendHeartBeat(0, "2008-03-10 00:00:00");
+				int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, DateFormater.toISO());
+				if (result == 0 )
+					EarlyWarning.appLogger.warn("HeartBeat not sent : update returned 0");
+				else
+					EarlyWarning.appLogger.debug("HeartBeat sent. Database updated");
 			} catch (SQLException sqle) {
 				EarlyWarning.appLogger.warn("Database connection problem. HeartBeat not sent.");
+			}
+			try {
+				Thread.sleep(1000*delay);
+			} catch (InterruptedException ie) {
+				EarlyWarning.appLogger.debug("Error while sleeping!");
 			}
 		}
     }

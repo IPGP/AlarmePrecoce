@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="resources/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="resources/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="resources/postgresql-8.3-603.jdbc3.jar"/>
+	<classpathentry kind="lib" path="resources/mysql-connector-java-3.1.14-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

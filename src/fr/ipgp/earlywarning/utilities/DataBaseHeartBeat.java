@@ -22,6 +22,7 @@ public class DataBaseHeartBeat {
 	private String editor;
 	protected int applicationNumber;
 	private Connection connection;
+	//private 
 	
 	public DataBaseHeartBeat() throws ClassNotFoundException {
 		host = new String(EarlyWarning.configuration.getString("dbms.host"));
@@ -31,7 +32,7 @@ public class DataBaseHeartBeat {
 		driver = new String(EarlyWarning.configuration.getString("dbms.driver"));
 		editor = new String(EarlyWarning.configuration.getString("dbms.editor"));
 		password = new String(EarlyWarning.configuration.getString("dbms.password"));
-		applicationNumber = EarlyWarning.configuration.getInt("dbms.num_appli");
+		applicationNumber = EarlyWarning.configuration.getInt("heartbeat.num_appli");
 		loadDriver();
 	}
 	
@@ -46,15 +47,16 @@ public class DataBaseHeartBeat {
 	/**
 	 * Connects to the database and updates the heartbeat message.
 	 * @throws SQLException if the connection or query aborts.
+	 * @return either the row count for the UPDATE statement, or 0 for SQL statements that return nothing
 	 */
-	public void sendHeartBeat(int message, String date) throws SQLException {
+	public int sendHeartBeat(int message, String date) throws SQLException {
 		String url = "jdbc:" + editor + "://" + host + ":" + port + "/" + database;
-		System.out.println(url);
 		connection = DriverManager.getConnection(url, user, password);
 		Statement statement = connection.createStatement();
 		String query = "UPDATE acquisition SET date_heure='" + date + "' where num_appli=" + applicationNumber + " AND num_type=" + message;
-		statement.execute(query);
+		int result = statement.executeUpdate(query);
 		statement.close();
 		connection.close();
+		return result;
 	}
 }
