@@ -45,9 +45,9 @@ public class EarlyWarning {
 				dataBaseHeartBeatThread.start();
 			}
 		} catch (ConversionException ce) {
-			appLogger.warn("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+			appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
 		}catch (NoSuchElementException nsee) {
-			appLogger.warn("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
+			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
 		}
 	}
 	
