@@ -28,8 +28,16 @@ public class EarlyWarning {
 		
 		appLogger.debug("Entering application.");
 		
-		Thread earlyWarningThread = new EarlyWarningThread();
-		earlyWarningThread.start();
+		try {
+			Thread earlyWarningThread = new EarlyWarningThread();
+			earlyWarningThread.start();
+		} catch (ConversionException ce) {
+			appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
+			System.exit(1);
+		}catch (NoSuchElementException nsee) {
+			appLogger.fatal("Fatal error : An element value is undefined : check network section of earlywarning.xml configuration file. Exiting application.");
+			System.exit(1);
+		}
 		
 		try {
 			if (configuration.getBoolean("heartbeat.use_heartbeat")) {
@@ -37,9 +45,9 @@ public class EarlyWarning {
 				dataBaseHeartBeatThread.start();
 			}
 		} catch (ConversionException ce) {
-			appLogger.warn("use_heartbeat element value is not an integer : check earlywarning.xml configuration file");
+			appLogger.warn("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
 		}catch (NoSuchElementException nsee) {
-			appLogger.warn("use_heartbeat element value is undefined : check earlywarning.xml configuration file");	
+			appLogger.warn("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
 		}
 	}
 	
@@ -51,7 +59,7 @@ public class EarlyWarning {
 		try {
 		    configuration = new XMLConfiguration("resources/earlywarning.xml");
 		} catch(ConfigurationException cex) {
-			appLogger.fatal("Fichier de configuration absent ou illisible. Fin de l'application");
+			appLogger.fatal("Fatal error : configuration file not present or not readable. Exiting application");
 			System.exit(1);
 		}
 	}

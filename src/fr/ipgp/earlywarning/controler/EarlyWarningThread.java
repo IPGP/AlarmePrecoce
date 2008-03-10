@@ -6,6 +6,10 @@ package fr.ipgp.earlywarning.controler;
 
 import java.io.*;
 import java.net.*;
+import java.util.NoSuchElementException;
+
+import org.apache.commons.configuration.ConversionException;
+
 import fr.ipgp.earlywarning.*;
 
 /**
@@ -21,11 +25,11 @@ public class EarlyWarningThread extends Thread {
     protected byte[] buffer = null;
     protected int port;
 	
-    public EarlyWarningThread() throws IOException {
+    public EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
     }
 
-    public EarlyWarningThread(String name) throws IOException {
+    public EarlyWarningThread(String name) throws IOException, ConversionException, NoSuchElementException {
     	super(name);
     	port = EarlyWarning.configuration.getInt("network.port");
     	socket = new DatagramSocket(port);
