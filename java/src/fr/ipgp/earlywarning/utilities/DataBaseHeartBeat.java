@@ -36,13 +36,12 @@ public class DataBaseHeartBeat {
 		
 	}
 	
-	private void loadDriverAndConnect() throws ClassNotFoundException {
+	public void loadDriverAndConnect() throws ClassNotFoundException {
 		Class.forName(driver);
 		String url = "jdbc:" + editor + "://" + host + ":" + port + "/" + database;
 		System.out.println(url);
 	}
 
-	public static void sendHeartBeat() throws ClassNotFoundException { 
-		
+	public void sendHeartBeat(){ 
 	}
 }
