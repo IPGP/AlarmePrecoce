@@ -36,7 +36,7 @@ public class DataBaseHeartBeatThread extends Thread {
     	EarlyWarning.appLogger.debug("Thread creation");
     	// Loading the driver
     	try {
-			dataBaseHeartBeat = new DataBaseHeartBeat();
+			dataBaseHeartBeat = new DataBaseHeartBeat(EarlyWarning.configuration);
 		} catch (ClassNotFoundException cnfe) {
 			EarlyWarning.appLogger.warn("Database driver not found. Database support disabled.");
 			EarlyWarning.appLogger.debug("Thread is stopping");
