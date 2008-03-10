@@ -4,12 +4,22 @@
     <port>4445</port>
   </network>
   <dbms>
+    <!-- Database support is only for Mysql and Postgresql -->
     <host>bory</host>
     <port>5432</port>
     <database>fovpf</database>
     <user>fonctionnement</user>
     <password>olvssclr</password>
-    <use_heartbeat></use_heartbeat></dbms>
+    <!-- MySQL editor : mysql -->
+    <!-- PostgreSQL editor : postgresql -->
+    <editor></editor>
+    <!-- MySQL driver : com.mysql.jdbc.Driver -->
+    <!-- PostgreSQL driver : org.postgresql.Driver -->
+    <driver>org.postgresql.Driver</driver>
+    <use_heartbeat>yes</use_heartbeat>
+    <num_appli>20</num_appli>
+    <num_type></num_type>
+  </dbms>
   <mailinglist>
     <email>boissier@ipgp.jussieu.fr</email>
     <email>arnaudl@ipgp.jussieu.fr</email>
