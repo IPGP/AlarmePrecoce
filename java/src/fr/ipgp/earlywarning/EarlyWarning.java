@@ -30,8 +30,10 @@ public class EarlyWarning {
 		Thread earlyWarningThread = new EarlyWarningThread();
 		earlyWarningThread.start();
 		
-		Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
-		dataBaseHeartBeatThread.start();
+		if (configuration.getBoolean("heartbeat.use_heartbeat")) {
+			Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
+			dataBaseHeartBeatThread.start();
+		}
 	}
 	
 	/**
