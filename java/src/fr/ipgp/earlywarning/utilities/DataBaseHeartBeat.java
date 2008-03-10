@@ -30,18 +30,31 @@ public class DataBaseHeartBeat {
 		user = new String(EarlyWarning.configuration.getString("dbms.user"));
 		driver = new String(EarlyWarning.configuration.getString("dbms.driver"));
 		editor = new String(EarlyWarning.configuration.getString("dbms.editor"));
-		password = new String(EarlyWarning.configuration.getString("dbms.paassword"));
+		password = new String(EarlyWarning.configuration.getString("dbms.password"));
 		applicationNumber = EarlyWarning.configuration.getInt("dbms.num_appli");
-		loadDriverAndConnect();
-		
+		loadDriver();
 	}
 	
-	public void loadDriverAndConnect() throws ClassNotFoundException {
+	/**
+	 * Loads the database driver and connect to the database.
+	 * @throws ClassNotFoundException if the driver class is not found
+	 */
+	public void loadDriver() throws ClassNotFoundException {
 		Class.forName(driver);
+	}
+	
+	/**
+	 * Connects to the database and updates the heartbeat message.
+	 * @throws SQLException if the connection or query aborts.
+	 */
+	public void sendHeartBeat(int message, String date) throws SQLException {
 		String url = "jdbc:" + editor + "://" + host + ":" + port + "/" + database;
 		System.out.println(url);
-	}
-
-	public void sendHeartBeat(){ 
+		connection = DriverManager.getConnection(url, user, password);
+		Statement statement = connection.createStatement();
+		String query = "UPDATE acquisition SET date_heure='" + date + "' where num_appli=" + applicationNumber + " AND num_type=" + message;
+		statement.execute(query);
+		statement.close();
+		connection.close();
 	}
 }

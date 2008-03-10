@@ -34,18 +34,18 @@ public class EarlyWarningThread extends Thread {
     }
     
     public void run() {
-    	EarlyWarning.appLogger.debug("Creation du thread EarlyWarningThread");
+    	EarlyWarning.appLogger.debug("Thread creation");
         while (moreTriggers) {
-        	EarlyWarning.appLogger.debug("En attente de trigger sur le port " + port);
+        	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
 
         	try {
                 socket.receive(packet);
             } catch (IOException ioe) {
-                EarlyWarning.appLogger.error("Erreur d'entree sortie lors de la reception d'un datagramme");
+                EarlyWarning.appLogger.error("Input Output error while receiving datagram");
                 ioe.printStackTrace();
             }
             if (Thread.interrupted()) {
-            	EarlyWarning.appLogger.warn("Arret du thread");
+            	EarlyWarning.appLogger.warn("Thread stopping");
                 return;
             }
             System.out.println(packet.toString());
