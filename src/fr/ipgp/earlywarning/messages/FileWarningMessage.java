@@ -16,6 +16,9 @@ public class FileWarningMessage implements WarningMessage {
 		
 	}
 	
+	/**
+	 * @return a String representing the object
+	 */
 	public String toString() {
 		String result = "";
 		return result;
