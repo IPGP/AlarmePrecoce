@@ -5,12 +5,17 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.triggers.*;
+import java.util.*;
 /**
  * Manage a trigger queue based on priorities. Launch the CallManager thread.
  * @author Patrice Boissier
  *
  */
 public class QueueManagerThread {
-	private Trigger[] triggers;
-	private boolean reorder;
+	private Vector<Trigger> queue;
+	private int nbTriggers = 0;
+	
+	private void sortQueue() {
+		Collections.sort(queue);
+	}
 }
