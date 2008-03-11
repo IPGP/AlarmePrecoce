@@ -9,5 +9,8 @@ package fr.ipgp.earlywarning.telephones;
  *
  */
 public interface CallList {
-
+	/**
+	 * @return a String representing the object
+	 */
+	public String toString();
 }

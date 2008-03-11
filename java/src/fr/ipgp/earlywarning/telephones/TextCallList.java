@@ -9,5 +9,16 @@ package fr.ipgp.earlywarning.telephones;
  *
  */
 public class TextCallList implements CallList{
-
+	private String text;
+	
+	public TextCallList() {
+		
+	}
+	
+	/**
+	 * @return a String representing the object
+	 */
+	public String toString() {
+		return text;
+	}
 }

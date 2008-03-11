@@ -4,10 +4,25 @@
  */
 package fr.ipgp.earlywarning.telephones;
 
+import java.io.File;
+
 /**
  * @author Patrice Boissier
  *
  */
 public class FileCallList implements CallList{
+	private File file;
+	
+	public FileCallList() {
+		
+	}
+	
+	/**
+	 * @return a String representing the object
+	 */
+	public String toString() {
+		String result = "";
+		return result;
+	}
 
 }

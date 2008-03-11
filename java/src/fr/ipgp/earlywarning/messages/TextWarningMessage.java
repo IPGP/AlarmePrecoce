@@ -15,6 +15,9 @@ public class TextWarningMessage implements WarningMessage {
 		
 	}
 	
+	/**
+	 * @return a String representing the object
+	 */
 	public String toString() {
 		return text;
 	}
