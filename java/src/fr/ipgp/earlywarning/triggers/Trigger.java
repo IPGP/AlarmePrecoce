@@ -182,6 +182,6 @@ public class Trigger implements Comparable {
      * @return a String with the id and priority of the Trigger
      */
     public String toString() {
-    	return id + " " + priority;
-        }
+    	return id + " " + priority + " " + type + " " + inetAddress.toString();
+    }
 }
