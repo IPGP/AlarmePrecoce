@@ -13,15 +13,15 @@ import java.io.File;
 public class FileCallList implements CallList{
 	private File file;
 	
-	public FileCallList() {
-		
+	public FileCallList(File file) {
+		this.file = file;
 	}
 	
 	/**
 	 * @return a String representing the object
 	 */
 	public String toString() {
-		String result = "";
+		String result = file.toString();
 		return result;
 	}
 

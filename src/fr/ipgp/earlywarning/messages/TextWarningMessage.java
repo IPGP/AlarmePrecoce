@@ -11,8 +11,8 @@ package fr.ipgp.earlywarning.messages;
 public class TextWarningMessage implements WarningMessage {
 	private String text;
 	
-	public TextWarningMessage() {
-		
+	public TextWarningMessage(String text) {
+		this.text = text;
 	}
 	
 	/**
