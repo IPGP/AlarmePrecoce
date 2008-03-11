@@ -27,6 +27,7 @@ public class EarlyWarning {
 		
 		setLogger();
 		
+		// Check unicity of the application. Exits if already launched.
 		try {
 			if (!CommonUtilities.appIsUnique("EarlyWarning")) {
 				appLogger.fatal("Application already running : exiting");
