@@ -58,7 +58,7 @@ public class DataBaseHeartBeatThread extends Thread {
 		}
 		// Notify the start time
 		try {
-			int result = dataBaseHeartBeat.sendHeartBeat(startMessage, DateFormater.toISO());
+			int result = dataBaseHeartBeat.sendHeartBeat(startMessage, CommonUtilities.dateToISO());
 			if (result == 0 )
 				EarlyWarning.appLogger.error("Start message not sent to the database : update returned 0");
 			else
@@ -70,7 +70,7 @@ public class DataBaseHeartBeatThread extends Thread {
 		// HeartBeat notification
 		while(moreHeartBeats) {
 			try {
-				int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, DateFormater.toISO());
+				int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, CommonUtilities.dateToISO());
 				if (result == 0 )
 					EarlyWarning.appLogger.error("HeartBeat not sent : update returned 0");
 				else

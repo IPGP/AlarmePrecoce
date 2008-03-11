@@ -25,7 +25,6 @@ public class DataBaseHeartBeat {
 	
 	public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException, ConversionException, NoSuchElementException, NullPointerException {
 		host = new String(configuration.getString("dbms.host"));
-		System.out.println("Host : " + host);
 		port = configuration.getInt("dbms.port");
 		database = new String(configuration.getString("dbms.database"));
 		user = new String(configuration.getString("dbms.user"));

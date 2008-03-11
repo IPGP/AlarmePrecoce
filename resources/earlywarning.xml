@@ -5,19 +5,19 @@
   </network>
   <dbms>
     <!-- Database support is only for Mysql and Postgresql -->
-    <host>localhost</host>
+    <host>bory</host>
     <!-- MySQL default port : 3306 -->
     <!-- PostgreSQL default port : 5432 -->
-    <port>3306</port>
-    <database>fonctionnement</database>
+    <port>5432</port>
+    <database>fovpf</database>
     <user>fonctionnement</user>
     <password>olvssclr</password>
     <!-- MySQL editor : mysql -->
     <!-- PostgreSQL editor : postgresql -->
-    <editor>mysql</editor>
+    <editor>postgresql</editor>
     <!-- MySQL driver : com.mysql.jdbc.Driver -->
     <!-- PostgreSQL driver : org.postgresql.Driver -->
-    <driver>com.mysql.jdbc.Driver</driver>
+    <driver>org.postgresql.Driver</driver>
   </dbms>
   <heartbeat>
     <use_heartbeat>true</use_heartbeat>
