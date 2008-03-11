@@ -6,7 +6,9 @@ package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
+import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
@@ -24,6 +26,18 @@ public class EarlyWarning {
 	public static void main(String[] args) throws IOException  {
 		
 		setLogger();
+		
+		try {
+			if (!CommonUtilities.appIsUnique("EarlyWarning")) {
+				appLogger.fatal("Application already running : exiting");
+				System.exit(1);
+			}
+		} catch (FileNotFoundException fnfe) {
+			appLogger.warn("Unable to create lock file to ensure unicity of the application");
+		} catch (IOException ioe) {
+			appLogger.warn("Unable to set lock file to ensure unicity of the application");
+		}
+
 		readConfiguration();
 		
 		appLogger.debug("Entering application.");
