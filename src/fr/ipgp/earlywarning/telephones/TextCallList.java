@@ -11,8 +11,8 @@ package fr.ipgp.earlywarning.telephones;
 public class TextCallList implements CallList{
 	private String text;
 	
-	public TextCallList() {
-		
+	public TextCallList(String text) {
+		this.text = text;
 	}
 	
 	/**
