@@ -26,18 +26,23 @@ public class CommonUtilities {
 	
 	/**
 	 * This method ensure that no other occurence of the application is already running.
-	 * @author http://rom.developpez.com/java-instance-unique/
-	 * @param lock the name of the lock file
+	 * @author http://www.javafr.com/codes/INSTANCE-UNIQUE-APPLICATION_40088.aspx
+	 * @param lockFileName the name of the lock file
 	 * @return true if the application is unique else it returns false
 	 */
-	public static boolean isUnique(String lock) {
-	    boolean unique;
-	    try {
-	        unique = new FileOutputStream(lock).getChannel().tryLock() != null;
-	    } catch(IOException ie) {
-	        unique = false;
-	    }
-	    return unique;
+	public static boolean appIsUnique(String lockFileName) throws FileNotFoundException, IOException {
+		boolean locked;
+		File fileLock = new File("Verrou.lock");
+		RandomAccessFile raFileLock = new RandomAccessFile(fileLock, "rw");
+			
+		  
+		if (raFileLock.getChannel().tryLock() == null) {
+			locked = false;
+		}
+		else {
+			locked = true;
+		}
+		return locked;
 	}
 	
 	/**
