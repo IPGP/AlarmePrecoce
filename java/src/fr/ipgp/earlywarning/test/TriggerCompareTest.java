@@ -1,7 +1,7 @@
 package fr.ipgp.earlywarning.test;
 
 import fr.ipgp.earlywarning.triggers.Trigger;
-import fr.ipgp.earlywarning.utilities.UniqueID;
+import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.messages.*;
 import java.net.*;
@@ -75,14 +75,12 @@ public class TriggerCompareTest {
 							"* TESTS de comparaison *\n" +
 							"************************");
 
-        Trigger trigger1 = new Trigger(UniqueID.get(),4);
-        Trigger trigger2 = new Trigger(UniqueID.get(),1);
-        Trigger trigger3 = new Trigger(UniqueID.get(),2);
-        Trigger trigger4 = new Trigger(UniqueID.get(),2);
+        Trigger trigger1 = new Trigger(CommonUtilities.getUniqueId(),4);
+        Trigger trigger2 = new Trigger(CommonUtilities.getUniqueId(),1);
+        Trigger trigger3 = new Trigger(CommonUtilities.getUniqueId(),2);
         boolean[] equalTest = {trigger1.equals(trigger2),trigger2.equals(trigger3),trigger3.equals(trigger3)};
         int[] test = {trigger1.compareTo(trigger2), trigger2.compareTo(trigger3), trigger3.compareTo(trigger3)};
         String[] expected = {" < false "," > false "," = true "};
-        //String[] triggers = {trigger1.toString(), trigger2.toString(), trigger3.toString(), trigger4.toString()}; 
         for (int i=0; i<3; i++) {
         	if (test[i] > 0) {
         		System.out.println(" < " + equalTest[i] + " - expected : " +expected[i]);
