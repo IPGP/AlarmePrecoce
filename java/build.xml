@@ -45,7 +45,7 @@
 			<include name="lib/**/*.jar"/>
 		</fileset>
 	</path>
-	<pathconvert property="class.path" dirsep="/" pathsep=" " refid="class-path">
+	<pathconvert property="class-path" dirsep="/" pathsep=" " refid="class.path">
 		<map from="${basedir}${file.separator}lib" to="lib" />
 	</pathconvert>
 </project>
