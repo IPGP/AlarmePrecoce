@@ -5,55 +5,82 @@
 package fr.ipgp.earlywarning.test;
 
 import java.net.*;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.junit.*;
+import fr.ipgp.earlywarning.messages.TextWarningMessage;
+import fr.ipgp.earlywarning.messages.WarningMessage;
+import fr.ipgp.earlywarning.telephones.CallList;
+import fr.ipgp.earlywarning.telephones.TextCallList;
+import fr.ipgp.earlywarning.triggers.Trigger;
+import fr.ipgp.earlywarning.utilities.CommonUtilities;
 /**
  * @author Patrice Boissier
  *
  */
 public class TestTrigger {
-
-	private byte[] message = null;
-	private int port = 4445;
-	private InetAddress address = null;
-	private DatagramSocket socket = null;
-	private DatagramPacket packet = null;
+	
+	public long id;
+	public int priority;
+	public CallList callList;
+	public WarningMessage message;
+	public InetAddress inetAddress;
+	public String application;
+	public String type;
+	private Map<String,String> properties;
 	
 	@Before
 	public void setUp() throws UnknownHostException, SocketException {
-		
+		id = 1635132135;
+		priority = 1;
+		callList = new TextCallList("0692703856");
+		message = new TextWarningMessage("Alerte : tout brule!!");
+		inetAddress = InetAddress.getByName("localhost");
+		application = new String("Sismo");
+		type = new String("v1");
+		properties = new HashMap<String,String>();
+		properties.put("key1", "value1");
+		properties.put("key2", "value2");
 	}
 	
 	@After
 	public void tearDown() {
-		socket.close();
+
 	}
 	
 	@Test
-	public void testNormalTrigger() throws IOException {
-		address = InetAddress.getByName("localhost");
-		Date date1 = new Date();
-		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		String messageString = "Sismo " + simpleFormat.format(date1) + " Declenchement";
-		message = new byte[messageString.length()];
-		message = messageString.getBytes();
-		packet = new DatagramPacket(message, message.length, address, port);
-		socket = new DatagramSocket();
-		socket.send(packet);
+	public void testTriggerGettersSetters() throws IOException {
+		Trigger trig = new Trigger(id,1);
+		trig.setApplication(application);
+		trig.setCallList(callList);
+		trig.setInetAddress(inetAddress);
+		trig.setMessage(message);
+		trig.setPriority(priority);
+		trig.setProperty("key1", "value1");
+		trig.setProperty("key2", "value2");
+		trig.setType(type);
+		Assert.assertEquals(application,trig.getApplication());
+		Assert.assertEquals(callList,trig.getCallList());
+		Assert.assertEquals(id,trig.getId());
+		Assert.assertEquals(inetAddress,trig.getInetAddress());
+		Assert.assertEquals(message,trig.getMessage());
+		Assert.assertEquals(priority,trig.getPriority());
+		Assert.assertEquals(properties,trig.getProperties());
+		Assert.assertEquals(type,trig.getType());
 	}
 		
 	@Test
-	public void testWeirdTrigger() throws IOException {
-		address = InetAddress.getByName("localhost");
-		String messageString = null;
-		message = new byte[messageString.length()];
-		message = messageString.getBytes();
-		packet = new DatagramPacket(message, message.length, address, port);
-		socket = new DatagramSocket();
-		socket.send(packet);
+	public void testTriggerComparison() throws IOException {
+        Trigger trigger1 = new Trigger(CommonUtilities.getUniqueId(),4);
+        Trigger trigger2 = new Trigger(CommonUtilities.getUniqueId(),1);
+        Trigger trigger3 = new Trigger(CommonUtilities.getUniqueId(),2);
+        Trigger trigger4 = new Trigger(CommonUtilities.getUniqueId(),1);
+        Assert.assertEquals(trigger1.compareTo(trigger2),1);
+        Assert.assertEquals(trigger2.compareTo(trigger3),-1);
+        Assert.assertEquals(trigger3.compareTo(trigger4),-1);
+        Assert.assertEquals(trigger1.compareTo(trigger1),0);
+        
 	}
 	
 	public static junit.framework.Test suite() {
