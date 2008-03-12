@@ -65,6 +65,7 @@
 				<pathelement path="lib/mysql-connector-java-3.1.14-bin.jar"/>
 				<pathelement path="lib/postgresql-8.3-603.jdbc3.jar"/>
 				<pathelement path="lib/junit-4.4.jar"/>
+				<pathelement path="bin"/>
 			</classpath>			
 			<formatter type="brief" usefile="false" />
 			<batchtest>
