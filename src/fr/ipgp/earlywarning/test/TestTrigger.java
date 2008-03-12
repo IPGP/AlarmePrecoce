@@ -44,4 +44,8 @@ public class TestTrigger {
 		socket = new DatagramSocket();
 		socket.send(packet);
 	}
+	
+	public static junit.framework.Test suite() {
+        return new junit.framework.JUnit4TestAdapter(TestTrigger.class);
+    }
 }
