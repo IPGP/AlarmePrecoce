@@ -9,7 +9,7 @@
 		<delete dir="dist"/>
 	</target>
 
-	<target name="compile" description="Compiles the source files to the bin directory">
+	<target name="compile" depends="init" description="Compiles the source files to the bin directory">
 		<javac srcdir="src" destdir="bin"/>
 	</target>
 	
