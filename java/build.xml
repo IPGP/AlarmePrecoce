@@ -80,7 +80,7 @@
 		</junit>
 	</target>
 	
-	<target name="test">
+	<target name="test" depends="compile" description="Performs unit tests for the project">
 		<junit fork="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="false" />
 			<classpath refid="test.classpath" />
