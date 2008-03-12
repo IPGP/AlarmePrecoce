@@ -58,7 +58,7 @@
 			<classpath refid="class.path"/>
 			<formatter type="brief" usefile="false" />
 			<batchtest>
-				<fileset dir="dist" includes="**/Test*.class"/>
+				<fileset dir="bin" includes="**/Test*.class"/>
 			</batchtest>
 		</junit>
 	</target>
