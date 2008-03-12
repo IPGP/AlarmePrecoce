@@ -13,7 +13,7 @@
 		<javac srcdir="src" destdir="bin"/>
 	</target>
 	
-	<target name="dist" description="Packages up EarlyWarning into EarlyWarning.jar">
+	<target name="dist" depends="compile" description="Packages up EarlyWarning into EarlyWarning.jar">
 		<jar destfile="dist/EarlyWarning.jar" basedir="bin"/>
 	</target>
 </project>
