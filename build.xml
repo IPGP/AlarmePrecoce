@@ -49,7 +49,7 @@
 	
 	<target name="test" depends="compile" description="Performs unit tests for the project">
 		<junit>
-			<classpath refid="${class-path}" />
+			<classpath refid="class.path" />
 			<formatter type="brief" usefile="false" />
 			<test name="fr.ipgp.earlywarning.test.TestTrigger" />
 		</junit>
