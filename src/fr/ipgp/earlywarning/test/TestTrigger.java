@@ -44,8 +44,22 @@ public class TestTrigger {
 		socket = new DatagramSocket();
 		socket.send(packet);
 	}
+		
+	@Test
+	public void testWeirdTrigger() throws IOException {
+		address = InetAddress.getByName("127.0.0.1");
+		Date date1 = new Date();
+		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String messageString = "Sismo " + simpleFormat.format(date1) + " Declenchement";
+		message = new byte[messageString.length()];
+		message = messageString.getBytes();
+		packet = new DatagramPacket(message, message.length, address, port);
+		socket = new DatagramSocket();
+		socket.send(packet);
+	}
 	
 	public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestTrigger.class);
     }
+
 }
