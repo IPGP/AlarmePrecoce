@@ -34,8 +34,10 @@
 				<attribute name="Class-Path" value="${class-path}" />
 			</manifest>
 		</jar>
-		<copy todir="dist">
+		<copy todir="dist/resources">
 			<fileset dir="resources"/>
+		</copy>
+		<copy todir="dist/lib">
 			<fileset dir="lib"/>
 		</copy>
 	</target>
