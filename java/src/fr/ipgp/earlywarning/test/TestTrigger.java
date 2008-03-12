@@ -24,7 +24,7 @@ public class TestTrigger {
 	
 	@Before
 	public void setUp() throws UnknownHostException, SocketException {
-		address = InetAddress.getByName("localhost");
+		
 	}
 	
 	@After
@@ -34,6 +34,7 @@ public class TestTrigger {
 	
 	@Test
 	public void testNormalTrigger() throws IOException {
+		address = InetAddress.getByName("localhost");
 		Date date1 = new Date();
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		String messageString = "Sismo " + simpleFormat.format(date1) + " Declenchement";
