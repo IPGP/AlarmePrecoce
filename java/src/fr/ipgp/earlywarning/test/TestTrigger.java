@@ -5,8 +5,7 @@
 package fr.ipgp.earlywarning.test;
 
 import java.net.*;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.io.*;
 import org.junit.*;
 import fr.ipgp.earlywarning.messages.TextWarningMessage;
@@ -50,7 +49,7 @@ public class TestTrigger {
 	}
 	
 	@Test
-	public void testTriggerGettersSetters() throws IOException {
+	public void testTrigger() throws IOException {
 		Trigger trig = new Trigger(id,1);
 		trig.setApplication(application);
 		trig.setCallList(callList);
@@ -68,6 +67,10 @@ public class TestTrigger {
 		Assert.assertEquals(priority,trig.getPriority());
 		Assert.assertEquals(properties,trig.getProperties());
 		Assert.assertEquals(type,trig.getType());
+        Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
+        Long idLong = new Long(id);
+        Integer priorityInteger = new Integer(priority);
+        Assert.assertEquals(idLong.hashCode()+priorityInteger.hashCode(),trig.hashCode());
 	}
 		
 	@Test
@@ -76,11 +79,16 @@ public class TestTrigger {
         Trigger trigger2 = new Trigger(CommonUtilities.getUniqueId(),1);
         Trigger trigger3 = new Trigger(CommonUtilities.getUniqueId(),2);
         Trigger trigger4 = new Trigger(CommonUtilities.getUniqueId(),1);
+        Trigger trigger5 = new Trigger(CommonUtilities.getUniqueId(),2);
         Assert.assertEquals(trigger1.compareTo(trigger2),1);
         Assert.assertEquals(trigger2.compareTo(trigger3),-1);
-        Assert.assertEquals(trigger3.compareTo(trigger4),-1);
+        Assert.assertEquals(trigger3.compareTo(trigger4),1);
         Assert.assertEquals(trigger1.compareTo(trigger1),0);
-        
+        Assert.assertEquals(trigger2.compareTo(trigger4),-1);
+        Assert.assertEquals(trigger5.compareTo(trigger3),1);
+        Assert.assertFalse(trigger1.equals(trigger2));
+        Assert.assertFalse(trigger2.equals(trigger4));
+        Assert.assertTrue(trigger1.equals(trigger1));
 	}
 	
 	public static junit.framework.Test suite() {
