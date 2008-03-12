@@ -4,6 +4,7 @@
 	<property name="docs-dir" location="docs" />
 	<property name="bin-dir" location="bin" />
 	<property name="lib-dir" value="lib"/>
+	<property name="test-dir" value="test"/>
 	
 	<path id="classpath.base">
 	</path>
@@ -30,12 +31,14 @@
 		<mkdir dir="${bin-dir}"/>
 		<mkdir dir="${dist-dir}"/>
 		<mkdir dir="${docs-dir}"/>
+		<mkdir dir="${test-dir}"/>
 	</target>
 
 	<target name="clean" description="Cleans up the build and dist directories.">
 		<delete dir="${bin-dir}"/>
 		<delete dir="${dist-dir}"/>
 		<delete dir="${docs-dir}"/>
+		<delete dir="${test-dir}"/>
 	</target>
 
 	<target name="compile" depends="init" description="Compiles the source files to the bin directory">
@@ -49,7 +52,19 @@
 			<fileset dir="lib"/>
 		</copy>
 	</target>
-	
+
+	<target name="compile-test" depends="init" description="Compiles the source files to the bin directory">
+		<javac srcdir="${src-dir}" destdir="${test-dir}">
+			<classpath refid="class.path"/>
+		</javac>
+		<copy todir="${test-dir}/resources">
+			<fileset dir="resources"/>
+		</copy>
+		<copy todir="${test-dir}/lib">
+			<fileset dir="lib"/>
+		</copy>
+	</target>
+
 	<target name="dist" depends="compile" description="Packages up EarlyWarning into EarlyWarning.jar">
 		<jar destfile="${dist-dir}/EarlyWarning.jar" basedir="${bin-dir}">
 			<manifest>
@@ -70,17 +85,7 @@
 		<javadoc packagenames="fr.ipgp.*" sourcepath="${src-dir}" destdir="${docs-dir}" windowtitle="EarlyWarning Documentation"/>
 	</target>
 	
-	<target name="test-old" depends="compile" description="Performs unit tests for the project">
-		<junit>
-			<classpath refid="class.path"/>
-			<formatter type="brief" usefile="false" />
-			<batchtest>
-				<fileset dir="${bin-dir}" includes="**/Test*.class"/>
-			</batchtest>
-		</junit>
-	</target>
-	
-	<target name="test" depends="compile" description="Performs unit tests for the project">
+	<target name="test" depends="compile-test" description="Performs unit tests for the project">
 		<junit fork="yes" haltonfailure="yes">
 			<formatter type="plain" usefile="false" />
 			<classpath refid="test.classpath" />
