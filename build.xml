@@ -27,10 +27,25 @@
 	</target>
 	
 	<target name="dist" depends="compile" description="Packages up EarlyWarning into EarlyWarning.jar">
-		<jar destfile="dist/EarlyWarning.jar" basedir="bin"/>
+		<jar destfile="dist/EarlyWarning.jar" basedir="bin">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="fr.ipgp.earlywarning.EarlyWarning" />
+				<attribute name="Class-Path" value="${class-path}" />
+			</manifest>
+		</jar>
 	</target>
 	
 	<target name="docs" description="Generates Javadoc for the project">
 		<javadoc packagenames="fr.ipgp.*" sourcepath="src" destdir="docs" windowtitle="EarlyWarning Documentation"/>
 	</target>
+	
+	<path id="class.path">		
+		<fileset dir="." >
+			<include name="lib/**/*.jar"/>
+		</fileset>
+	</path>
+	<pathconvert property="class.path" dirsep="/" pathsep=" " refid="class-path">
+		<map from="${basedir}${file.separator}lib" to="lib" />
+	</pathconvert>
 </project>
