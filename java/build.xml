@@ -25,6 +25,12 @@
 				<pathelement location="lib/junit-4.4.jar"/>
 			</classpath>
 		</javac>
+		<copy todir="bin/resources">
+			<fileset dir="resources"/>
+		</copy>
+		<copy todir="bin/lib">
+			<fileset dir="lib"/>
+		</copy>
 	</target>
 	
 	<target name="dist" depends="compile" description="Packages up EarlyWarning into EarlyWarning.jar">
