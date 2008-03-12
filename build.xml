@@ -55,17 +55,7 @@
 	
 	<target name="test" depends="compile" description="Performs unit tests for the project">
 		<junit>
-			<classpath>
-				<pathelement location="lib/commons-collections-3.2.jar"/>
-				<pathelement location="lib/commons-configuration-1.5.jar"/>
-				<pathelement location="lib/commons-digester-1.8.jar"/>
-				<pathelement location="lib/commons-lang-2.3.jar"/>
-				<pathelement location="lib/commons-logging-1.1.1.jar"/>
-				<pathelement location="lib/log4j-1.2.15.jar"/>
-				<pathelement location="lib/mysql-connector-java-3.1.14-bin.jar"/>
-				<pathelement location="lib/postgresql-8.3-603.jdbc3.jar"/>
-				<pathelement location="lib/junit-4.4.jar"/>
-			</classpath>
+			<classpath refid="classpath.test" />
 			<formatter type="brief" usefile="false" />
 			<batchtest>
 				<fileset dir="bin" includes="**/Test*.class"/>
