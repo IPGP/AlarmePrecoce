@@ -2,18 +2,34 @@
 	<target name="init" description="Creates the needed directories.">
 		<mkdir dir="bin"/>
 		<mkdir dir="dist"/>
+		<mkdir dir="docs"/>
 	</target>
 
 	<target name="clean" description="Cleans up the build and dist directories.">
 		<delete dir="bin"/>
 		<delete dir="dist"/>
+		<delete dir="docs"/>
 	</target>
 
 	<target name="compile" depends="init" description="Compiles the source files to the bin directory">
 		<javac srcdir="src" destdir="bin"/>
+		<classpath>
+			<pathelement location="lib/commons-collections-3.2.jar"/>
+			<pathelement location="lib/commons-configuration-1.5.jar"/>
+			<pathelement location="lib/commons-digester-1.8.jar"/>
+			<pathelement location="lib/commons-lang-2.3.jar"/>
+			<pathelement location="lib/commons-logging-1.1.1.jar"/>
+			<pathelement location="lib/log4j-1.2.15.jar"/>
+			<pathelement location="lib/mysql-connector-java-3.1.14-bin.jar"/>
+			<pathelement location="lib/postgresql-8.3-603.jdbc3.jar"/>
+		</classpath>
 	</target>
 	
 	<target name="dist" depends="compile" description="Packages up EarlyWarning into EarlyWarning.jar">
 		<jar destfile="dist/EarlyWarning.jar" basedir="bin"/>
+	</target>
+	
+	<target name="docs" description="Generates Javadoc for the project">
+		<javadoc packagenames="fr.ipgp.*" sourcepath="src" destdir="docs" windowtitle="EarlyWarning Documentation"/>
 	</target>
 </project>
