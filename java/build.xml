@@ -34,6 +34,10 @@
 				<attribute name="Class-Path" value="${class-path}" />
 			</manifest>
 		</jar>
+		<copy todir="dist">
+			<fileset dir="resources"/>
+			<fileset dir="lib"/>
+		</copy>
 	</target>
 	
 	<target name="docs" description="Generates Javadoc for the project">
