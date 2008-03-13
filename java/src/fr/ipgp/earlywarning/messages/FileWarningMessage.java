@@ -23,4 +23,11 @@ public class FileWarningMessage implements WarningMessage {
 		String result = file.toString();
 		return result;
 	}
+	
+	/**
+	 * @return the file to get
+	 */
+	public File getFile() {
+		return file;
+	}
 }
