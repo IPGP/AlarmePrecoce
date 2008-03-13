@@ -21,6 +21,7 @@ public class Trigger implements Comparable {
 	private String application;
 	private CallList callList;
 	private WarningMessage message;
+	private boolean repeat;
 	private Map<String,Object> properties;
 	
 	public Trigger (Long id, Integer priority) {
@@ -107,6 +108,20 @@ public class Trigger implements Comparable {
 		this.message = message;
 	}
 
+	/**
+	 * @param repeat the repeat to set
+	 */
+	public void setRepeat(boolean repeat) {
+		this.repeat = repeat;
+	}
+	
+	/**
+	 * @return the repeat
+	 */
+	public boolean getRepeat() {
+		return repeat;
+	}
+	
 	/**
 	 * @return the properties
 	 */
