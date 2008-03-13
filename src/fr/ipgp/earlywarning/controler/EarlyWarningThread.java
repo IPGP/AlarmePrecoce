@@ -9,6 +9,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.*;
+import fr.ipgp.earlywarning.triggers.*;
 
 /**
  * @author Patrice Boissier
@@ -20,7 +21,7 @@ public class EarlyWarningThread extends Thread {
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
-    protected byte[] buffer = null;
+    protected byte[] buffer = new byte[65535];
     protected int port;
 	
     public EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
@@ -31,7 +32,6 @@ public class EarlyWarningThread extends Thread {
     	super(name);
     	port = EarlyWarning.configuration.getInt("network.port");
     	socket = new DatagramSocket(port);
-    	buffer = new byte[256];
     	packet = new DatagramPacket(buffer, buffer.length);
     }
     
@@ -40,21 +40,23 @@ public class EarlyWarningThread extends Thread {
     	   	
     	QueueManagerThread queueManagerThread = new QueueManagerThread();
     	queueManagerThread.start();
-    	  	
+
+    	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
+
         while (moreTriggers) {
-        	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
 
         	try {
                 socket.receive(packet);
+                Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
+                Trigger trigger = datagram2Trigger.getTrigger();
+                queueManagerThread.addTrigger(trigger);
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
-                ioe.printStackTrace();
             }
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
                 return;
             }
-            System.out.println(packet.toString());
         }
         socket.close();
     }
