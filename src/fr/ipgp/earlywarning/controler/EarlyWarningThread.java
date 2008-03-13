@@ -34,7 +34,6 @@ public class EarlyWarningThread extends Thread {
     	port = EarlyWarning.configuration.getInt("network.port");
     	socket = new DatagramSocket(port);
     	buffer = new byte[256];
-    	//Coucou
     	packet = new DatagramPacket(buffer, buffer.length);
     }
     
