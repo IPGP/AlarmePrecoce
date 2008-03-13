@@ -42,29 +42,7 @@ public class EarlyWarningThread extends Thread {
     	   	
     	QueueManagerThread queueManagerThread = new QueueManagerThread();
     	queueManagerThread.start();
-    	
-    	// TEST
-    	
-		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
-		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
-		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);
-		Vector<Trigger> vect1 = new Vector<Trigger>();
-		Vector<Trigger> vect2 = new Vector<Trigger>();
-		Vector<Trigger> vect3 = new Vector<Trigger>();
-		vect1.add(trig1);
-		vect2.add(trig1);
-		vect2.add(trig2);
-		vect3.add(trig3);
-		vect3.add(trig1);
-		vect3.add(trig2);
-		queueManagerThread.addTrigger(trig1);
-    	System.out.println(queueManagerThread.getQueue().toString());
-    	queueManagerThread.addTrigger(trig2);
-    	System.out.println(queueManagerThread.getQueue().toString());
-    	queueManagerThread.addTrigger(trig3);
-    	System.out.println(queueManagerThread.getQueue().toString());
-    	//TEST
-    	
+    	  	
         while (moreTriggers) {
         	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
 

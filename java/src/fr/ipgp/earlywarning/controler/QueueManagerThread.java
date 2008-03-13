@@ -19,6 +19,7 @@ import org.apache.commons.configuration.ConversionException;
 public class QueueManagerThread extends Thread {
 	private Vector<Trigger> queue;
 	private int nbTriggers = 0;
+    protected boolean moreTriggers = true;
 	
     public QueueManagerThread() {
     	this("QueueManagerThread");
