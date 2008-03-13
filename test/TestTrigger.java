@@ -27,6 +27,7 @@ public class TestTrigger {
 	public String type;
 	public boolean repeat;
 	public String date;
+	public Integer confirmCode;
 	private Map<String,String> properties;
 	
 	@Before
@@ -42,7 +43,8 @@ public class TestTrigger {
 		repeat = true;
 		properties.put("key1", "value1");
 		properties.put("key2", "value2");
-		String date = "2007/02/12 10:00:00";
+		date = "2007/02/12 10:00:00";
+		confirmCode = 11;
 	}
 	
 	@After
@@ -63,6 +65,7 @@ public class TestTrigger {
 		trig.setType(type);
 		trig.setRepeat(repeat);
 		trig.setDate(date);
+		trig.setConfirmCode(confirmCode);
 		Assert.assertEquals(application,trig.getApplication());
 		Assert.assertEquals(callList,trig.getCallList());
 		Assert.assertEquals(id,trig.getId());
@@ -73,6 +76,7 @@ public class TestTrigger {
 		Assert.assertEquals(type,trig.getType());
 		Assert.assertEquals(repeat,trig.getRepeat());
 		Assert.assertEquals(date,trig.getDate());
+		Assert.assertEquals(confirmCode,trig.getConfirmCode());
         Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
         Long idLong = new Long(id);
         Integer priorityInteger = new Integer(priority);
