@@ -22,6 +22,7 @@ public class Trigger implements Comparable {
 	private CallList callList;
 	private WarningMessage message;
 	private boolean repeat;
+	private String date;
 	private Map<String,Object> properties;
 	
 	public Trigger (Long id, Integer priority) {
@@ -120,6 +121,20 @@ public class Trigger implements Comparable {
 	 */
 	public boolean getRepeat() {
 		return repeat;
+	}
+	
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
+	/**
+	 * @return the date
+	 */
+	public String getDate() {
+		return date;
 	}
 	
 	/**
