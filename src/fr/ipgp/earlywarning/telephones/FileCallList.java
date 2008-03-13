@@ -24,5 +24,8 @@ public class FileCallList implements CallList{
 		String result = file.toString();
 		return result;
 	}
-
+	
+	public File getFile() {
+		return this.file;
+	}
 }
