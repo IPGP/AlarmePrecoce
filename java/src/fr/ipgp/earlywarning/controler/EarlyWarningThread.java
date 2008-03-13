@@ -8,9 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.apache.commons.configuration.ConversionException;
-import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.*;
-import fr.ipgp.earlywarning.utilities.*;
 
 /**
  * @author Patrice Boissier
