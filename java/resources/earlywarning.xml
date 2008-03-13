@@ -26,6 +26,15 @@
     <num_type_start>18</num_type_start>
     <hearbeat_delay>6</hearbeat_delay>
   </heartbeat>
+  <triggers>
+  	<defaults>
+  		<confirm_code>11</confirm_code>
+  		<repeat>true</repeat>
+  		<call_list>resources/defaultCallList.csv</call_list>
+  		<warning_message>resources/defaultWarningMessage.wav</warning_message>
+  	</defaults>
+  	<call_on_unknown_message>true</call_on_unknown_message>
+  </triggers>
   <mailinglist>
     <email>boissier@ipgp.jussieu.fr</email>
     <email>arnaudl@ipgp.jussieu.fr</email>

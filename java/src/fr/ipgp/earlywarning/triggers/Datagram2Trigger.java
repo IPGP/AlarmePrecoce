@@ -46,21 +46,23 @@ public class Datagram2Trigger {
     	HashMap hashMap = new HashMap();
     	String[] receivedSplit = received.split(" ");
     	
-    	// Format historique OVPF : type v1
+    	//if (receivedSplit[0].matches(regex))
+    	
+    	// Format historique OVPF : type 01
     	// Sismo dd/MM/yyyy HH:mm:ss Declenchement
     	//TODO utiliser des expressions regulieres pour verifier les champs recus!
     	if (receivedSplit[0].equals("Sismo") && receivedSplit.length == 4) {
     		trigger.setApplication(receivedSplit[0]);
         	trigger.setCallList(new TextCallList("default"));
         	trigger.setMessage(new TextWarningMessage(receivedSplit[3]));
-        	trigger.setType("v1");
+        	trigger.setType("01");
         	trigger.setDate(receivedSplit[1] + " " + receivedSplit[2]);
         	trigger.setRepeat(true);
     	}
     	
-    	// Format v2
-    	// vv p 
-    	if (receivedSplit[0].equals("v2")) {
+    	// Format version 02 : type 02
+    	// vv p yyyy/MM/dd HH:mm:ss application calllist repeat message
+    	if (receivedSplit[0].equals("02")) {
     		
     	}
     	
