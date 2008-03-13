@@ -24,10 +24,9 @@ public class Datagram2Trigger {
     	senderAddress=packet.getAddress();
     	senderPort=packet.getPort();
     	String received = new String(packet.getData());
-    	HashMap hashMap = decode(received);
     	trigger = new Trigger(CommonUtilities.getUniqueId(),1);
     	trigger.setInetAddress(senderAddress);
-
+    	HashMap hashMap = decode(received);
     }
     
     /**
@@ -48,16 +47,19 @@ public class Datagram2Trigger {
     	String[] receivedSplit = received.split(" ");
     	
     	// Format historique OVPF : type v1
-    	// 
-    	if (receivedSplit[0].equals("Sismo")) {
+    	// Sismo dd/MM/yyyy HH:mm:ss Declenchement
+    	//TODO utiliser des expressions regulieres pour verifier les champs recus!
+    	if (receivedSplit[0].equals("Sismo") && receivedSplit.length == 4) {
     		trigger.setApplication(receivedSplit[0]);
-        	//trigger.setCallList(new TextCallList("default"));
-        	//trigger.setMessage(new TextWarningMessage(receivedSplit[3]));
+        	trigger.setCallList(new TextCallList("default"));
+        	trigger.setMessage(new TextWarningMessage(receivedSplit[3]));
         	trigger.setType("v1");
+        	trigger.setDate(receivedSplit[1] + " " + receivedSplit[2]);
+        	trigger.setRepeat(true);
     	}
     	
     	// Format v2
-    	// version priorite 
+    	// vv p 
     	if (receivedSplit[0].equals("v2")) {
     		
     	}
