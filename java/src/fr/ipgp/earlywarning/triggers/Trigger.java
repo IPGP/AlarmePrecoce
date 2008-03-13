@@ -23,6 +23,7 @@ public class Trigger implements Comparable {
 	private WarningMessage message;
 	private boolean repeat;
 	private String date;
+	private Integer confirmCode;
 	private Map<String,Object> properties;
 	
 	public Trigger (Long id, Integer priority) {
@@ -32,6 +33,20 @@ public class Trigger implements Comparable {
 		this.priority = priority;
 	}
 	
+	/**
+	 * @return the confirmCode
+	 */
+	public Integer getConfirmCode() {
+		return confirmCode;
+	}
+
+	/**
+	 * @param confirmCode the confirmCode to set
+	 */
+	public void setConfirmCode(Integer confirmCode) {
+		this.confirmCode = confirmCode;
+	}
+
 	/**
 	 * @return the priority
 	 */
