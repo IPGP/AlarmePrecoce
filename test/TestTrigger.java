@@ -1,8 +1,4 @@
-/**
- * Created Mar 12, 2008 10:52:16 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
- */
-package fr.ipgp.earlywarning.test;
+
 
 import java.net.*;
 import java.util.*;
@@ -49,7 +45,7 @@ public class TestTrigger {
 	}
 	
 	@Test
-	public void testTrigger() throws IOException {
+	public void testCreateTrigger() throws IOException {
 		Trigger trig = new Trigger(id,1);
 		trig.setApplication(application);
 		trig.setCallList(callList);
