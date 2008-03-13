@@ -21,4 +21,11 @@ public class TextCallList implements CallList{
 	public String toString() {
 		return text;
 	}
+	
+	/**
+	 * @return the text to get
+	 */
+	public String getText() {
+		return text;
+	}
 }
