@@ -1,15 +1,17 @@
 
+/**
+ * Created Mar 12, 2008 10:06:05 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+ */
 
 import java.net.*;
 import java.util.*;
 import java.io.*;
 import org.junit.*;
-import fr.ipgp.earlywarning.messages.TextWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.telephones.CallList;
-import fr.ipgp.earlywarning.telephones.TextCallList;
-import fr.ipgp.earlywarning.triggers.Trigger;
-import fr.ipgp.earlywarning.utilities.CommonUtilities;
+import fr.ipgp.earlywarning.messages.*;
+import fr.ipgp.earlywarning.telephones.*;
+import fr.ipgp.earlywarning.triggers.*;
+import fr.ipgp.earlywarning.utilities.*;
 /**
  * @author Patrice Boissier
  *
