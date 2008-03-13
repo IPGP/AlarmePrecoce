@@ -6,11 +6,8 @@ package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.triggers.*;
-
-import java.io.IOException;
 import java.util.*;
 
-import org.apache.commons.configuration.ConversionException;
 /**
  * Manage a trigger queue based on priorities. Launch the CallManager thread.
  * @author Patrice Boissier
