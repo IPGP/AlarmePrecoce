@@ -41,6 +41,7 @@ public class QueueManagerThread extends Thread {
 	 */
 	public void addTrigger(Trigger trigger) {
 		queue.add(trigger);
+		nbTriggers++;
 		sortQueue();
 	}
 	
