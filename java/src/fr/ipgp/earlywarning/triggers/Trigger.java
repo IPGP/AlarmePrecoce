@@ -21,7 +21,7 @@ public class Trigger implements Comparable {
 	private String application;
 	private CallList callList;
 	private WarningMessage message;
-	private Map properties;
+	private Map<String,Object> properties;
 	
 	public Trigger (Long id, Integer priority) {
 		if (id == null || priority == null)
@@ -120,7 +120,7 @@ public class Trigger implements Comparable {
 	 */
 	public void setProperty(String key, Object value) {
 		if (properties == null) {
-            properties = new HashMap();
+            properties = new HashMap<String,Object>();
         }
 		this.properties.put(key, value);
 	}
