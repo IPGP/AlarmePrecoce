@@ -47,9 +47,11 @@ public class EarlyWarningThread extends Thread {
 
         	try {
                 socket.receive(packet);
+                EarlyWarning.appLogger.info("Received a packet");
                 Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
                 Trigger trigger = datagram2Trigger.getTrigger();
                 queueManagerThread.addTrigger(trigger);
+                EarlyWarning.appLogger.info("A new trigger has been added to the queue : "+trigger.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
             }
