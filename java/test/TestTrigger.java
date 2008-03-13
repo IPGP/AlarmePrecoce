@@ -25,6 +25,7 @@ public class TestTrigger {
 	public InetAddress inetAddress;
 	public String application;
 	public String type;
+	public boolean repeat;
 	private Map<String,String> properties;
 	
 	@Before
@@ -37,6 +38,7 @@ public class TestTrigger {
 		application = new String("Sismo");
 		type = new String("v1");
 		properties = new HashMap<String,String>();
+		repeat = true;
 		properties.put("key1", "value1");
 		properties.put("key2", "value2");
 	}
@@ -57,6 +59,7 @@ public class TestTrigger {
 		trig.setProperty("key1", "value1");
 		trig.setProperty("key2", "value2");
 		trig.setType(type);
+		trig.setRepeat(repeat);
 		Assert.assertEquals(application,trig.getApplication());
 		Assert.assertEquals(callList,trig.getCallList());
 		Assert.assertEquals(id,trig.getId());
@@ -65,6 +68,7 @@ public class TestTrigger {
 		Assert.assertEquals(priority,trig.getPriority());
 		Assert.assertEquals(properties,trig.getProperties());
 		Assert.assertEquals(type,trig.getType());
+		Assert.assertEquals(repeat,trig.getRepeat());
         Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
         Long idLong = new Long(id);
         Integer priorityInteger = new Integer(priority);
