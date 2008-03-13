@@ -22,7 +22,6 @@
 
 	<path id="test.classpath">
 		<pathelement location="${test-bin-dir}"/>
-		<pathelement location="/usr/share/ant/lib/junit.jar" />
 	  	<fileset dir="${lib-dir}">
 	  		<include name="**/*.jar"/>
 	  	</fileset>
