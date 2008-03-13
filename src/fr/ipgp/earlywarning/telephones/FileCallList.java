@@ -25,6 +25,10 @@ public class FileCallList implements CallList{
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @return the file to get
+	 */
 	public File getFile() {
 		return this.file;
 	}

@@ -4,9 +4,8 @@
  */
 
 import org.junit.*;
-
 import java.io.*;
-import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.telephones.*;
 /**
  * @author Patrice Boissier
  *
@@ -28,9 +27,10 @@ public class TestFileCallList {
 	public void testCreateFileCallList() {
 		FileCallList fileCallList = new FileCallList(testFile);
 		Assert.assertEquals(testFile,fileCallList.getFile());
+		Assert.assertEquals(testFile.toString(),fileCallList.toString());
 	}
 	
 	public static junit.framework.Test suite() {
-        return new junit.framework.JUnit4TestAdapter(TestTrigger.class);
+        return new junit.framework.JUnit4TestAdapter(TestFileCallList.class);
     }
 }
