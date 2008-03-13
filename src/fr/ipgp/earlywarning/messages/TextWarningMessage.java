@@ -21,4 +21,8 @@ public class TextWarningMessage implements WarningMessage {
 	public String toString() {
 		return text;
 	}
+	
+	public String getText() {
+		return text;
+	}
 }
