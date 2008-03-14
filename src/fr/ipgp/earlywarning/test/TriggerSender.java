@@ -35,7 +35,7 @@ public class TriggerSender {
 		Date date1 = new Date();
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
-		String messageString = "Sismo " + simpleFormat.format(date1) + " Declenchement";
+		String messageString = "02 " + simpleFormat.format(date1) + " Declenchement";
 			
 		message = new byte[messageString.length()];
 		message = messageString.getBytes();
