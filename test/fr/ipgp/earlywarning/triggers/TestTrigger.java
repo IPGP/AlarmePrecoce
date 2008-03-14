@@ -1,3 +1,4 @@
+package fr.ipgp.earlywarning.triggers;
 
 /**
  * Created Mar 12, 2008 10:06:05 AM
