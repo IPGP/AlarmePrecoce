@@ -45,8 +45,35 @@ public class Datagram2Trigger {
     public HashMap decode(String received) {
     	HashMap hashMap = new HashMap();
     	String[] receivedSplit = received.split(" ");
+    	int version;
     	
-    	//if (receivedSplit[0].matches(regex))
+    	if (receivedSplit[0].matches("\\d\\d")) {
+    		version = Integer.parseInt(receivedSplit[0]);
+    		System.out.println("Test : " + version);
+    	}
+    	else {
+    		if(receivedSplit[0].equals("Sismo")) {
+    			version = 1;
+    			System.out.println("Test : " + version);
+    		}
+    		else
+    			version = 0;
+    	}
+    	
+    	switch(version)
+        {
+            case 1:
+                System.out.println("Version 1 : " + receivedSplit[0]);
+            break;
+            case 2:
+            	System.out.println("Version 2 : " + receivedSplit[0]);
+            break;
+            default:
+            	System.out.println("Version inconnue : " + receivedSplit[0]);
+            break;
+        }
+
+
     	
     	// Format historique OVPF : type 01
     	// Sismo dd/MM/yyyy HH:mm:ss Declenchement
