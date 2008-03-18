@@ -104,9 +104,12 @@ public class Datagram2Trigger {
     public boolean decodeV2(String[] elements) {
     	boolean validFormat = true;
     	if (elements[1].matches("\\d")
-    			&&elements[2].matches("\\d\\d\\d\\d/\\d\\d/\\d\\d")
-    			&&elements[3].matches("\\d\\d:\\d\\d:\\d\\d")
-    			&&elements[4].matches("\\w*")){
+    			&& elements[2].matches("\\d\\d\\d\\d/\\d\\d/\\d\\d")
+    			&& elements[3].matches("\\d\\d:\\d\\d:\\d\\d")
+    			&& elements[4].matches("\\w*")
+    			&& (elements[5].matches("\\w*\\.csv") || elements[5].matches("(\"\\d*\")+"))
+    			&& (elements[6].equals("true") || elements[6].equals("false"))
+    			&& (elements[7].matches("\\w*\\.wav") || elements[7].matches(""))){
     		
     	}
     	return validFormat;
