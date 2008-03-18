@@ -6,6 +6,7 @@ package fr.ipgp.earlywarning.triggers;
 
 import java.util.*;
 import java.net.*;
+import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
@@ -26,7 +27,6 @@ public class Datagram2Trigger {
     	String received = new String(packet.getData());
     	trigger = new Trigger(CommonUtilities.getUniqueId(),1);
     	trigger.setInetAddress(senderAddress);
-    	HashMap hashMap = decode(received);
     }
     
     /**
@@ -40,22 +40,20 @@ public class Datagram2Trigger {
      * Decode the properties of the received message from the DatagramPacket.
      * Set the Trigger attributes.
      * @param received the received message of the DatagramPacket
-     * @return hashMap the hashMap containing the 
+     * @return true if the message was decoded successfully 
      */
-    public HashMap decode(String received) {
-    	HashMap hashMap = new HashMap();
+    public boolean decode(String received) {
     	String[] receivedSplit = received.split(" ");
     	int version;
     	
-    	if (receivedSplit[0].matches("\\d\\d")) {
+    	if (receivedSplit[0].matches("\\d\\d"))
     		version = Integer.parseInt(receivedSplit[0]);
-    		System.out.println("Test : " + version);
-    	}
     	else {
-    		if(receivedSplit[0].equals("Sismo")) {
+    		if(receivedSplit[0].equals("Sismo") 
+    				&& receivedSplit[1].matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")
+    				&& receivedSplit[2].matches("\\d\\d:\\d\\d:\\d\\d")
+    				&& receivedSplit.length == 4)
     			version = 1;
-    			System.out.println("Test : " + version);
-    		}
     		else
     			version = 0;
     	}
@@ -63,36 +61,54 @@ public class Datagram2Trigger {
     	switch(version)
         {
             case 1:
-                System.out.println("Version 1 : " + receivedSplit[0]);
-            break;
+                return decodeV1(receivedSplit);
             case 2:
-            	System.out.println("Version 2 : " + receivedSplit[0]);
-            break;
+                return decodeV2(receivedSplit);
             default:
-            	System.out.println("Version inconnue : " + receivedSplit[0]);
-            break;
+            	EarlyWarning.appLogger.error("Version inconnue : " + receivedSplit[0]);
+            	return false;
         }
-
-
-    	
-    	// Format historique OVPF : type 01
-    	// Sismo dd/MM/yyyy HH:mm:ss Declenchement
-    	//TODO utiliser des expressions regulieres pour verifier les champs recus!
-    	if (receivedSplit[0].equals("Sismo") && receivedSplit.length == 4) {
-    		trigger.setApplication(receivedSplit[0]);
-        	trigger.setCallList(new TextCallList("default"));
-        	trigger.setMessage(new TextWarningMessage(receivedSplit[3]));
-        	trigger.setType("01");
-        	trigger.setDate(receivedSplit[1] + " " + receivedSplit[2]);
-        	trigger.setRepeat(true);
-    	}
-    	
-    	// Format version 02 : type 02
-    	// vv p yyyy/MM/dd HH:mm:ss application calllist repeat message
-    	if (receivedSplit[0].equals("02")) {
+    }
+    
+    /**
+     * Decode the old OVPF format : type 01
+     * Sismo dd/MM/yyyy HH:mm:ss Declenchement
+     * @param elements the elements of the received message 
+     * @return true if the decoding was successful else false
+     */
+    public boolean decodeV1(String[] elements) {
+    	boolean validFormat = true;
+		trigger.setApplication(elements[0]);
+    	trigger.setCallList(new TextCallList("default"));
+    	trigger.setMessage(new TextWarningMessage(elements[3]));
+    	trigger.setType("01");
+    	trigger.setDate(elements[1] + " " + elements[2]);
+    	trigger.setRepeat(true);
+    	return validFormat;
+    }
+    
+    /**
+     * Decode version 2 messages.<br/>
+     * <b>Format : </b><br/>
+     * vv p yyyy/MM/dd HH:mm:ss application calllist repeat message<br/>
+     * vv : version, two digit<br/>
+     * p : priority, one digit<br/>
+     * yyyy/MM/dd HH:mm:ss : date, ISO format<br/>
+     * application : application name, [a-zA-Z_0-9]*<br/>
+     * calllist : call list, either a comma separated list of digits or a .csv file name<br/>
+     * repeat : true or false<br/>
+     * message : warning message, either a message or a .wav file
+     * @param elements the elements of the received message
+     * @return true if the decoding was successful else false
+     */
+    public boolean decodeV2(String[] elements) {
+    	boolean validFormat = true;
+    	if (elements[1].matches("\\d")
+    			&&elements[2].matches("\\d\\d\\d\\d/\\d\\d/\\d\\d")
+    			&&elements[3].matches("\\d\\d:\\d\\d:\\d\\d")
+    			&&elements[4].matches("\\w*")){
     		
     	}
-    	
-    	return hashMap;
+    	return validFormat;
     }
 }
