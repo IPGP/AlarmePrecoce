@@ -84,8 +84,10 @@
 		</copy>
 	</target>
 	
-	<target name="${docs-dir}" description="Generates Javadoc for the project">
-		<javadoc packagenames="fr.ipgp.*" sourcepath="${src-dir}" destdir="${docs-dir}" windowtitle="EarlyWarning Documentation"/>
+	<target name="javadoc" description="Generates Javadoc for the project">
+		<javadoc packagenames="fr.ipgp.*" sourcepath="${src-dir}" destdir="${docs-dir}" windowtitle="EarlyWarning Documentation">
+			<classpath refid="class.path"/>			
+		</javadoc>
 	</target>
 	
 	<target name="test" depends="compile-test" description="Performs unit tests for the project">
