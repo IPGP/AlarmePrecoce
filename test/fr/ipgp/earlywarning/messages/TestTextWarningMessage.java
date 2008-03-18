@@ -1,3 +1,4 @@
+package fr.ipgp.earlywarning.messages;
 /**
  * Created Mar 13, 2008 9:38:42 AM
  * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP

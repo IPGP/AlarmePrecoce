@@ -1,3 +1,4 @@
+package fr.ipgp.earlywarning.telephones;
 /**
  * Created Mar 13, 2008 8:17:09 AM
  * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
