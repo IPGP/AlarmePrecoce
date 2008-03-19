@@ -13,7 +13,7 @@ import fr.ipgp.earlywarning.triggers.*;
  * @author Patrice Boissier
  *
  */
-public class TestDatagram2Trigger {
+public class TestDatagramTriggerConverter {
 	
     protected DatagramPacket packet = null;
     protected byte[] buffer = new byte[65535];
@@ -38,7 +38,7 @@ public class TestDatagram2Trigger {
 		String message = new String("Sismo 13/03/2008 13:22:04 Declenchement");
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		Assert.assertEquals(trigger.getInetAddress(),address);
 		Assert.assertEquals(datagram2Trigger.decode(message),true);
@@ -49,7 +49,7 @@ public class TestDatagram2Trigger {
 		String message = new String("Sismo 13/03/2008 13:22:04 Declenchement");
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		Assert.assertEquals(trigger.getInetAddress(),address);
 		Assert.assertEquals(datagram2Trigger.decode(message),true);
@@ -60,7 +60,7 @@ public class TestDatagram2Trigger {
 		String message = new String("Sifsdsmo 13/03/2008 13:22:04 Declenchement");
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		Assert.assertEquals(trigger.getInetAddress(),address);
 		Assert.assertEquals(datagram2Trigger.decode(message),false);
@@ -71,13 +71,13 @@ public class TestDatagram2Trigger {
 		String message = new String("Sismo 13/03/200s8 1f3:22f:,04 Ddqsfeclenchement df sdfzer asr ");
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		Datagram2Trigger datagram2Trigger = new Datagram2Trigger(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		Assert.assertEquals(trigger.getInetAddress(),address);
 		Assert.assertEquals(datagram2Trigger.decode(message),false);
 	}
 	
 	public static junit.framework.Test suite() {
-        return new junit.framework.JUnit4TestAdapter(TestDatagram2Trigger.class);
+        return new junit.framework.JUnit4TestAdapter(TestDatagramTriggerConverter.class);
     }
 }
