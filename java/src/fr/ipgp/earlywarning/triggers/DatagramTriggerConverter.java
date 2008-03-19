@@ -14,13 +14,13 @@ import fr.ipgp.earlywarning.telephones.*;
  * @author Patrice Boissier
  *
  */
-public class Datagram2Trigger {
+public class DatagramTriggerConverter implements TriggerConverter {
     protected DatagramPacket packet = null;
     protected InetAddress senderAddress;
     protected int senderPort;
     protected Trigger trigger;
     
-    public Datagram2Trigger(DatagramPacket packet) {
+    public DatagramTriggerConverter(DatagramPacket packet) {
     	this.packet = packet;                
     	senderAddress=packet.getAddress();
     	senderPort=packet.getPort();
