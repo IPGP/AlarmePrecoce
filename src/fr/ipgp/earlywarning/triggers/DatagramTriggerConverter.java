@@ -4,7 +4,6 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import java.util.*;
 import java.net.*;
 import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.utilities.*;
@@ -49,10 +48,13 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	if (receivedSplit[0].matches("\\d\\d"))
     		version = Integer.parseInt(receivedSplit[0]);
     	else {
-    		if(receivedSplit[0].equals("Sismo") 
+/*    		if(receivedSplit[0].equals("Sismo") 
     				&& receivedSplit[1].matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")
     				&& receivedSplit[2].matches("\\d\\d:\\d\\d:\\d\\d")
-    				&& receivedSplit.length == 4)
+    				&& receivedSplit.length == 4)*/
+    		if(receivedSplit[0].equals("Sismo") 
+    				&& CommonUtilities.isDate(receivedSplit[1] + " " + receivedSplit[2], "dd/MM/yyyy HH:mm:ss")
+    				&& receivedSplit.length > 3)
     			version = 1;
     		else
     			version = 0;
@@ -65,7 +67,8 @@ public class DatagramTriggerConverter implements TriggerConverter {
             case 2:
                 return decodeV2(receivedSplit);
             default:
-            	EarlyWarning.appLogger.error("Version inconnue : " + receivedSplit[0]);
+            	EarlyWarning.appLogger.error("Unknown version : " + receivedSplit[0]);
+            	System.out.println("Unknown version");
             	return false;
         }
     }
@@ -84,6 +87,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	trigger.setType("01");
     	trigger.setDate(elements[1] + " " + elements[2]);
     	trigger.setRepeat(true);
+		System.out.println("valid v1 format");
     	return validFormat;
     }
     
@@ -95,23 +99,22 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * p : priority, one digit<br/>
      * yyyy/MM/dd HH:mm:ss : date, ISO format<br/>
      * application : application name, [a-zA-Z_0-9]*<br/>
-     * calllist : call list, either a comma separated list of digits or a .csv file name<br/>
+     * calllist : call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
      * repeat : true or false<br/>
-     * message : warning message, either a message or a .wav file
+     * message : warning message, either a message or a .wav file ([a-zA-Z_0-9]*\.wav)
      * @param elements the elements of the received message
      * @return true if the decoding was successful else false
      */
     public boolean decodeV2(String[] elements) {
-    	boolean validFormat = true;
     	if (elements[1].matches("\\d")
-    			&& elements[2].matches("\\d\\d\\d\\d/\\d\\d/\\d\\d")
-    			&& elements[3].matches("\\d\\d:\\d\\d:\\d\\d")
+    			&& CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")
     			&& elements[4].matches("\\w*")
-    			&& (elements[5].matches("\\w*\\.csv") || elements[5].matches("(\"\\d*\")+"))
+    			&& (elements[5].matches("\\w*\\.csv") || elements[5].matches("(\\d*)(,\\d*)+"))
     			&& (elements[6].equals("true") || elements[6].equals("false"))
-    			&& (elements[7].matches("\\w*\\.wav") || elements[7].matches(""))){
-    		
-    	}
-    	return validFormat;
+    			&& (elements[7].matches("\\w*\\.wav") || elements[7].matches(".+"))){
+    		System.out.println("valid v2 format");
+    		return true;
+    	} else
+    		return false;     	
     }
 }
