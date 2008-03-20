@@ -48,8 +48,8 @@ public class EarlyWarningThread extends Thread {
         	try {
                 socket.receive(packet);
                 EarlyWarning.appLogger.info("Received a packet");
-                DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
-                Trigger trigger = datagram2Trigger.getTrigger();
+                DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet);
+                Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : "+trigger.toString());
             } catch (IOException ioe) {
