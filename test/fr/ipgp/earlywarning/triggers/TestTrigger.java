@@ -28,7 +28,7 @@ public class TestTrigger {
 	public String type;
 	public boolean repeat;
 	public String date;
-	public Integer confirmCode;
+	public String confirmCode;
 	private Map<String,String> properties;
 	
 	@Before
@@ -45,7 +45,7 @@ public class TestTrigger {
 		properties.put("key1", "value1");
 		properties.put("key2", "value2");
 		date = "2007/02/12 10:00:00";
-		confirmCode = 11;
+		confirmCode = "11";
 	}
 	
 	@After
