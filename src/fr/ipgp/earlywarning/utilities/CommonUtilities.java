@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.utilities;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.text.*;
+import java.util.*;
 
 /**
  * Useful methods for standalone applications...
@@ -63,5 +63,17 @@ public class CommonUtilities {
 	public static String dateToISO(Date date) {
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return(simpleFormat.format(date));
+	}
+	
+	public static boolean isDate(String date, String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		try {
+			sdf.parse(date);
+			System.out.println("Date " + date + " is OK!");
+			return true;
+		} catch (ParseException pe) {
+			System.out.println("Date " + date + " is WRONG!");
+			return false;
+		}
 	}
 }
