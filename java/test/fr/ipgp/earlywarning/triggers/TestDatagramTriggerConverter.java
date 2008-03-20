@@ -34,7 +34,6 @@ public class TestDatagramTriggerConverter {
 	}
 	
 	public void testDecodeTrigger(String message) {
-		System.out.println("Message : " + message);
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
 		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
@@ -43,11 +42,11 @@ public class TestDatagramTriggerConverter {
 		try {
 			datagram2Trigger.decode(message);
 		} catch (UnknownTriggerFormatException utfe) {
-			System.out.println("Unknown trigger format");
+			System.out.println("Unknown trigger format : " + message);
 		} catch (InvalidTriggerFieldException itfe) {
-			System.out.println("Invalid trigger field");
+			System.out.println("Invalid trigger field : " + message);
 		} catch (MissingTriggerFieldException mtfe) {
-			System.out.println("Missing trigger field");
+			System.out.println("Missing trigger field : " + message);
 		}
 	}
 	
@@ -72,12 +71,14 @@ public class TestDatagramTriggerConverter {
 	@Test
 	public void testDecodeV2Trigger() {
 		// vv p yyyy/MM/dd HH:mm:ss application calllist repeat message
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un message d'alerte|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true |Ceci est un message d'alerte|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true |Ceci est un message d'alerte|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true |Alerte|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un message d'alerte!|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true |Ceci est un message 		d'alerte.|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true |Ceci est un message, d'alerte?|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true |Alerté|");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true message.wav");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true warningMessage.wav");
+		// Invalid priority
+		testDecodeTrigger("02 1d 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true warningMessage.wav");
 		// Invalid type
 		testDecodeTrigger("020 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true Ceci est un message d alerte");
 		// Incomplete message
@@ -87,6 +88,9 @@ public class TestDatagramTriggerConverter {
 		testDecodeTrigger("02 1 2008/03/32 13:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un message d alerte|");
 		// Invalid time
 		testDecodeTrigger("02 1 2008/12/18 25:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un message d alerte|");
+		// Invalid warning message
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un $message d alerte|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true |Ceci est un message d alerte");
 		// Invalid text call list
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455,toto true |Ceci est un message d alerte|");
 		// Invalid file call list
