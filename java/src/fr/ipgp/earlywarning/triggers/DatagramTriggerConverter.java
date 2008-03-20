@@ -41,20 +41,14 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @return true if the message was decoded successfully 
      */
-    public boolean decode(String received) {
+    public void decode(String received) throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
     	String[] receivedSplit = received.split(" ");
     	int version;
     	
     	if (receivedSplit[0].matches("\\d\\d"))
     		version = Integer.parseInt(receivedSplit[0]);
     	else {
-/*    		if(receivedSplit[0].equals("Sismo") 
-    				&& receivedSplit[1].matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")
-    				&& receivedSplit[2].matches("\\d\\d:\\d\\d:\\d\\d")
-    				&& receivedSplit.length == 4)*/
-    		if(receivedSplit[0].equals("Sismo") 
-    				&& CommonUtilities.isDate(receivedSplit[1] + " " + receivedSplit[2], "dd/MM/yyyy HH:mm:ss")
-    				&& receivedSplit.length > 3)
+    		if(receivedSplit[0].equals("Sismo")) 
     			version = 1;
     		else
     			version = 0;
@@ -63,13 +57,11 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	switch(version)
         {
             case 1:
-                return decodeV1(receivedSplit);
+                decodeV1(receivedSplit);
             case 2:
-                return decodeV2(receivedSplit);
+                decodeV2(receivedSplit);
             default:
-            	EarlyWarning.appLogger.error("Unknown version : " + receivedSplit[0]);
-            	System.out.println("Unknown version");
-            	return false;
+            	throw new UnknownTriggerFormatException("Unknown version : " + receivedSplit[0]); 
         }
     }
     
@@ -79,16 +71,18 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message 
      * @return true if the decoding was successful else false
      */
-    public boolean decodeV1(String[] elements) {
-    	boolean validFormat = true;
-		trigger.setApplication(elements[0]);
-    	trigger.setCallList(new TextCallList("default"));
-    	trigger.setMessage(new TextWarningMessage(elements[3]));
-    	trigger.setType("01");
-    	trigger.setDate(elements[1] + " " + elements[2]);
-    	trigger.setRepeat(true);
-		System.out.println("valid v1 format");
-    	return validFormat;
+    public void decodeV1(String[] elements) throws InvalidTriggerFieldException{
+    	if (CommonUtilities.isDate(elements[1] + " " + elements[2], "dd/MM/yyyy HH:mm:ss") 
+    			&& elements.length > 3) {
+    		trigger.setApplication(elements[0]);
+    		trigger.setCallList(new TextCallList("default"));
+	    	trigger.setMessage(new TextWarningMessage(elements[3]));
+	    	trigger.setType("01");
+	    	trigger.setDate(elements[1] + " " + elements[2]);
+	    	trigger.setRepeat(true);
+    	} else {
+        	throw new InvalidTriggerFieldException ("Invalid V1 trigger fields : " + elements.toString());  		
+    	}
     }
     
     /**
@@ -101,20 +95,39 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * application : application name, [a-zA-Z_0-9]*<br/>
      * calllist : call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
      * repeat : true or false<br/>
-     * message : warning message, either a message or a .wav file ([a-zA-Z_0-9]*\.wav)
+     * message : warning message, either a quoted (") text message or a .wav file ([a-zA-Z_0-9]*\.wav)
      * @param elements the elements of the received message
      * @return true if the decoding was successful else false
      */
-    public boolean decodeV2(String[] elements) {
-    	if (elements[1].matches("\\d")
+    public void decodeV2(String[] elements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
+    	String message = new String();
+    	boolean first = true;
+    	if (elements.length>7) {
+    		for (int j=7; j<elements.length; j++) {
+    			if (first) {
+    				message += elements[j];
+    				first = false;
+    			} else
+    				message += " " + elements[j];
+    		}
+    	} else {
+    		throw new MissingTriggerFieldException ("Too few fields for a V2 trigger : " + elements.toString());
+    	}
+    	
+    	if (
+    			elements[1].matches("\\d")
     			&& CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")
     			&& elements[4].matches("\\w*")
-    			&& (elements[5].matches("\\w*\\.csv") || elements[5].matches("(\\d*)(,\\d*)+"))
+    			&& (elements[5].matches("\\w+\\.csv") || elements[5].matches("(\\d*)(,\\d*)*"))
     			&& (elements[6].equals("true") || elements[6].equals("false"))
-    			&& (elements[7].matches("\\w*\\.wav") || elements[7].matches(".+"))){
+    			&& (message.matches("\\w+\\.wav") || message.matches("\\|\\.+\\|"))
+    			){
     		System.out.println("valid v2 format");
-    		return true;
-    	} else
-    		return false;     	
+    		for (int i = 0; i<elements.length; i++) {
+    			System.out.println("Element "+i+" : "+elements[i]);
+    		}
+    	} else {
+    		throw new InvalidTriggerFieldException ("Invalid V2 trigger fields : " + elements.toString());
+    	}
     }
 }

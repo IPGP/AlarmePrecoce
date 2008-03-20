@@ -9,5 +9,5 @@ package fr.ipgp.earlywarning.triggers;
  */
 public interface TriggerConverter {
 	 public Trigger getTrigger();
-	 public boolean decode(String received);
+	 public void decode(String received) throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException;
 }
