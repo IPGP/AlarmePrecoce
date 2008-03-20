@@ -50,18 +50,21 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	else {
     		if(receivedSplit[0].equals("Sismo")) 
     			version = 1;
-    		else
-    			version = 0;
+    		else {
+    			throw new UnknownTriggerFormatException("Unknown version : " + receivedSplit[0]);
+    		}
     	}
     	
     	switch(version)
         {
             case 1:
                 decodeV1(receivedSplit);
+                break;
             case 2:
                 decodeV2(receivedSplit);
+                break;
             default:
-            	throw new UnknownTriggerFormatException("Unknown version : " + receivedSplit[0]); 
+            	throw new UnknownTriggerFormatException("Unknown version : " + receivedSplit[0]);
         }
     }
     
@@ -71,7 +74,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message 
      * @return true if the decoding was successful else false
      */
-    public void decodeV1(String[] elements) throws InvalidTriggerFieldException{
+    private void decodeV1(String[] elements) throws InvalidTriggerFieldException{
     	if (CommonUtilities.isDate(elements[1] + " " + elements[2], "dd/MM/yyyy HH:mm:ss") 
     			&& elements.length > 3) {
     		trigger.setApplication(elements[0]);
@@ -80,9 +83,9 @@ public class DatagramTriggerConverter implements TriggerConverter {
 	    	trigger.setType("01");
 	    	trigger.setDate(elements[1] + " " + elements[2]);
 	    	trigger.setRepeat(true);
-    	} else {
+	    	System.out.println("valid v1 format");
+    	} else 
         	throw new InvalidTriggerFieldException ("Invalid V1 trigger fields : " + elements.toString());  		
-    	}
     }
     
     /**
@@ -99,7 +102,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message
      * @return true if the decoding was successful else false
      */
-    public void decodeV2(String[] elements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
+    private void decodeV2(String[] elements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
     	String message = new String();
     	boolean first = true;
     	if (elements.length>7) {
@@ -110,9 +113,8 @@ public class DatagramTriggerConverter implements TriggerConverter {
     			} else
     				message += " " + elements[j];
     		}
-    	} else {
+    	} else 
     		throw new MissingTriggerFieldException ("Too few fields for a V2 trigger : " + elements.toString());
-    	}
     	
     	if (
     			elements[1].matches("\\d")
