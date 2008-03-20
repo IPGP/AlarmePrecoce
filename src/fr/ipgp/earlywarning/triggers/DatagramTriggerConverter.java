@@ -115,19 +115,25 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		}
     	} else 
     		throw new MissingTriggerFieldException ("Too few fields for a V2 trigger : " + elements.toString());
+
     	
+    	// BEGIN TEST CODE
+		//if (message.matches("\\|[\\w\\s!\\?,\\.'\\u00C0-\\u00FF]*\\|")) {
+		//	System.out.println("Warning message matches : " + message);
+		//} else {
+		//	System.out.println("Warning message doesn't match : " + message);
+		//}
+		//END TEST CODE
+		
     	if (
     			elements[1].matches("\\d")
     			&& CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")
     			&& elements[4].matches("\\w*")
     			&& (elements[5].matches("\\w+\\.csv") || elements[5].matches("(\\d*)(,\\d*)*"))
     			&& (elements[6].equals("true") || elements[6].equals("false"))
-    			&& (message.matches("\\w+\\.wav") || message.matches("\\|\\.+\\|"))
+    			&& (message.matches("\\w+\\.wav") || message.matches("\\|[\\w\\s!\\?,\\.'\\u00C0-\\u00FF]*\\|"))
     			){
     		System.out.println("valid v2 format");
-    		for (int i = 0; i<elements.length; i++) {
-    			System.out.println("Element "+i+" : "+elements[i]);
-    		}
     	} else {
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger fields : " + elements.toString());
     	}
