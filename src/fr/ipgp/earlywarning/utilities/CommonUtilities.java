@@ -65,15 +65,16 @@ public class CommonUtilities {
 		return(simpleFormat.format(date));
 	}
 	
-	public static boolean isDate(String date, String format) {
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		try {
-			sdf.parse(date);
-			System.out.println("Date " + date + " is OK!");
-			return true;
-		} catch (ParseException pe) {
-			System.out.println("Date " + date + " is WRONG!");
-			return false;
-		}
+	public static boolean isDate(String dateString, String format) {
+		DateFormat formatter = new SimpleDateFormat(format);
+		formatter.setLenient(false);
+        try {
+        	Date date = (Date)formatter.parse(dateString);
+        	return true;
+        } catch (ParseException pe) {
+        	return false;        	
+        }
+		
+		
 	}
 }
