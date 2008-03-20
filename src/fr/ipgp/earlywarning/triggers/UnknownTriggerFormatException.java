@@ -1,5 +1,5 @@
 /**
- * 
+ * Thrown to indicate that the trigger format could not be determined
  */
 package fr.ipgp.earlywarning.triggers;
 
