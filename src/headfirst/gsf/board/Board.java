@@ -1,7 +1,6 @@
 package headfirst.gsf.board;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import headfirst.gsf.unit.Unit;

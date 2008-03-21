@@ -5,7 +5,6 @@ package fr.ipgp.earlywarning.controler;
  */
 import org.junit.*;
 import fr.ipgp.earlywarning.triggers.*;
-import fr.ipgp.earlywarning.controler.*;
 import fr.ipgp.earlywarning.utilities.*;
 import java.util.*;
 

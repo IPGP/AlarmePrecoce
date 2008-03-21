@@ -7,7 +7,6 @@ package fr.ipgp.earlywarning.triggers;
 import org.junit.*;
 
 import java.net.*;
-import java.util.*;
 import java.io.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
@@ -41,7 +40,7 @@ public class TestDatagramTriggerConverter {
 		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		try {
-			datagram2Trigger.decode(message);
+			datagram2Trigger.decode();
 		} catch (UnknownTriggerFormatException utfe) {
 			System.out.println("Unknown trigger format : " + message);
 		} catch (InvalidTriggerFieldException itfe) {
@@ -61,7 +60,7 @@ public class TestDatagramTriggerConverter {
 		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trig = datagram2Trigger.getTrigger();
 		try {
-			datagram2Trigger.decode(message);
+			datagram2Trigger.decode();
 			Assert.assertEquals("Sismo",trig.getApplication());
 			//Assert.assertEquals(callList,trig.getCallList());
 			Assert.assertEquals(address,trig.getInetAddress());
