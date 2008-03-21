@@ -142,7 +142,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
 //    	if (elements[7].matches("\\d+") && elements[7].length() < 7) {
 //    		System.out.println("Element 6 OK");
 //    	}
-//    	if ((message.matches("\\w+\\.wav") || message.matches("\\-[\\w\\s!\\?,\\.'\\u00C0-\\u00FF]*\\-"))) {
+//    	if (message.matches("\\w+\\.wav") ) {
 //    		System.out.println("Element 7 OK");
 //    	}
     	
