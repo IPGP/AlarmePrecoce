@@ -5,8 +5,6 @@ package fr.ipgp.earlywarning.messages;
  */
 import org.junit.*;
 
-import fr.ipgp.earlywarning.messages.*;
-
 /**
  * @author Patrice Boissier
  *

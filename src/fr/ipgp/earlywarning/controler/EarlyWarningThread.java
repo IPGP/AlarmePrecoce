@@ -49,12 +49,19 @@ public class EarlyWarningThread extends Thread {
                 socket.receive(packet);
                 EarlyWarning.appLogger.info("Received a packet");
                 DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet);
+                datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : "+trigger.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
-            }
+            } catch (UnknownTriggerFormatException utfe) {
+            	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+            } catch (InvalidTriggerFieldException itfe) {
+            	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
+            } catch (MissingTriggerFieldException mtfe) {
+            	EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+            } 
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
                 return;
