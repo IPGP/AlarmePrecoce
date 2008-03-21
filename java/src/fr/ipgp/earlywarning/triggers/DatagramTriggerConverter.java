@@ -18,14 +18,15 @@ public class DatagramTriggerConverter implements TriggerConverter {
     protected InetAddress senderAddress;
     protected int senderPort;
     protected Trigger trigger;
+    protected String received;
     
     public DatagramTriggerConverter(DatagramPacket packet) {
     	this.packet = packet;                
-    	senderAddress=packet.getAddress();
-    	senderPort=packet.getPort();
-    	String received = new String(packet.getData());
-    	trigger = new Trigger(CommonUtilities.getUniqueId(),1);
-    	trigger.setInetAddress(senderAddress);
+    	this.senderAddress=packet.getAddress();
+    	this.senderPort=packet.getPort();
+    	this.received = new String(packet.getData());
+    	this.trigger = new Trigger(CommonUtilities.getUniqueId(),1);
+    	this.trigger.setInetAddress(senderAddress);
     }
     
     /**
@@ -41,7 +42,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode(String received) throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
     	String[] receivedSplit = received.split(" ");
     	int version;
     	
@@ -86,7 +87,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
 	    	trigger.setConfirmCode("11");
 	    	System.out.println("valid v1 format");
     	} else 
-        	throw new InvalidTriggerFieldException ("Invalid V1 trigger fields : " + elements.toString());  		
+        	throw new InvalidTriggerFieldException ("Invalid V1 trigger fields : " + received);  		
     }
     
     /**
@@ -116,7 +117,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     				message += " " + elements[j];
     		}
     	} else 
-    		throw new MissingTriggerFieldException ("Too few fields for a V2 trigger : " + elements.toString());
+    		throw new MissingTriggerFieldException ("Not enough fields for a V2 trigger : " + received);
 		
     	if (elements[1].matches("\\d")
     			&& CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")
@@ -142,6 +143,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
 			trigger.setConfirmCode(elements[7]);
 	    	System.out.println("valid v2 format");
     	} else
-    		throw new InvalidTriggerFieldException ("Invalid V2 trigger fields : " + elements.toString());
+    		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : " + received);
     }
 }

@@ -4,8 +4,6 @@ package fr.ipgp.earlywarning.telephones;
  * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 import org.junit.*;
-import fr.ipgp.earlywarning.telephones.*;
-
 /**
  * @author Patrice Boissier
  *
