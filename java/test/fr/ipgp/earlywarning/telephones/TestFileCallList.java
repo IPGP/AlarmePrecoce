@@ -6,7 +6,6 @@ package fr.ipgp.earlywarning.telephones;
 
 import org.junit.*;
 import java.io.*;
-import fr.ipgp.earlywarning.telephones.*;
 /**
  * @author Patrice Boissier
  *

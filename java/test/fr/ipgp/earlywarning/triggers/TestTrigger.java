@@ -11,7 +11,6 @@ import java.io.*;
 import org.junit.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
-import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.*;
 /**
  * @author Patrice Boissier
