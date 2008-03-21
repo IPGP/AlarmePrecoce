@@ -119,6 +119,36 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	} else 
     		throw new MissingTriggerFieldException ("Not enough fields for a V2 trigger : " + received);
 		
+    	//TEST CODE
+    	
+//    	for (int j=0; j<8 ; j++) {
+//    		System.out.println("Elements " + j + " : " + elements[j]);
+//    	}
+//    	
+//    	System.out.println("Message : " + message);
+//    	
+//    	if (elements[1].matches("\\d")) {
+//    		System.out.println("Element 1 OK");
+//    	}
+//    	if (CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")) {
+//    		System.out.println("Element 2 et 3 OK");
+//    	}
+//    	if (elements[4].matches("\\w*")) {
+//    		System.out.println("Element 4 OK");
+//    	}
+//    	if (elements[6].equals("true") || elements[6].equals("false")) {
+//    		System.out.println("Element 5 OK");
+//    	}
+//    	if (elements[7].matches("\\d+") && elements[7].length() < 7) {
+//    		System.out.println("Element 6 OK");
+//    	}
+//    	if ((message.matches("\\w+\\.wav") || message.matches("\\-[\\w\\s!\\?,\\.'\\u00C0-\\u00FF]*\\-"))) {
+//    		System.out.println("Element 7 OK");
+//    	}
+    	
+    	
+    	// END TEST CODE
+    	
     	if (elements[1].matches("\\d")
     			&& CommonUtilities.isDate(elements[2] + " " + elements[3], "yyyy/MM/dd HH:mm:ss")
     			&& elements[4].matches("\\w*")
