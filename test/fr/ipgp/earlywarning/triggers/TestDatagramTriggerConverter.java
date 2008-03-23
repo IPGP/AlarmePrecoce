@@ -36,17 +36,17 @@ public class TestDatagramTriggerConverter {
 	
 	public void testDecodeTrigger(String message) {
 		packet.setData(message.getBytes());
-		//packet.setLength(message.length());
+		packet.setLength(message.length());
 		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		try {
 			datagram2Trigger.decode();
 		} catch (UnknownTriggerFormatException utfe) {
-			System.out.println("Unknown trigger format : " + message);
+			System.out.println(utfe.getMessage());
 		} catch (InvalidTriggerFieldException itfe) {
-			System.out.println("Invalid trigger field : " + message);
+			System.out.println(itfe.getMessage());
 		} catch (MissingTriggerFieldException mtfe) {
-			System.out.println("Missing trigger field : " + message);
+			System.out.println(mtfe.getMessage());
 		}
 	}
 	
@@ -72,11 +72,11 @@ public class TestDatagramTriggerConverter {
 			Assert.assertEquals("11",trig.getConfirmCode());
 			
 		} catch (UnknownTriggerFormatException utfe) {
-			System.out.println("Unknown trigger format : " + message);
+			System.out.println(utfe.getMessage());
 		} catch (InvalidTriggerFieldException itfe) {
-			System.out.println("Invalid trigger field : " + message);
+			System.out.println(itfe.getMessage());
 		} catch (MissingTriggerFieldException mtfe) {
-			System.out.println("Missing trigger field : " + message);
+			System.out.println(mtfe.getMessage());
 		}
 	}
 	

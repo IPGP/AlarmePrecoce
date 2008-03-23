@@ -21,7 +21,7 @@ public class EarlyWarningThread extends Thread {
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
-    protected byte[] buffer = new byte[65535];
+    protected byte[] buffer = new byte[512];
     protected int port;
 	
     public EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
@@ -48,10 +48,6 @@ public class EarlyWarningThread extends Thread {
         	try {
                 socket.receive(packet);
                 EarlyWarning.appLogger.info("Received a packet");
-                //DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
-        		//Trigger trig = datagram2Trigger.getTrigger();
-        		//try {
-        			//datagram2Trigger.decode();
                 DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet);
                 System.out.println("Content : " + new String(packet.getData()));
                 datagramTriggerConverter.decode();
