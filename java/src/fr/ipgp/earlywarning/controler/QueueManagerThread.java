@@ -52,7 +52,22 @@ public class QueueManagerThread extends Thread {
 		return queue;
 	}
 	
+	/**
+	 * @return a string representing the queue manager 
+	 */
+	public String toString() {
+		return nbTriggers + " Triggers : " + queue.toString();
+	}
+	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
+    	while (moreTriggers) {
+    		try {
+				Thread.sleep(5000);
+				System.out.println("QueueManager : " + toString());
+			} catch (InterruptedException ie) {
+				EarlyWarning.appLogger.error("Error while sleeping!");
+			}
+    	}
 	}
 }
