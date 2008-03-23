@@ -47,8 +47,20 @@ public class TestQueueManagerThread {
     	queueManagerThread.addTrigger(trig3);
     	Assert.assertEquals(vect3, queueManagerThread.getQueue());
 	}
+	
+	@Test
+	public void testAddTriggerInQueueManagerThread () {
+		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
+		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
+		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);		
+		QueueManagerThread queueManagerThread = new QueueManagerThread();
+    	queueManagerThread.start();
+    	queueManagerThread.addTrigger(trig1);
+    	queueManagerThread.addTrigger(trig2);
+    	queueManagerThread.addTrigger(trig3);
+	}
 
-public static junit.framework.Test suite() {
-    return new junit.framework.JUnit4TestAdapter(TestQueueManagerThread.class);
-}
+	public static junit.framework.Test suite() {
+		return new junit.framework.JUnit4TestAdapter(TestQueueManagerThread.class);
+	}
 }
