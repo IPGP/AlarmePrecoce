@@ -53,7 +53,8 @@ public class EarlyWarningThread extends Thread {
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
-                EarlyWarning.appLogger.info("A new trigger has been added to the queue : "+trigger.toString());
+                EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.toString());
+                EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
             } catch (UnknownTriggerFormatException utfe) {
