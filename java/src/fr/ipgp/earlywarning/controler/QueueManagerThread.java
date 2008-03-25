@@ -5,6 +5,7 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
+import fr.ipgp.earlywarning.telephones.PhoneCall;
 import fr.ipgp.earlywarning.triggers.*;
 import java.util.*;
 
@@ -43,8 +44,23 @@ public class QueueManagerThread extends Thread {
 		queue.add(trigger);
 		nbTriggers++;
 		sortQueue();
+		System.out.println("Queue : " + queue.toString());
 	}
 	
+	/**
+	 * @return the moreTriggers
+	 */
+	public boolean isMoreTriggers() {
+		return moreTriggers;
+	}
+
+	/**
+	 * @param moreTriggers the moreTriggers to set
+	 */
+	public void setMoreTriggers(boolean moreTriggers) {
+		this.moreTriggers = moreTriggers;
+	}
+
 	/**
 	 * @return queue the Queue to get
 	 */
@@ -61,13 +77,28 @@ public class QueueManagerThread extends Thread {
 	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
+		PhoneCall phoneCall = new PhoneCall();
     	while (moreTriggers) {
-    		try {
-				Thread.sleep(5000);
-				System.out.println("QueueManager : " + toString());
-			} catch (InterruptedException ie) {
-				EarlyWarning.appLogger.error("Error while sleeping!");
-			}
+    		if (nbTriggers > 0) {
+    			if (phoneCall.isCallInProgress()) {
+    	    		try {
+    					Thread.sleep(5000);
+    					System.out.println("Another call is in progress. Sleeping for 5 seconds...");
+    				} catch (InterruptedException ie) {
+    					EarlyWarning.appLogger.error("Error while sleeping!");
+    				}    				
+    			} else {
+    				phoneCall.setTrigger(queue.firstElement());
+    				queue.remove(0);
+    			}
+    		} else {
+	    		try {
+					Thread.sleep(5000);
+					System.out.println("Sleeping for 5 seconds...");
+				} catch (InterruptedException ie) {
+					EarlyWarning.appLogger.error("Error while sleeping!");
+				}
+    		}
     	}
 	}
 }
