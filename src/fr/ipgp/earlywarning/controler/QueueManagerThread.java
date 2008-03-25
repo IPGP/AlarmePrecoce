@@ -90,11 +90,12 @@ public class QueueManagerThread extends Thread {
     			} else {
     				phoneCall.setTrigger(queue.firstElement());
     				queue.remove(0);
+    				phoneCall.callTillConfirm();
     			}
     		} else {
 	    		try {
 					Thread.sleep(5000);
-					System.out.println("Sleeping for 5 seconds...");
+					System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
 				} catch (InterruptedException ie) {
 					EarlyWarning.appLogger.error("Error while sleeping!");
 				}

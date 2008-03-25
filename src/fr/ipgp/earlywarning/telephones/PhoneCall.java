@@ -10,19 +10,15 @@ import fr.ipgp.earlywarning.triggers.*;
  * @author boissier
  *
  */
-public class PhoneCall extends Thread {
+public class PhoneCall {
 	private boolean callInProgress = false;
 	private boolean moreTriggers = true;
 	private Trigger trigger;
 	
     public PhoneCall() {
-    	this("PhoneCallManagerThread");
+
     }
-    
-    public PhoneCall(String name) {
-    	super(name);
-    }
-   
+     
     /**
      * @param trigger the trigger to set
      */
@@ -69,7 +65,7 @@ public class PhoneCall extends Thread {
 		this.moreTriggers = moreTriggers;
 	}
 
-	public void run() {
-    	EarlyWarning.appLogger.debug("Thread creation");
+	public void callTillConfirm() {
+    	EarlyWarning.appLogger.debug("Starting phone call");
 	}
 }
