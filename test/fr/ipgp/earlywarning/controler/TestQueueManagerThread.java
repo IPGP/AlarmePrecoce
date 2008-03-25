@@ -46,6 +46,8 @@ public class TestQueueManagerThread {
     	Assert.assertEquals(vect2, queueManagerThread.getQueue());
     	queueManagerThread.addTrigger(trig3);
     	Assert.assertEquals(vect3, queueManagerThread.getQueue());
+    	queueManagerThread.setMoreTriggers(false);
+    	Assert.assertEquals(false, queueManagerThread.isMoreTriggers());
 	}
 	
 	@Test
