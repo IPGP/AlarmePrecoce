@@ -67,5 +67,13 @@ public class PhoneCall {
 
 	public void callTillConfirm() {
     	EarlyWarning.appLogger.debug("Starting phone call");
+    	try {
+    		System.out.println("Phone call in progress...");
+			Thread.sleep(10000);
+		} catch (InterruptedException ie) {
+			EarlyWarning.appLogger.error("Error while sleeping!");
+		}
+		System.out.println("Phone call terminated");
+		callInProgress = false;
 	}
 }
