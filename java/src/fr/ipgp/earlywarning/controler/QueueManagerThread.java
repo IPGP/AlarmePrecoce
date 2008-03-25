@@ -90,6 +90,7 @@ public class QueueManagerThread extends Thread {
     			} else {
     				phoneCall.setTrigger(queue.firstElement());
     				queue.remove(0);
+    				nbTriggers--;
     				phoneCall.callTillConfirm();
     			}
     		} else {
