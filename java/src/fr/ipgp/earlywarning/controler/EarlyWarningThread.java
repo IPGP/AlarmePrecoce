@@ -6,10 +6,15 @@ package fr.ipgp.earlywarning.controler;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.*;
+import fr.ipgp.earlywarning.messages.*;
+import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
+import fr.ipgp.earlywarning.utilities.CommonUtilities;
 
 /**
  * @author Patrice Boissier
@@ -23,6 +28,7 @@ public class EarlyWarningThread extends Thread {
     protected boolean moreTriggers = true;
     protected byte[] buffer = new byte[512];
     protected int port;
+    protected boolean triggerOnError;
 	
     public EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
@@ -31,6 +37,7 @@ public class EarlyWarningThread extends Thread {
     public EarlyWarningThread(String name) throws IOException, ConversionException, NoSuchElementException {
     	super(name);
     	port = EarlyWarning.configuration.getInt("network.port");
+    	triggerOnError = EarlyWarning.configuration.getBoolean("triggers.create_trigger_on_errors");
     	socket = new DatagramSocket(port);
     	packet = new DatagramPacket(buffer, buffer.length);
     }
@@ -49,7 +56,6 @@ public class EarlyWarningThread extends Thread {
                 socket.receive(packet);
                 EarlyWarning.appLogger.info("Received a packet");
                 DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet);
-                System.out.println("Content : " + new String(packet.getData()));
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
@@ -57,12 +63,32 @@ public class EarlyWarningThread extends Thread {
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
+                if (triggerOnError) {
+                	Trigger trig = createErrorTrigger("Input Output error while receiving datagram");
+                	if (!trig.equals(null))
+                		queueManagerThread.addTrigger(trig);
+                }
             } catch (UnknownTriggerFormatException utfe) {
             	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+                if (triggerOnError) {
+                	Trigger trig = createErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
+                	if (!trig.equals(null))
+                		queueManagerThread.addTrigger(trig);
+                }
             } catch (InvalidTriggerFieldException itfe) {
             	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
+                if (triggerOnError) {
+                	Trigger trig = createErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
+                	if (!trig.equals(null))
+                		queueManagerThread.addTrigger(trig);
+                }
             } catch (MissingTriggerFieldException mtfe) {
             	EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+                if (triggerOnError) {
+                	Trigger trig = createErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
+                	if (!trig.equals(null))
+                		queueManagerThread.addTrigger(trig);
+                }
             } 
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
@@ -70,5 +96,51 @@ public class EarlyWarningThread extends Thread {
             }
         }
         socket.close();
+    } 
+    
+    /**
+     * Create a custom error trigger based on the error message.
+     * @param errorMessage
+     */
+    private Trigger createErrorTrigger (String errorMessage) {
+    	try {  	
+    		long id = CommonUtilities.getUniqueId();
+			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
+			CallList callList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list")));
+			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("phone_call.support_text2speech");
+			WarningMessage message;
+			if (supportText2Speech)
+				message = new TextWarningMessage(errorMessage);
+			else
+				message = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.error_message")));
+			String application = new String("EarlyWarning");
+			String type = new String("v2");
+			boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
+			Date date1 = new Date();
+			SimpleDateFormat  simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			String date = simpleFormat.format(date1);
+			String confirmCode = new String(EarlyWarning.configuration.getString("triggers.defaults.confirm_code"));
+	    	Trigger trig = new Trigger(id, priority);
+			trig.setApplication(application);
+			trig.setCallList(callList);
+			InetAddress inetAddress = InetAddress.getByName("localhost");
+			trig.setInetAddress(inetAddress);
+			trig.setMessage(message);
+			trig.setPriority(priority);
+			trig.setType(type);
+			trig.setRepeat(repeat);
+			trig.setDate(date);
+			trig.setConfirmCode(confirmCode);
+			return trig;
+		} catch (UnknownHostException uh) {
+			EarlyWarning.appLogger.error("localhost unknown : check hosts file");
+			return null;
+		} catch (ConversionException ce) {
+			EarlyWarning.appLogger.error("Error : an element value has wrong type : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
+			return null;
+		} catch (NoSuchElementException nsee) {
+			EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
+			return null;
+		}
     }
 }

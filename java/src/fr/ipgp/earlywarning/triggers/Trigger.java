@@ -229,4 +229,14 @@ public class Trigger implements Comparable {
     public String toString() {
     	return "Id : " + id + " - Priority : " + priority;
     }
+    
+    /**
+     * Represent the properties of a trigger
+     * @return a String with the properties of the Trigger
+     */
+    public String showTrigger() {
+    	return "Id : " + id + " - Priority : " + priority + " - Type : " + type + " From : " + inetAddress.toString() + 
+    	" - Application : " + application + " - Repeat : " + repeat + " - Date : " + date + " - Confirm Code : " + confirmCode +
+    	" - Call List : " + callList.toString() + " - Warning Message : " + message.toString();
+    }
 }
