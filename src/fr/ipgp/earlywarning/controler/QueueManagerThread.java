@@ -44,7 +44,6 @@ public class QueueManagerThread extends Thread {
 		queue.add(trigger);
 		nbTriggers++;
 		sortQueue();
-		System.out.println("Queue : " + queue.toString());
 	}
 	
 	/**

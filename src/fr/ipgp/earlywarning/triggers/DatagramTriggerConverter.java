@@ -88,7 +88,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
 	    trigger.setDate(packetContentElements[1] + " " + packetContentElements[2]);
 	    trigger.setRepeat(true);
 	    trigger.setConfirmCode("11");
-	    System.out.println("valid v1 format");
     }
     
     /**
@@ -152,6 +151,5 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	trigger.setDate(packetContentElements[2] + " " + packetContentElements[3]);
     	trigger.setRepeat(Boolean.parseBoolean(packetContentElements[6]));
     	trigger.setConfirmCode(packetContentElements[7]);
-    	System.out.println("valid v2 format");
     }
 }
