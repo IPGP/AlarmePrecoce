@@ -36,7 +36,7 @@ public class TriggerV2Sender {
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		//String messageString = "02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 alerte.wav";
 		//String messageString = "02 1 2008/03/21 11:00:33 nagios 0692703856 true 11 |Alerte, plus de place sur partage|";
-		String messageString = "02 1 " + simpleFormat.format(date1) + " nagios 0692703856 true 11 |Alerte, plus de place sur partage!|";
+		String messageString = "02 1 " + simpleFormat.format(date1) + "s nagios 0692703856 true 11 |Alerte, plus de place sur partage!|";
 			
 		message = new byte[messageString.length()];
 		message = messageString.getBytes();
