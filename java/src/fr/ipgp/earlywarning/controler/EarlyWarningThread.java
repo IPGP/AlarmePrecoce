@@ -131,6 +131,7 @@ public class EarlyWarningThread extends Thread {
 			trig.setRepeat(repeat);
 			trig.setDate(date);
 			trig.setConfirmCode(confirmCode);
+			System.out.println(trig.showTrigger());
 			return trig;
 		} catch (UnknownHostException uh) {
 			EarlyWarning.appLogger.error("localhost unknown : check hosts file");
