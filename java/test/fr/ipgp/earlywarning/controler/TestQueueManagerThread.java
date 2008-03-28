@@ -6,8 +6,7 @@ package fr.ipgp.earlywarning.controler;
 import org.junit.*;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.*;
-import java.util.*;
-
+import java.util.concurrent.PriorityBlockingQueue;
 /**
  * @author Patrice Boissier
  *
@@ -29,23 +28,18 @@ public class TestQueueManagerThread {
 		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);
-		Vector<Trigger> vect1 = new Vector<Trigger>();
-		Vector<Trigger> vect2 = new Vector<Trigger>();
-		Vector<Trigger> vect3 = new Vector<Trigger>();
-		vect1.add(trig1);
-		vect2.add(trig1);
-		vect2.add(trig2);
-		vect3.add(trig3);
-		vect3.add(trig1);
-		vect3.add(trig2);
+		PriorityBlockingQueue<Trigger> pbq1 = new PriorityBlockingQueue<Trigger>();
+		pbq1.offer(trig1);
+		pbq1.offer(trig2);
+		pbq1.offer(trig3);
 		QueueManagerThread queueManagerThread = new QueueManagerThread();
     	queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
-    	Assert.assertEquals(vect1, queueManagerThread.getQueue());
     	queueManagerThread.addTrigger(trig2);
-    	Assert.assertEquals(vect2, queueManagerThread.getQueue());
     	queueManagerThread.addTrigger(trig3);
-    	Assert.assertEquals(vect3, queueManagerThread.getQueue());
+    	Assert.assertEquals(trig3, queueManagerThread.getQueue().poll());
+    	Assert.assertEquals(trig1, queueManagerThread.getQueue().poll());
+    	Assert.assertEquals(trig2, queueManagerThread.getQueue().poll());
     	queueManagerThread.setMoreTriggers(false);
     	Assert.assertEquals(false, queueManagerThread.isMoreTriggers());
 	}
