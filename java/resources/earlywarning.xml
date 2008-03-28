@@ -29,7 +29,7 @@
   <triggers>
   	<create_trigger_on_errors>true</create_trigger_on_errors>
   	<defaults>
-  		<priority>1</priority>
+  		<priority>2</priority>
   		<confirm_code>11</confirm_code>
   		<repeat>true</repeat>
   		<call_list>resources/defaultCallList.csv</call_list>
