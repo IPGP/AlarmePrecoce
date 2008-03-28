@@ -35,9 +35,11 @@ public class TestDatagramTriggerConverter {
 	}
 	
 	public void testDecodeTrigger(String message) {
+		WarningMessage warningMessage = new TextWarningMessage("Declenchement");
+		CallList callList = new FileCallList(new File("default.voc"));
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
 		Trigger trigger = datagram2Trigger.getTrigger();
 		try {
 			datagram2Trigger.decode();
@@ -53,18 +55,18 @@ public class TestDatagramTriggerConverter {
 	@Test
 	public void testCreateV1Trigger() {
 		WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-		CallList callList = new FileCallList(new File("default.csv"));
+		CallList callList = new FileCallList(new File("default.voc"));
 		String message = "Sismo 13/03/2008 13:22:04 Declenchement";
 		packet.setData(message.getBytes());
 		packet.setLength(message.length());
-		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet);
+		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11", 1);
 		Trigger trig = datagram2Trigger.getTrigger();
 		try {
 			datagram2Trigger.decode();
 			Assert.assertEquals("Sismo",trig.getApplication());
-			//Assert.assertEquals(callList,trig.getCallList());
+			Assert.assertEquals(callList,trig.getCallList());
 			Assert.assertEquals(address,trig.getInetAddress());
-			//Assert.assertEquals(warningMessage,trig.getMessage());
+			Assert.assertEquals(warningMessage,trig.getMessage());
 			Assert.assertEquals(1,trig.getPriority());
 			Assert.assertEquals("01",trig.getType());
 			Assert.assertEquals(true,trig.getRepeat());
@@ -107,17 +109,17 @@ public class TestDatagramTriggerConverter {
 	public void testDecodeValidV2Trigger() {
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 12 |Ceci est un message d'alerte!|");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 |Ceci est un message 		d'alerte.|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true 123542 |Ceci est un message, d'alerte?|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csv true 2263 |Alerte|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.voc true 123542 |Ceci est un message, d'alerte?|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.voc true 2263 |Alerte|");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 958 message.wav");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true 58547 warningMessage.wav");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.voc true 58547 warningMessage.wav");
 		testDecodeTrigger("02 1 2008/03/21 11:00:33 nagios 0692703856 true 11 |Alerte, plus de place sur partage|");
 	}
 
 	@Test
 	public void testDecodeInvalidV2Trigger() {
 		// Invalid priority
-		testDecodeTrigger("02 1d 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true 11 warningMessage.wav");
+		testDecodeTrigger("02 1d 2008/03/18 13:22:04 appli_dataTaker01 file_test.voc true 11 warningMessage.wav");
 		// Invalid type
 		testDecodeTrigger("020 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 11 Ceci est un message d alerte");
 		// Incomplete message
@@ -133,13 +135,13 @@ public class TestDatagramTriggerConverter {
 		// Invalid text call list
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455,toto true 11 |Ceci est un message d alerte|");
 		// Invalid file call list
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.csvd true 11 |Ceci est un message d alerte|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 fichier.vocd true 11 |Ceci est un message d alerte|");
 		// Invalid text
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 11 message.fsd");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true 11 warningMessage.wav coucou");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.voc true 11 warningMessage.wav coucou");
 		// Invalid confirm code
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true 5854705 warningMessage.wav");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.csv true 585z5 warningMessage.wav");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.voc true 5854705 warningMessage.wav");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 file_test.voc true 585z5 warningMessage.wav");
 	}
 		
 	public static junit.framework.Test suite() {
