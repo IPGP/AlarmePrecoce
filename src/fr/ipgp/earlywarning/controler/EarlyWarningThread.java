@@ -89,7 +89,11 @@ public class EarlyWarningThread extends Thread {
                 	if (!trig.equals(null))
                 		queueManagerThread.addTrigger(trig);
                 }
-            } 
+            } catch (ConversionException ce) {
+            	EarlyWarning.appLogger.error("Default call list or warning message has a bad name in configuration file");
+            } catch (NoSuchElementException nsee) {
+            	EarlyWarning.appLogger.error("Default call list or warning message is missing in configuration file");
+            }
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
                 return;
