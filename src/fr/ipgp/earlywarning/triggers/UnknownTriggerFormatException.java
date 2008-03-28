@@ -8,6 +8,7 @@ package fr.ipgp.earlywarning.triggers;
  *
  */
 public class UnknownTriggerFormatException extends Exception {
+	private static final long serialVersionUID = 5720153655400554L;
 	UnknownTriggerFormatException() {
     }
 	UnknownTriggerFormatException(String msg) {

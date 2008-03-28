@@ -44,7 +44,27 @@ public class EarlyWarningThread extends Thread {
     
     public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
-    	   	
+    	
+    	CallList defaultCallList = null;
+    	WarningMessage defaultWarningMessage = null;
+    	boolean defaultRepeat = true;
+    	String defaultConfirmCode = null;
+    	int defaultPriority=1;
+    	
+    	try {
+    		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list")));
+    		defaultWarningMessage = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.warning_message")));
+    		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
+    		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
+    		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        	System.exit(1);
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        	System.exit(1);
+        }
+    	
     	QueueManagerThread queueManagerThread = new QueueManagerThread();
     	queueManagerThread.start();
 
@@ -55,7 +75,7 @@ public class EarlyWarningThread extends Thread {
         	try {
                 socket.receive(packet);
                 EarlyWarning.appLogger.info("Received a packet");
-                DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet);
+                DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultCallList, defaultWarningMessage, defaultRepeat, defaultConfirmCode, defaultPriority);
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
@@ -89,10 +109,6 @@ public class EarlyWarningThread extends Thread {
                 	if (!trig.equals(null))
                 		queueManagerThread.addTrigger(trig);
                 }
-            } catch (ConversionException ce) {
-            	EarlyWarning.appLogger.error("Default call list or warning message has a bad name in configuration file");
-            } catch (NoSuchElementException nsee) {
-            	EarlyWarning.appLogger.error("Default call list or warning message is missing in configuration file");
             }
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");

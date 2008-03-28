@@ -6,12 +6,6 @@ package fr.ipgp.earlywarning.triggers;
 
 import java.net.*;
 import java.io.*;
-import java.util.NoSuchElementException;
-import java.util.regex.*;
-
-import org.apache.commons.configuration.ConversionException;
-
-import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
@@ -25,13 +19,23 @@ public class DatagramTriggerConverter implements TriggerConverter {
     protected int senderPort;
     protected Trigger trigger;
     protected String packetContent;
+    protected CallList defaultCallList;
+    protected WarningMessage defaultWarningMessage;
+    protected boolean defaultRepeat;
+    protected String defaultConfirmCode;
+    protected int defaultPriority;
     
-    public DatagramTriggerConverter(DatagramPacket packet) {
+    public DatagramTriggerConverter(DatagramPacket packet, CallList defaultCallList, WarningMessage defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
     	this.packet = packet;                
     	this.senderAddress=packet.getAddress();
     	this.senderPort=packet.getPort();
     	this.packetContent = new String(packet.getData(), 0, packet.getLength());
-    	this.trigger = new Trigger(CommonUtilities.getUniqueId(),1);
+    	this.defaultCallList = defaultCallList;
+    	this.defaultWarningMessage = defaultWarningMessage;
+    	this.defaultRepeat = defaultRepeat;
+    	this.defaultConfirmCode = defaultConfirmCode;
+    	this.defaultPriority = defaultPriority;
+    	this.trigger = new Trigger(CommonUtilities.getUniqueId(),defaultPriority);
     	this.trigger.setInetAddress(senderAddress);
     }
     
@@ -48,7 +52,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, ConversionException, NoSuchElementException{
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
     	String[] packetContentSplit = this.packetContent.split(" ");
     	int version;
     	
@@ -81,18 +85,18 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message 
      * @throws InvalidTriggerFieldException
      */
-    private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException , ConversionException, NoSuchElementException{
+    private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
     	if (!CommonUtilities.isDate(packetContentElements[1] + " " + packetContentElements[2], "dd/MM/yyyy HH:mm:ss"))
     		throw new InvalidTriggerFieldException ("Invalid V1 trigger field(s) : invalid date " + packetContentElements[1] + " " + packetContentElements[2]);
     	if (packetContentElements.length < 4)
     		throw new MissingTriggerFieldException ("Not enough fields for a V1 trigger : " + this.packetContent);
     	trigger.setApplication(packetContentElements[0]);
-    	trigger.setCallList(new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list"))));
-	    trigger.setMessage(new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.warning_message"))));
+    	trigger.setCallList(defaultCallList);
+	    trigger.setMessage(defaultWarningMessage);
 	    trigger.setType("01");
 	    trigger.setDate(packetContentElements[1] + " " + packetContentElements[2]);
-	    trigger.setRepeat(true);
-	    trigger.setConfirmCode("11");
+	    trigger.setRepeat(defaultRepeat);
+	    trigger.setConfirmCode(defaultConfirmCode);
     }
     
     /**
