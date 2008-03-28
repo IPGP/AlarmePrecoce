@@ -8,6 +8,7 @@ package fr.ipgp.earlywarning.triggers;
  *
  */
 public class InvalidTriggerFieldException extends Exception {
+	private static final long serialVersionUID = 952405405400554L;
 	InvalidTriggerFieldException() {
     }
 	InvalidTriggerFieldException(String msg) {
