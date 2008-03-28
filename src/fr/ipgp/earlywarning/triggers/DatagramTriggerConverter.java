@@ -6,7 +6,12 @@ package fr.ipgp.earlywarning.triggers;
 
 import java.net.*;
 import java.io.*;
+import java.util.NoSuchElementException;
 import java.util.regex.*;
+
+import org.apache.commons.configuration.ConversionException;
+
+import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
@@ -43,7 +48,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, ConversionException, NoSuchElementException{
     	String[] packetContentSplit = this.packetContent.split(" ");
     	int version;
     	
@@ -76,14 +81,14 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message 
      * @throws InvalidTriggerFieldException
      */
-    private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException{
+    private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException , ConversionException, NoSuchElementException{
     	if (!CommonUtilities.isDate(packetContentElements[1] + " " + packetContentElements[2], "dd/MM/yyyy HH:mm:ss"))
     		throw new InvalidTriggerFieldException ("Invalid V1 trigger field(s) : invalid date " + packetContentElements[1] + " " + packetContentElements[2]);
     	if (packetContentElements.length < 4)
     		throw new MissingTriggerFieldException ("Not enough fields for a V1 trigger : " + this.packetContent);
     	trigger.setApplication(packetContentElements[0]);
-    	trigger.setCallList(new FileCallList(new File("default.csv")));
-	    trigger.setMessage(new TextWarningMessage(packetContentElements[3]));
+    	trigger.setCallList(new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list"))));
+	    trigger.setMessage(new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.warning_message"))));
 	    trigger.setType("01");
 	    trigger.setDate(packetContentElements[1] + " " + packetContentElements[2]);
 	    trigger.setRepeat(true);
@@ -98,7 +103,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * p : priority, one digit<br/>
      * yyyy/MM/dd HH:mm:ss : date, ISO format<br/>
      * application : application name, [a-zA-Z_0-9]*<br/>
-     * calllist : call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
+     * calllist : call list, either a comma separated list of digits or a .voc file name ([a-zA-Z_0-9]*\.voc)<br/>
      * repeat : true or false<br/>
      * confirmcode : confirmation code, a digit sequence (1 to 6 digits)
      * message : warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
@@ -129,7 +134,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid repeat " + packetContentElements[6]);
     	if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
-    	if (packetContentElements[5].matches("\\w+\\.csv"))
+    	if (packetContentElements[5].matches("\\w+\\.voc"))
     		trigger.setCallList(new FileCallList(new File(packetContentElements[5])));
     	else {
     		if (packetContentElements[5].matches("(\\d*)(,\\d*)*"))
