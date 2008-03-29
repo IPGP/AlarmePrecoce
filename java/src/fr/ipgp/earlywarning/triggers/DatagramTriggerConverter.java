@@ -52,7 +52,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException {
     	String[] packetContentSplit = this.packetContent.split(" ");
     	int version;
     	
@@ -114,7 +114,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message
      * @return true if the decoding was successful else false
      */
-    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
+    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException {
     	String warningMessage = new String();
     	boolean first = true;
     	if (packetContentElements.length>8) {
