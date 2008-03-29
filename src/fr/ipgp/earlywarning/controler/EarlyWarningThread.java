@@ -8,7 +8,6 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.messages.*;
@@ -62,6 +61,9 @@ public class EarlyWarningThread extends Thread {
         	System.exit(1);
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        	System.exit(1);
+        } catch (IOException ioe) {
+        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Exiting application.");
         	System.exit(1);
         }
     	
@@ -162,6 +164,9 @@ public class EarlyWarningThread extends Thread {
 		} catch (NoSuchElementException nsee) {
 			EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
 			return null;
-		}
+		} catch (IOException ioe) {
+        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Exiting application.");
+        	return null;
+        }
     }
 }

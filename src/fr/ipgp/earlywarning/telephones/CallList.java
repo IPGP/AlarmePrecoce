@@ -17,25 +17,19 @@ public interface CallList {
 	 */
 	public String toString();
 	
-//    /**
-//     * move the record forward
-//     */
-//    public boolean next();
-//    
-//    /**
-//     * get the current record values
-//     * @param name parameter name
-//     */
-//    public String getValue(String name);
-//    
-//    /**
-//     * total number of records
-//     */
-//    public int getTotal();
-//    
-//    /**
-//     * move the current record to the beginning
-//     */
-//    public void reset();
-	
+    /**
+     * move the record forward
+     */
+    public boolean next();
+    
+    /**
+     * get the current record values
+     * @param name parameter name
+     */
+    public String getValue(String name);
+    
+    /**
+     * total number of records
+     */
+    public int getTotal();
 }
