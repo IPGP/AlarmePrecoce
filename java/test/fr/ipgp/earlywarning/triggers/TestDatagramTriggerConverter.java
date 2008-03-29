@@ -35,13 +35,14 @@ public class TestDatagramTriggerConverter {
 	}
 	
 	public void testDecodeTrigger(String message) {
-		WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-		CallList callList = new FileCallList(new File("default.voc"));
-		packet.setData(message.getBytes());
-		packet.setLength(message.length());
-		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
-		Trigger trigger = datagram2Trigger.getTrigger();
 		try {
+
+			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
+			CallList callList = new FileCallList(new File("default.voc"));
+			packet.setData(message.getBytes());
+			packet.setLength(message.length());
+			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
+			Trigger trigger = datagram2Trigger.getTrigger();
 			datagram2Trigger.decode();
 		} catch (UnknownTriggerFormatException utfe) {
 			System.out.println(utfe.getMessage());
@@ -49,19 +50,21 @@ public class TestDatagramTriggerConverter {
 			System.out.println(itfe.getMessage());
 		} catch (MissingTriggerFieldException mtfe) {
 			System.out.println(mtfe.getMessage());
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
 		}
 	}
 	
 	@Test
 	public void testCreateV1Trigger() {
-		WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-		CallList callList = new FileCallList(new File("default.voc"));
-		String message = "Sismo 13/03/2008 13:22:04 Declenchement";
-		packet.setData(message.getBytes());
-		packet.setLength(message.length());
-		DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11", 1);
-		Trigger trig = datagram2Trigger.getTrigger();
 		try {
+			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
+			CallList callList = new FileCallList(new File("default.voc"));
+			String message = "Sismo 13/03/2008 13:22:04 Declenchement";
+			packet.setData(message.getBytes());
+			packet.setLength(message.length());
+			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11", 1);
+			Trigger trig = datagram2Trigger.getTrigger();
 			datagram2Trigger.decode();
 			Assert.assertEquals("Sismo",trig.getApplication());
 			Assert.assertEquals(callList,trig.getCallList());
@@ -79,6 +82,8 @@ public class TestDatagramTriggerConverter {
 			System.out.println(itfe.getMessage());
 		} catch (MissingTriggerFieldException mtfe) {
 			System.out.println(mtfe.getMessage());
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
 		}
 	}
 	

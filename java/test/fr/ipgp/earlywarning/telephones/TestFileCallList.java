@@ -25,9 +25,13 @@ public class TestFileCallList {
 	
 	@Test
 	public void testCreateFileCallList() {
-		FileCallList fileCallList = new FileCallList(testFile);
-		Assert.assertEquals(testFile,fileCallList.getFile());
-		Assert.assertEquals(testFile.toString(),fileCallList.toString());
+		try {
+			FileCallList fileCallList = new FileCallList(testFile);
+			Assert.assertEquals(testFile,fileCallList.getFile());
+			Assert.assertEquals(testFile.toString(),fileCallList.toString());
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	public static junit.framework.Test suite() {
