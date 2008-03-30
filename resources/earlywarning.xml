@@ -32,9 +32,10 @@
   		<priority>2</priority>
   		<confirm_code>11</confirm_code>
   		<repeat>true</repeat>
-  		<call_list>resources/defaultCallList.csv</call_list>
-  		<warning_message>resources/defaultWarningMessage.wav</warning_message>
-  		<error_message>resources/defaultErrorMessage.wav</error_message>
+  		<call_list>defaultCallList.csv</call_list>
+  		<warning_message>defaultWarningMessage.wav</warning_message>
+  		<error_message>defaultErrorMessage.wav</error_message>
+  		<resources_path>resources</resources_path>
   	</defaults>
   	<call_on_unknown_message>true</call_on_unknown_message>
   </triggers>

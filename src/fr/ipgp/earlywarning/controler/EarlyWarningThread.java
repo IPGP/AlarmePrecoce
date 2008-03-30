@@ -51,8 +51,9 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list")));
-    		defaultWarningMessage = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.warning_message")));
+    		System.out.println(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list"));
+    		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
+    		defaultWarningMessage = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.warning_message")));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
     		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");

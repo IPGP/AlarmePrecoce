@@ -15,7 +15,7 @@ public class TestFileCallList {
 	
 	@Before
 	public void setUp() {
-		testFile = new File("testFile");
+		testFile = new File("defaultCallList.csv");
 	}
 	
 	@After
