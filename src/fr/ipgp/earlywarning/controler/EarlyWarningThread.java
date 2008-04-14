@@ -59,13 +59,13 @@ public class EarlyWarningThread extends Thread {
     		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
     	} catch (ConversionException ce) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-        	System.exit(1);
+        	System.exit(-1);
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-        	System.exit(1);
+        	System.exit(-1);
         } catch (IOException ioe) {
         	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Exiting application.");
-        	System.exit(1);
+        	System.exit(-1);
         }
     	
     	QueueManagerThread queueManagerThread = new QueueManagerThread();
