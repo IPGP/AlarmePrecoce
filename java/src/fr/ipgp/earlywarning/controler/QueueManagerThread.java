@@ -81,7 +81,7 @@ public class QueueManagerThread extends Thread {
     		} else {
 	    		try {
 					Thread.sleep(5000);
-					System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
+					//System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
 				} catch (InterruptedException ie) {
 					EarlyWarning.appLogger.error("Error while sleeping!");
 				}
