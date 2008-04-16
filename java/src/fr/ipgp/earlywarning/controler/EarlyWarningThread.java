@@ -51,7 +51,6 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		System.out.println(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list"));
     		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
     		defaultWarningMessage = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.warning_message")));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
@@ -129,13 +128,13 @@ public class EarlyWarningThread extends Thread {
     	try {  	
     		long id = CommonUtilities.getUniqueId();
 			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-			CallList callList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.call_list")));
+			CallList callList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
 			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("phone_call.support_text2speech");
 			WarningMessage message;
 			if (supportText2Speech)
 				message = new TextWarningMessage(errorMessage);
 			else
-				message = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.error_message")));
+				message = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.error_message")));
 			String application = new String("EarlyWarning");
 			String type = new String("v2");
 			boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
