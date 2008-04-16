@@ -81,35 +81,43 @@ public class EarlyWarningThread extends Thread {
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
-                EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.toString());
+                EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
                 if (triggerOnError) {
                 	Trigger trig = createErrorTrigger("Input Output error while receiving datagram");
-                	if (!trig.equals(null))
+                	if (!(trig == null)) {
                 		queueManagerThread.addTrigger(trig);
+                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+                	}
                 }
             } catch (UnknownTriggerFormatException utfe) {
             	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
                 if (triggerOnError) {
                 	Trigger trig = createErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
-                	if (!trig.equals(null))
+                	if (!(trig == null)) {
                 		queueManagerThread.addTrigger(trig);
+            			EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+                	}
                 }
             } catch (InvalidTriggerFieldException itfe) {
             	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
                 if (triggerOnError) {
                 	Trigger trig = createErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                	if (!trig.equals(null))
+                	if (!(trig == null)) {
                 		queueManagerThread.addTrigger(trig);
+                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+                	}
                 }
             } catch (MissingTriggerFieldException mtfe) {
             	EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
                 if (triggerOnError) {
                 	Trigger trig = createErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
-                	if (!trig.equals(null))
+                	if (!(trig == null)) {
                 		queueManagerThread.addTrigger(trig);
+                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+                	}
                 }
             }
             if (Thread.interrupted()) {
@@ -153,7 +161,6 @@ public class EarlyWarningThread extends Thread {
 			trig.setRepeat(repeat);
 			trig.setDate(date);
 			trig.setConfirmCode(confirmCode);
-			System.out.println(trig.showTrigger());
 			return trig;
 		} catch (UnknownHostException uh) {
 			EarlyWarning.appLogger.error("localhost unknown : check hosts file");
@@ -165,7 +172,7 @@ public class EarlyWarningThread extends Thread {
 			EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
 			return null;
 		} catch (IOException ioe) {
-        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Exiting application.");
+        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Trigger not sent.");
         	return null;
         }
     }
