@@ -44,7 +44,7 @@ public class EarlyWarning {
 		appLogger.debug("Entering application.");
 		
 		try {
-			Thread earlyWarningThread = new EarlyWarningThread();
+			Thread earlyWarningThread = EarlyWarningThread.getInstance();
 			earlyWarningThread.start();
 		} catch (ConversionException ce) {
 			appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
@@ -56,7 +56,7 @@ public class EarlyWarning {
 		
 		try {
 			if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-				Thread dataBaseHeartBeatThread = new DataBaseHeartBeatThread();
+				Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
 				dataBaseHeartBeatThread.start();
 			}
 		} catch (ConversionException ce) {
