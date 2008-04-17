@@ -32,7 +32,7 @@ public class TestQueueManagerThread {
 		pbq1.offer(trig1);
 		pbq1.offer(trig2);
 		pbq1.offer(trig3);
-		QueueManagerThread queueManagerThread = new QueueManagerThread();
+		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
     	queueManagerThread.addTrigger(trig2);
@@ -49,7 +49,7 @@ public class TestQueueManagerThread {
 		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);		
-		QueueManagerThread queueManagerThread = new QueueManagerThread();
+		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
     	queueManagerThread.addTrigger(trig2);
