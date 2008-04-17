@@ -21,7 +21,7 @@ import fr.ipgp.earlywarning.utilities.CommonUtilities;
  * When a trigger arrives, it is passed to the queue manager.
  */
 public class EarlyWarningThread extends Thread {
-	
+	private static EarlyWarningThread uniqueInstance;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
@@ -29,16 +29,23 @@ public class EarlyWarningThread extends Thread {
     protected int port;
     protected boolean triggerOnError;
 	
-    public EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
+    private EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
     }
 
-    public EarlyWarningThread(String name) throws IOException, ConversionException, NoSuchElementException {
+    private EarlyWarningThread(String name) throws IOException, ConversionException, NoSuchElementException {
     	super(name);
     	port = EarlyWarning.configuration.getInt("network.port");
     	triggerOnError = EarlyWarning.configuration.getBoolean("triggers.create_trigger_on_errors");
     	socket = new DatagramSocket(port);
     	packet = new DatagramPacket(buffer, buffer.length);
+    }
+    
+    public static synchronized EarlyWarningThread getInstance() throws IOException, ConversionException, NoSuchElementException {
+    	if (uniqueInstance == null) {
+    		uniqueInstance = new EarlyWarningThread();
+    	}
+    	return uniqueInstance;
     }
     
     public void run() {
@@ -67,7 +74,7 @@ public class EarlyWarningThread extends Thread {
         	System.exit(-1);
         }
     	
-    	QueueManagerThread queueManagerThread = new QueueManagerThread();
+    	QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
 
     	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);

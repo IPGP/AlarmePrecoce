@@ -17,21 +17,29 @@ import fr.ipgp.earlywarning.*;
  *
  */
 public class DataBaseHeartBeatThread extends Thread {
+	private static DataBaseHeartBeatThread uniqueInstance;
 	protected DataBaseHeartBeat dataBaseHeartBeat;
 	protected int aliveMessage;
 	protected int startMessage;
 	protected int delay;
 	protected boolean moreHeartBeats = true;
 	
-	public DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
+	private DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
     	this("DataBaseHeartBeatThread");
     }
 
-    public DataBaseHeartBeatThread(String name) throws IOException, ConversionException, NoSuchElementException {
+    private DataBaseHeartBeatThread(String name) throws IOException, ConversionException, NoSuchElementException {
     	super(name);
     	aliveMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_alive");
     	startMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_start");
     	delay = EarlyWarning.configuration.getInt("heartbeat.hearbeat_delay");
+    }
+    
+    public static synchronized DataBaseHeartBeatThread getInstance() throws IOException {
+    	if (uniqueInstance == null) {
+    		uniqueInstance = new DataBaseHeartBeatThread();
+    	}
+    	return uniqueInstance;
     }
     
     public void run() {
