@@ -50,7 +50,7 @@ public class TestQueueManagerThread {
 		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);		
 		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
-    	queueManagerThread.start();
+    	//queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
     	queueManagerThread.addTrigger(trig2);
     	queueManagerThread.addTrigger(trig3);
