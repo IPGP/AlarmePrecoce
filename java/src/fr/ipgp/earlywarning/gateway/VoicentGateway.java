@@ -8,5 +8,8 @@ package fr.ipgp.earlywarning.gateway;
  *
  */
 public class VoicentGateway {
-
+	  private String host;
+	  private int port;
+	  
+	  
 }
