@@ -1,5 +1,13 @@
 package com.voicent.webalert;
 
+//http://www.voicent.com/devnet/docs/callreqref.htm
+
+//http://195.83.188.145:8155/ocall/callreqHandler.jsp?info=SimpleTextCall0692703856&phoneno=0692703856&firstocc=10&selfdelete=0&txt=Test
+//http://195.83.188.145:8155/ocall/callstatusHandler.jsp?reqid=1208431448218
+//http://195.83.188.145:8155/ocall/callremoveHandler.jsp?reqid=1208431448218
+
+//[removed]
+
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
@@ -40,6 +48,8 @@ public class Voicent2
    */
   public String callText(String phoneno, String text, boolean selfdelete)
   {
+	  //http://195.83.188.145:8155/ocall/callreqHandler.jsp?info=SimpleTextCall0692703856&phoneno=0692703856&firstocc=10&selfdelete=0&txt=Test
+	  
     // call request url
     String urlstr = "/ocall/callreqHandler.jsp";
 
@@ -101,12 +111,26 @@ public class Voicent2
 
   /**
    * Get call status of the call with the reqID.
-   *
+   * 
+   * http://195.83.188.145:8155/ocall/callstatusHandler.jsp
+   * returns :
+   * Call in progress :
+   * [] 
+   * Call made :
+   * [0^null^made^2008 3 17 12 26^2008 3 17 12 25^Message left on answering machine^^^^^
+   * ]
+   * [0^null^made^2008 3 17 12 24^2008 3 17 12 24^Call succeeded^^^^^
+   * ]
+   * Wrong reqID :
+   * ERROR: no such call record: 1208431448217
    * @param reqID Call request ID on the gateway
    * @return call status
    */
   public String callStatus(String reqID)
   {
+	  //http://195.83.188.145:8155/ocall/callstatusHandler.jsp
+
+	  
     // call status url
     String urlstr = "/ocall/callstatusHandler.jsp";
 
