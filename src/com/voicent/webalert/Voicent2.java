@@ -116,13 +116,26 @@ public class Voicent2
    * returns :
    * Call in progress :
    * [] 
+   * 
    * Call made :
    * [0^null^made^2008 3 17 12 26^2008 3 17 12 25^Message left on answering machine^^^^^
    * ]
    * [0^null^made^2008 3 17 12 24^2008 3 17 12 24^Call succeeded^^^^^
    * ]
+   * 
    * Wrong reqID :
    * ERROR: no such call record: 1208431448217
+   * 
+   * Test  : ne pas répondre ou ne pas laisser le message être dit :
+   * Retry :
+   * [0^null^retry^2008 3 18 6 18^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^
+   * ]
+   * [0^null^retry^2008 3 18 6 18^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 19^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^
+   * ]
+   * [0^null^retry^2008 3 18 6 18^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 19^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 21^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^
+   * ]
+   * [0^null^retry^2008 3 18 6 18^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 19^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 21^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^0^null^retry^2008 3 18 6 22^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^
+   * ]
    * @param reqID Call request ID on the gateway
    * @return call status
    */
