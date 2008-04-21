@@ -24,6 +24,9 @@ public class MockGateway implements Gateway {
 		return uniqueInstance;
 	}
 	
+	/**
+	 * 
+	 */
 	public String callText(String phoneno, String text, boolean selfdelete) {
 		return "";
 	}
