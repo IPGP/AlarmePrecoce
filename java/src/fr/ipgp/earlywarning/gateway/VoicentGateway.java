@@ -37,6 +37,8 @@
  * To remove the call :<br/>
  * http://195.83.188.145:8155/ocall/callremoveHandler.jsp?reqid=1208431448218<br/>
  * [removed]<br/>
+ * If it does not exist :<br/>
+ * ERROR: no such call record: 1208431448218<br/>
  */
 package fr.ipgp.earlywarning.gateway;
 
@@ -49,16 +51,70 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-
 /**
  * @author patriceboissier
  *
  */
 public class VoicentGateway implements Gateway{
+	private static VoicentGateway uniqueInstance;
 	private String host;
 	private int port;
 	private String encoding = "UTF-8";
-	  
+	
+	private VoicentGateway () {
+	    this.host = "localhost";
+	    this.port = 8155;
+	}
+	
+	private VoicentGateway (String host, int port) {
+		this.host = host;
+		this.port = port;
+	}
+	
+    public static synchronized VoicentGateway getInstance() {
+    	if (uniqueInstance == null) {
+    		uniqueInstance = new VoicentGateway();
+    	}
+    	return uniqueInstance;
+    }
+
+    public static synchronized VoicentGateway getInstance(String host, int port) {
+    	if (uniqueInstance == null) {
+    		uniqueInstance = new VoicentGateway(host, port);
+    	}
+    	uniqueInstance.setHost(host);
+    	uniqueInstance.setPort(port);
+    	return uniqueInstance;
+    }
+
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port the port to set
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 	/**  
 	 * Make a call to the number specified and play the text message using text-to-speech engine.<br/>
 	 * <br/>
@@ -129,14 +185,33 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 	
-	public void callRemove(String requestID) {
-		
+	/**
+	 * Remove a call if this call is not in progress
+	 * @param reqID Call request ID on the gateway
+	 * @return the result of the remove command
+	 */
+	public String callRemove(String requestID) {
+		try {
+		    String urlString = "/ocall/callremoveHandler.jsp";
+		    String postString = "reqid=";
+		    postString += URLEncoder.encode(requestID, encoding);
+		    String requestCallRemove = postToGateway(urlString, postString);
+		    return getCallRemovedStatus(requestCallRemove);
+		} catch (UnsupportedEncodingException uee) {
+			return null;
+		}
 	}
 	
 	public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode) {
 		
 	}
 	
+	/**
+	 * Sends a request to the gateway using the HTTP interface.
+	 * @param urlString the URL string for the gateway
+	 * @param postString the POST arguments for the gateway
+	 * @return the return message of the gateway
+	 */
 	private String postToGateway(String urlString, String postString) {
 		try {
 			URL url = new URL("http", host, port, urlString);
@@ -167,6 +242,11 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 
+	/**
+	 * Get the call ID from the output string from the gateway.
+	 * @param receivedString from the gateway
+	 * @return the call ID
+	 */
 	private String getRequestId(String receivedString) {
 		if (receivedString == null)
 			return null;
@@ -180,17 +260,35 @@ public class VoicentGateway implements Gateway{
 	    return receivedString.substring(index1, index2);
 	}
 	
+	/**
+	 * Get call status from the gateway.
+	 * @param receivedString from the gateway
+	 * @return the call status
+	 */
 	private String getCallStatus(String receivedString) {
 	    if (receivedString.equals("[]"))
 	    	return "Call in progress";
-		if (receivedString.indexOf("^Message left on answering machine^") != -1)
-			return "Message left on answering machine";
-	    if (receivedString.indexOf("^made^") != -1)
-	    	return "Call Made";
-	    if (receivedString.indexOf("^failed^") != -1)
-	    	return "Call Failed";
-	    if (receivedString.indexOf("^retry^") != -1)
-	    	return "Call Will Retry";
+	    if (receivedString.indexOf("ERROR: no such call record:") != -1)
+	    	return "No such call record";
+	    String [] receivedStringSplitted = null;
+	    receivedStringSplitted =receivedString.split("\\^");
+	    if (receivedStringSplitted.length < 11)
+	    	return null;
+	    String callStatusMessage = receivedStringSplitted[receivedStringSplitted.length-6];
+		if (!callStatusMessage.equals(""))
+			return callStatusMessage;
 	    return null;
-	  }
+	}
+	
+	/**
+	 * Get the result of the remove call from the gateway.
+	 * @param receivedString from the gateway
+	 * @return the result of the remove command
+	 */
+	private String getCallRemovedStatus(String receivedString) {
+	    if (receivedString.equals("[removed]"))
+	    	return "Call successfully removed";
+	    else
+	    	return "Call id unknown"; 
+	}
 }

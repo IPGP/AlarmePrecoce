@@ -29,13 +29,13 @@
   <triggers>
   	<create_trigger_on_errors>true</create_trigger_on_errors>
   	<defaults>
-  		<priority>2</priority>
-  		<confirm_code>11</confirm_code>
-  		<repeat>true</repeat>
-  		<call_list>defaultCallList.csv</call_list>
-  		<warning_message>defaultWarningMessage.wav</warning_message>
-  		<error_message>defaultErrorMessage.wav</error_message>
-  		<resources_path>resources</resources_path>
+  	  <priority>2</priority>
+  	  <confirm_code>11</confirm_code>
+  	  <repeat>true</repeat>
+  	  <call_list>defaultCallList.csv</call_list>
+  	  <warning_message>defaultWarningMessage.wav</warning_message>
+  	  <error_message>defaultErrorMessage.wav</error_message>
+  	  <resources_path>resources</resources_path>
   	</defaults>
   	<call_on_unknown_message>true</call_on_unknown_message>
   </triggers>
@@ -46,4 +46,10 @@
     <email>boissier@ipgp.jussieu.fr</email>
     <email>arnaudl@ipgp.jussieu.fr</email>
   </mailinglist>
+  <gateway>
+  	<voicent>
+  	  <host>195.83.188.41</host>
+  	  <port>8155</port>
+  	</voicent>
+  </gateway>
 </earlywarning>
