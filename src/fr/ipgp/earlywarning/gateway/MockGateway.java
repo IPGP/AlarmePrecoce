@@ -50,8 +50,8 @@ public class MockGateway implements Gateway {
 		}
 	}
 	
-	public void callRemove(String reqID) {
-		
+	public String callRemove(String reqID) {
+		return "";
 	}
 	public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode) {
 		
