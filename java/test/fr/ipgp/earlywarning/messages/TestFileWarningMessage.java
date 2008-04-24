@@ -11,11 +11,11 @@ import org.junit.*;
  *
  */
 public class TestFileWarningMessage {
-	File testFile;
+	String testFile;
 	
 	@Before
 	public void setUp() {
-		testFile = new File("testFile");
+		testFile = new String("testFile");
 	}
 	
 	@After

@@ -147,7 +147,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     			throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
     	}
     	if (warningMessage.matches("\\w+\\.wav"))
-    		trigger.setMessage(new FileWarningMessage(new File(warningMessage)));
+    		trigger.setMessage(new FileWarningMessage(warningMessage));
     	else {
     		if (warningMessage.matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
     			trigger.setMessage(new TextWarningMessage(warningMessage));

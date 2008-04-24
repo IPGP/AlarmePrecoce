@@ -88,7 +88,7 @@ public class EarlyWarningThread extends Thread {
     	
     	try {
     		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
-    		defaultWarningMessage = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.warning_message")));
+    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
     		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
@@ -178,7 +178,7 @@ public class EarlyWarningThread extends Thread {
 			if (supportText2Speech)
 				message = new TextWarningMessage(errorMessage);
 			else
-				message = new FileWarningMessage(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.error_message")));
+				message = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.error_message"));
 			String application = new String("EarlyWarning");
 			String type = new String("v2");
 			boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
