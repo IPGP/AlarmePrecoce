@@ -202,8 +202,44 @@ public class VoicentGateway implements Gateway{
 		}
 	}
 	
-	public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode) {
+	public String callTillConfirm(String vcastexe, String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
+		try {
+			
+			String phoneNumberList = "";
+			boolean firstPhoneNumber = true;
+			for (String phoneNumber : phoneNumbers) {
+				if (firstPhoneNumber) {
+					phoneNumberList += phoneNumber;
+					firstPhoneNumber = false;
+				} else {
+					phoneNumberList += " " + phoneNumber;
+				}
+			}
+			
+		    String urlString = "/ocall/callreqHandler.jsp";
+		    String postString = "info=" + URLEncoder.encode("Simple Call till Confirm", encoding);
+		    postString += "&phoneno=666";
+		    postString += "&firstocc=50";
+		    postString += "&selfdelete=0";
+		    postString += "&startexec=" + URLEncoder.encode(vcastexe, encoding);
 		
+		    String cmdline = "\"" + vocFile + "\"";
+		    cmdline += " -startnow";
+		    cmdline += " -confirmcode " + confirmCode;
+		    cmdline += " -wavfile " + "\"" +  waveFile + "\"";
+		    //cmdline += " -numbers" + " \"" + phoneNumberList + "\"";
+		    //cmdline += " -import" + " \"C:/temp/test.txt\"";
+		    cmdline += " -cleanstatus";
+		
+		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
+		
+		    System.out.println("URL : " + urlString + "?" + postString);
+		    String requestCallTillConfirm = postToGateway(urlString, postString);
+		    System.out.println("Server answer : " + requestCallTillConfirm);
+		    return requestCallTillConfirm;
+	    } catch (UnsupportedEncodingException uee) {
+	    	return null;
+	    }
 	}
 	
 	/**
