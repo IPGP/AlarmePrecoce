@@ -54,17 +54,26 @@ public class EarlyWarningThread extends Thread {
     	//TEST VOICENT GATEWAY
     	
     	VoicentGateway voicentGateway = VoicentGateway.getInstance("195.83.188.145", 8155);
-    	String id = voicentGateway.callText("0692703856", "This is a test alert", false);
-    	while (voicentGateway.callStatus(id).equals("Call in progress")) {
-    		try {
-    			Thread.sleep(3000);
-    			System.out.println(voicentGateway.callStatus(id) + " " + id);
-			} catch (InterruptedException ie) {
-				EarlyWarning.appLogger.error("Error while sleeping!");
-    		}
-    	}
-    	System.out.println(voicentGateway.callStatus(id) + " " + id);
-    	System.out.println(voicentGateway.callRemove(id) + " " + id);
+
+    	String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
+    	
+    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
+                "C:/temp/log.voc",
+                "C:/temp/pat.wav",
+                "11", phoneNumbers);
+    	
+//    	String id = voicentGateway.callText("0692703856", "This is a test alert", false);
+//    	while (voicentGateway.callStatus(id).equals("Call in progress")) {
+//    		try {
+//    			Thread.sleep(3000);
+//    			System.out.println(voicentGateway.callStatus(id) + " " + id);
+//			} catch (InterruptedException ie) {
+//				EarlyWarning.appLogger.error("Error while sleeping!");
+//    		}
+//    	}
+//    	System.out.println(voicentGateway.callStatus(id) + " " + id);
+//    	System.out.println(voicentGateway.callRemove(id) + " " + id);
+    	
     	
     	//TODO VŽrifier la sortie de callRemove
     	//TODO VŽrifier la date de sendTrigger.pl

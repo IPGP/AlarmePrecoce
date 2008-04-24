@@ -53,7 +53,7 @@ public class MockGateway implements Gateway {
 	public String callRemove(String reqID) {
 		return "";
 	}
-	public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode) {
-		
+	public String callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode, String [] phoneNumbers) {
+		return "";
 	}
 }
