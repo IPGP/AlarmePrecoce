@@ -12,5 +12,5 @@ public interface Gateway {
 	public String callAudio(String phoneNumber, String audioFile, boolean selfDelete);
 	public String callStatus(String requestID);
 	public String callRemove(String requestID);
-	public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode);
+	public String callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode, String [] phoneNumbers);
 }
