@@ -50,6 +50,9 @@
   	<voicent>
   	  <host>195.83.188.41</host>
   	  <port>8155</port>
+  	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
+  	  <vocfile>C:/vocfiles/default.voc</vocfile>
+  	  <wavefile>C:/Program Files/Voicent/MyRecordings/defaultWarningMessage.wav</wavefile>
   	</voicent>
   </gateway>
 </earlywarning>
