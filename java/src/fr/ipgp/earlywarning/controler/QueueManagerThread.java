@@ -7,6 +7,7 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.telephones.PhoneCall;
 import fr.ipgp.earlywarning.triggers.*;
+import fr.ipgp.earlywarning.gateway.*;
 import java.util.concurrent.PriorityBlockingQueue;
 /**
  * Manage a trigger queue based on priorities. Launch the CallManager thread.
@@ -17,6 +18,7 @@ public class QueueManagerThread extends Thread {
 	private static QueueManagerThread uniqueInstance;
 	private PriorityBlockingQueue<Trigger> queue;
     protected boolean moreTriggers = true;
+    private Gateway gateway;
 	
     private QueueManagerThread() {
     	this("QueueManagerThread");
@@ -72,24 +74,15 @@ public class QueueManagerThread extends Thread {
 	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
-		PhoneCall phoneCall = new PhoneCall();
+    	gateway = VoicentGateway.getInstance();
+		//PhoneCall phoneCall = new PhoneCall();
     	while (moreTriggers) {
     		if (queue.size() > 0) {
-    			if (phoneCall.isCallInProgress()) {
-    	    		try {
-    					Thread.sleep(5000);
-    					System.out.println("Another call is in progress. Sleeping for 5 seconds...");
-    				} catch (InterruptedException ie) {
-    					EarlyWarning.appLogger.error("Error while sleeping!");
-    				}    				
-    			} else {
-    				phoneCall.setTrigger(queue.poll());
-    				phoneCall.callTillConfirm();
-    			}
+    			//gateway.callTillConfirm(vcastexe, vocfile, wavfile, ccode, phoneNumbers)
     		} else {
 	    		try {
 					Thread.sleep(5000);
-					//System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
+					System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
 				} catch (InterruptedException ie) {
 					EarlyWarning.appLogger.error("Error while sleeping!");
 				}
