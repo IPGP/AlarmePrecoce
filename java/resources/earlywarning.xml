@@ -20,7 +20,7 @@
     <driver>org.postgresql.Driver</driver>
   </dbms>
   <heartbeat>
-    <use_heartbeat>false</use_heartbeat>
+    <use_heartbeat>true</use_heartbeat>
     <num_appli>20</num_appli>
     <num_type_alive>24</num_type_alive>
     <num_type_start>18</num_type_start>
