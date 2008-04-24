@@ -4,7 +4,6 @@ package fr.ipgp.earlywarning.messages;
  * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import java.io.File;
 import org.junit.*;
 /**
  * @author Patrice Boissier

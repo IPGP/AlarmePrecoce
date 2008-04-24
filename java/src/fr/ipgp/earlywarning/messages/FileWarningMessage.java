@@ -4,7 +4,6 @@
  */
 package fr.ipgp.earlywarning.messages;
 
-import java.io.*;
 /**
  * @author Patrice Boissier
  * This class represents the file warning message to be delivered by phone call
