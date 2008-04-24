@@ -10,9 +10,9 @@ import java.io.*;
  * This class represents the file warning message to be delivered by phone call
  */
 public class FileWarningMessage implements WarningMessage {
-	private File file;
+	private String file;
 	
-	public FileWarningMessage(File file) {
+	public FileWarningMessage(String file) {
 		this.file = file;
 	}
 	
@@ -27,7 +27,7 @@ public class FileWarningMessage implements WarningMessage {
 	/**
 	 * @return the file to get
 	 */
-	public File getFile() {
+	public String getFile() {
 		return file;
 	}
 }

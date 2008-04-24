@@ -9,7 +9,7 @@ import org.apache.commons.configuration.*;
 import java.sql.*;
 import java.util.*;
 import fr.ipgp.earlywarning.utilities.*;
-import fr.ipgp.earlywarning.*;
+import fr.ipgp.earlywarning.EarlyWarning;
 
 /**
  * Sends heartbeat represented by an update in the "fonctionnement" database (for OVPF only!)
