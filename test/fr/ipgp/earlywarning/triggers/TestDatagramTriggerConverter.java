@@ -43,6 +43,7 @@ public class TestDatagramTriggerConverter {
 			packet.setLength(message.length());
 			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
 			Trigger trigger = datagram2Trigger.getTrigger();
+			trigger.toString();
 			datagram2Trigger.decode();
 		} catch (UnknownTriggerFormatException utfe) {
 			System.out.println(utfe.getMessage());
