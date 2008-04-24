@@ -16,7 +16,6 @@ public class PhoneCall {
 	private Trigger trigger;
 	
     public PhoneCall() {
-
     }
      
     /**
@@ -69,6 +68,7 @@ public class PhoneCall {
     	EarlyWarning.appLogger.debug("Starting phone call");
     	try {
     		System.out.println("Phone call in progress : " + trigger.toString());
+    		//gateway.callTillConfirm(vcastexe, vocfile, wavfile, ccode, phoneNumbers)
 			Thread.sleep(10000);
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
