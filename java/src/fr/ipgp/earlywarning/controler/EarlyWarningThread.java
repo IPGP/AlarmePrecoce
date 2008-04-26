@@ -58,8 +58,8 @@ public class EarlyWarningThread extends Thread {
     	String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
     	
     	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
-                "C:/temp/log.voc",
-                "C:/temp/pat.wav",
+                "C:/mygroup/log.voc",
+                "C:/mygroup/hello.wav",
                 "11", phoneNumbers);
     	
 //    	String id = voicentGateway.callText("0692703856", "This is a test alert", false);

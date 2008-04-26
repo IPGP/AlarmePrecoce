@@ -227,9 +227,9 @@ public class VoicentGateway implements Gateway{
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" +  waveFile + "\"";
-		    //cmdline += " -numbers" + " \"" + phoneNumberList + "\"";
+		    cmdline += " -numbers" + " \"" + phoneNumberList + "\"";
 		    //cmdline += " -import" + " \"C:/temp/test.txt\"";
-		    cmdline += " -cleanstatus";
+		    //cmdline += " -cleanstatus";
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
