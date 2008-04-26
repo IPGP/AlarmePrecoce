@@ -55,7 +55,8 @@ public class EarlyWarningThread extends Thread {
     	
     	VoicentGateway voicentGateway = VoicentGateway.getInstance("195.83.188.145", 8155);
 
-    	String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
+    	//String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
+    	String [] phoneNumbers = {"0262275826"};
     	
     	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
                 "C:/mygroup/log.voc",
