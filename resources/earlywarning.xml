@@ -32,7 +32,7 @@
   	  <priority>2</priority>
   	  <confirm_code>11</confirm_code>
   	  <repeat>true</repeat>
-  	  <call_list>defaultCallList.csv</call_list>
+  	  <call_list>defaultCallList.txt</call_list>
   	  <warning_message>defaultWarningMessage.wav</warning_message>
   	  <error_message>defaultErrorMessage.wav</error_message>
   	  <resources_path>resources</resources_path>
