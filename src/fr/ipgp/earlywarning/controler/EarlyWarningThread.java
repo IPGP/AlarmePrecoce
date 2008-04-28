@@ -14,7 +14,6 @@ import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
-import fr.ipgp.earlywarning.gateway.VoicentGateway;
 /**
  * @author Patrice Boissier
  * Thread that listen for incoming triggers from the network.
@@ -87,8 +86,8 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("triggers.defaults.call_list"));
-    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.warning_message"));
+    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.txt_call_list"));
+    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
     		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
@@ -151,13 +150,13 @@ public class EarlyWarningThread extends Thread {
     	try {  	
     		long id = CommonUtilities.getUniqueId();
 			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-			CallList callList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
-			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("phone_call.support_text2speech");
+			CallList callList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.txt_call_list"));
+			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("gateway.text_to_speech");
 			WarningMessage message;
 			if (supportText2Speech)
 				message = new TextWarningMessage(errorMessage);
 			else
-				message = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.error_message"));
+				message = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.error_message"));
 			String application = new String("EarlyWarning");
 			String type = new String("v2");
 			boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
@@ -186,8 +185,8 @@ public class EarlyWarningThread extends Thread {
 		} catch (NoSuchElementException nsee) {
 			EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
 			return null;
-		} catch (IOException ioe) {
-        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Trigger not sent.");
+        } catch (InvalidFileNameException ifne) {
+        	EarlyWarning.appLogger.fatal("Invalid default call list. Check gateway section of earlywarning.xml configuration file. Trigger not sent.");
         	return null;
         }
     }
