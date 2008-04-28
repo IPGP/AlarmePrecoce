@@ -38,7 +38,7 @@ public class TestDatagramTriggerConverter {
 		try {
 
 			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-			CallList callList = new FileCallList(new File("resources/defaultCallList.csv"));
+			CallList callList = new FileReferenceCallList("defaultCallList.txt");
 			packet.setData(message.getBytes());
 			packet.setLength(message.length());
 			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
@@ -53,6 +53,8 @@ public class TestDatagramTriggerConverter {
 			System.out.println(mtfe.getMessage());
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
+		} catch (InvalidFileNameException ifne) {
+			System.out.println(ifne.getMessage());
 		}
 	}
 	
@@ -60,7 +62,7 @@ public class TestDatagramTriggerConverter {
 	public void testCreateV1Trigger() {
 		try {
 			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-			CallList callList = new FileCallList(new File("resources/defaultCallList.csv"));
+			CallList callList = new FileReferenceCallList("resources/defaultCallList.voc");
 			String message = "Sismo 13/03/2008 13:22:04 Declenchement";
 			packet.setData(message.getBytes());
 			packet.setLength(message.length());
@@ -85,6 +87,8 @@ public class TestDatagramTriggerConverter {
 			System.out.println(mtfe.getMessage());
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
+		} catch (InvalidFileNameException ifne) {
+			System.out.println(ifne.getMessage());
 		}
 	}
 	
@@ -115,10 +119,10 @@ public class TestDatagramTriggerConverter {
 	public void testDecodeValidV2Trigger() {
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 12 |Ceci est un message d'alerte!|");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 |Ceci est un message 		d'alerte.|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.csv true 123542 |Ceci est un message, d'alerte?|");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.csv true 2263 |Alerte|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.voc true 123542 |Ceci est un message, d'alerte?|");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.txt true 2263 |Alerte|");
 		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856,06924555455 true 958 message.wav");
-		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.csv true 58547 warningMessage.wav");
+		testDecodeTrigger("02 1 2008/03/18 13:22:04 appli_dataTaker01 defaultCallList.txt true 58547 warningMessage.wav");
 		testDecodeTrigger("02 1 2008/03/21 11:00:33 nagios 0692703856 true 11 |Alerte, plus de place sur partage|");
 	}
 
