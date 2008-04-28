@@ -32,27 +32,27 @@
   	  <priority>2</priority>
   	  <confirm_code>11</confirm_code>
   	  <repeat>true</repeat>
-  	  <call_list>defaultCallList.txt</call_list>
-  	  <warning_message>defaultWarningMessage.wav</warning_message>
-  	  <error_message>defaultErrorMessage.wav</error_message>
   	  <resources_path>resources</resources_path>
   	</defaults>
   	<call_on_unknown_message>true</call_on_unknown_message>
   </triggers>
-  <phone_call>
-  	<support_text2speech>false</support_text2speech>
-  </phone_call>
   <mailinglist>
     <email>boissier@ipgp.jussieu.fr</email>
     <email>arnaudl@ipgp.jussieu.fr</email>
   </mailinglist>
   <gateway>
+    <text_to_speech>true</text_to_speech>
+    <defaults>
+	  <txt_call_list>defaultCallList.txt</txt_call_list>
+  	  <warning_message>defaultWarningMessage.wav</warning_message>
+  	  <error_message>defaultErrorMessage.wav</error_message>
+  	</defaults>
   	<voicent>
   	  <host>195.83.188.41</host>
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
-  	  <vocfile>C:/vocfiles/default.voc</vocfile>
-  	  <wavefile>C:/Program Files/Voicent/MyRecordings/defaultWarningMessage.wav</wavefile>
+  	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
+  	  <default_voc_call_list>defaultCallList.voc</default_voc_call_list>
   	</voicent>
   </gateway>
 </earlywarning>

@@ -75,9 +75,14 @@ public class QueueManagerThread extends Thread {
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	gateway = VoicentGateway.getInstance();
-		//PhoneCall phoneCall = new PhoneCall();
     	while (moreTriggers) {
     		if (queue.size() > 0) {
+    			String vocFile;
+    			Trigger trig = queue.poll();
+    			if (trig.getCallList().getType().equals("voc"))
+    				vocFile = trig.getCallList().toString();
+    			else 
+    				vocFile = "";
     			//gateway.callTillConfirm(vcastexe, vocfile, wavfile, ccode, phoneNumbers)
     		} else {
 	    		try {
