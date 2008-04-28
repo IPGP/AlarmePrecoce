@@ -17,19 +17,8 @@ public interface CallList {
 	 */
 	public String toString();
 	
-    /**
-     * move the record forward
-     */
-    public boolean next();
-    
-    /**
-     * get the current record values
-     * @param name parameter name
-     */
-    public String getValue(String name);
-    
-    /**
-     * total number of records
-     */
-    public int getTotal();
+	/**
+	 * @return a String representing the CallList type
+	 */
+	public String getType();
 }

@@ -52,7 +52,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException {
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
     	String[] packetContentSplit = this.packetContent.split(" ");
     	int version;
     	
@@ -114,7 +114,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param elements the elements of the received message
      * @return true if the decoding was successful else false
      */
-    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException {
+    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
     	String warningMessage = new String();
     	boolean first = true;
     	if (packetContentElements.length>8) {
@@ -138,13 +138,17 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid repeat " + packetContentElements[6]);
     	if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
-    	if (packetContentElements[5].matches("\\w+\\.csv"))
-    		trigger.setCallList(new FileCallList(new File(packetContentElements[5])));
+    	if (packetContentElements[5].matches("\\w+\\.txt"))
+    		trigger.setCallList(new FileReferenceCallList(packetContentElements[5]));
     	else {
-    		if (packetContentElements[5].matches("(\\d*)(,\\d*)*"))
-    			trigger.setCallList(new TextCallList(packetContentElements[5]));
-    		else
-    			throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
+    		if (packetContentElements[5].matches("\\w+\\.voc"))
+    			trigger.setCallList(new FileReferenceCallList(packetContentElements[5]));
+    		else {
+    			if (packetContentElements[5].matches("(\\d*)(,\\d*)*"))
+    				trigger.setCallList(new TextCallList(packetContentElements[5]));
+    			else
+    				throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
+    		}
     	}
     	if (warningMessage.matches("\\w+\\.wav"))
     		trigger.setMessage(new FileWarningMessage(warningMessage));

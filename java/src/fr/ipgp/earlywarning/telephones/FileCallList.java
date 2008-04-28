@@ -18,6 +18,7 @@ public class FileCallList implements CallList{
     private int total = -1;
     private ArrayList<String> currentRecord = new ArrayList<String>();
     private BufferedReader bufferedReader = null;
+    private final String type = "csv";
     
 	public FileCallList(File file) throws IOException {
 		this.file = file;
@@ -42,6 +43,12 @@ public class FileCallList implements CallList{
 		return this.file;
 	}
 	
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
     
     public boolean next() {
         currentRecord.clear();
