@@ -22,6 +22,7 @@ import fr.ipgp.earlywarning.gateway.VoicentGateway;
  */
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
+	private QueueManagerThread queueManagerThread;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
@@ -52,17 +53,17 @@ public class EarlyWarningThread extends Thread {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
     	//TEST VOICENT GATEWAY
-    	
-    	VoicentGateway voicentGateway = VoicentGateway.getInstance("195.83.188.145", 8155);
-
-    	//String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
-    	String [] phoneNumbers = {"0262275826"};
-    	
-    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
-                "C:/mygroup/log.voc",
-                "C:/mygroup/hello.wav",
-                "11", phoneNumbers);
-    	
+//    	
+//    	VoicentGateway voicentGateway = VoicentGateway.getInstance("195.83.188.145", 8155);
+//
+//    	//String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
+//    	String [] phoneNumbers = {"0262275826"};
+//    	
+//    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
+//                "C:/mygroup/log.voc",
+//                "C:/mygroup/hello.wav",
+//                "11", phoneNumbers);
+//    	
 //    	String id = voicentGateway.callText("0692703856", "This is a test alert", false);
 //    	while (voicentGateway.callStatus(id).equals("Call in progress")) {
 //    		try {
@@ -74,8 +75,6 @@ public class EarlyWarningThread extends Thread {
 //    	}
 //    	System.out.println(voicentGateway.callStatus(id) + " " + id);
 //    	System.out.println(voicentGateway.callRemove(id) + " " + id);
-    	
-    	
     	//TODO VŽrifier la sortie de callRemove
     	//TODO VŽrifier la date de sendTrigger.pl
     	
@@ -88,8 +87,8 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileCallList(new File(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.call_list")));
-    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.resources_path")+ "/" +EarlyWarning.configuration.getString("triggers.defaults.warning_message"));
+    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("triggers.defaults.call_list"));
+    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("triggers.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
     		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
@@ -99,12 +98,12 @@ public class EarlyWarningThread extends Thread {
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
         	System.exit(-1);
-        } catch (IOException ioe) {
-        	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Exiting application.");
+        } catch (InvalidFileNameException ifne) {
+        	EarlyWarning.appLogger.fatal("Default call list has an invalid name (*.txt or *.voc) in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
         	System.exit(-1);
         }
     	
-    	QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
+    	queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
 
     	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
@@ -122,40 +121,19 @@ public class EarlyWarningThread extends Thread {
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
-                if (triggerOnError) {
-                	Trigger trig = createErrorTrigger("Input Output error while receiving datagram");
-                	if (!(trig == null)) {
-                		queueManagerThread.addTrigger(trig);
-                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
-                	}
-                }
+                addErrorTrigger("Input Output error while receiving datagram");
             } catch (UnknownTriggerFormatException utfe) {
             	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
-                if (triggerOnError) {
-                	Trigger trig = createErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
-                	if (!(trig == null)) {
-                		queueManagerThread.addTrigger(trig);
-            			EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
-                	}
-                }
+            	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
             } catch (InvalidTriggerFieldException itfe) {
             	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                if (triggerOnError) {
-                	Trigger trig = createErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                	if (!(trig == null)) {
-                		queueManagerThread.addTrigger(trig);
-                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
-                	}
-                }
+            	addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
             } catch (MissingTriggerFieldException mtfe) {
             	EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
-                if (triggerOnError) {
-                	Trigger trig = createErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
-                	if (!(trig == null)) {
-                		queueManagerThread.addTrigger(trig);
-                		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
-                	}
-                }
+            	addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
+            } catch (InvalidFileNameException ifne) {
+            	EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
+            	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
             }
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
@@ -211,6 +189,16 @@ public class EarlyWarningThread extends Thread {
 		} catch (IOException ioe) {
         	EarlyWarning.appLogger.fatal("Error while opening default call list or warning message. Trigger not sent.");
         	return null;
+        }
+    }
+    
+    private void addErrorTrigger (String errorMessage) {
+    	if (triggerOnError) {
+        	Trigger trig = createErrorTrigger(errorMessage);
+        	if (!(trig == null)) {
+        		queueManagerThread.addTrigger(trig);
+        		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+        	}
         }
     }
 }

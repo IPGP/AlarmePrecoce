@@ -26,6 +26,7 @@ public class TestTextCallList {
 		TextCallList textCallList = new TextCallList(testText);
         Assert.assertEquals(testText,textCallList.getText());
         Assert.assertEquals(testText,textCallList.toString());
+        Assert.assertEquals("text",textCallList.getType());
 	}
 	
 	public static junit.framework.Test suite() {
