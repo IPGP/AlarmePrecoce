@@ -7,12 +7,14 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
+import fr.ipgp.earlywarning.view.EarlyWarningWindow;
+
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
-
+import javax.swing.*;
 /**
  * @author Patrice Boissier
  * Entry point for the application
@@ -64,6 +66,13 @@ public class EarlyWarning {
 		}catch (NoSuchElementException nsee) {
 			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
 		}
+		
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				EarlyWarningWindow window = new EarlyWarningWindow();
+				window.setVisible(true);
+			}
+		});
 	}
 	
 	/**

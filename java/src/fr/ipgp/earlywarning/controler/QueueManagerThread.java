@@ -8,7 +8,11 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.telephones.PhoneCall;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.gateway.*;
+
+import java.util.NoSuchElementException;
 import java.util.concurrent.PriorityBlockingQueue;
+
+import org.apache.commons.configuration.ConversionException;
 /**
  * Manage a trigger queue based on priorities. Launch the CallManager thread.
  * @author Patrice Boissier
@@ -77,13 +81,23 @@ public class QueueManagerThread extends Thread {
     	gateway = VoicentGateway.getInstance();
     	while (moreTriggers) {
     		if (queue.size() > 0) {
-    			String vocFile;
-    			Trigger trig = queue.poll();
-    			if (trig.getCallList().getType().equals("voc"))
-    				vocFile = trig.getCallList().toString();
-    			else 
-    				vocFile = "";
-    			//gateway.callTillConfirm(vcastexe, vocfile, wavfile, ccode, phoneNumbers)
+    			try {
+    				String vocFile;
+    				String vcastExe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
+    				Trigger trig = queue.poll();
+    				String confirmCode = trig.getConfirmCode();
+    				String wavFile = "";
+    				String [] phoneNumbers = {""};
+    				if (trig.getCallList().getType().equals("voc"))
+    					vocFile = EarlyWarning.configuration.getString("gateway.voicent.resources_path") + "/" + trig.getCallList().toString();
+    				else //TODO Generer le fichier dynamiquement!!!
+    					vocFile = EarlyWarning.configuration.getString("gateway.voicent.resources_path") + "/" + "log20080428.voc";
+    				gateway.callTillConfirm(vcastExe, vocFile, wavFile, confirmCode, phoneNumbers);
+    			} catch (ConversionException ce) {
+    	        	EarlyWarning.appLogger.fatal("has a wrong value in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
+    	        } catch (NoSuchElementException nsee) {
+    	        	EarlyWarning.appLogger.fatal("is missing in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
+    	        }
     		} else {
 	    		try {
 					Thread.sleep(5000);
