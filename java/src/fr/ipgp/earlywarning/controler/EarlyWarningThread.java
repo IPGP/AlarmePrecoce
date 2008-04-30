@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.*;
-import fr.ipgp.earlywarning.gateway.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
@@ -52,34 +51,6 @@ public class EarlyWarningThread extends Thread {
     public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
-    	//TEST VOICENT GATEWAY
-//    	
-//    	VoicentGateway voicentGateway = VoicentGateway.getInstance("195.83.188.145", 8155);
-//
-//    	//String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
-//    	String [] phoneNumbers = {"0262275826"};
-//    	
-//    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe","C:/temp/log.voc","C:/temp/voicent.wav", "11");
-//                "C:/mygroup/log.voc",
-//                "C:/mygroup/hello.wav",
-//                "11", phoneNumbers);
-//    	
-//    	String id = voicentGateway.callText("0692703856", "This is a test alert", false);
-//    	while (voicentGateway.callStatus(id).equals("Call in progress")) {
-//    		try {
-//    			Thread.sleep(3000);
-//    			System.out.println(voicentGateway.callStatus(id) + " " + id);
-//			} catch (InterruptedException ie) {
-//				EarlyWarning.appLogger.error("Error while sleeping!");
-//    		}
-//    	}
-//    	System.out.println(voicentGateway.callStatus(id) + " " + id);
-//    	System.out.println(voicentGateway.callRemove(id) + " " + id);
-    	//TODO VŽrifier la sortie de callRemove
-    	//TODO VŽrifier la date de sendTrigger.pl
-    	
-    	// END OF TEST
-    	
     	CallList defaultCallList = null;
     	WarningMessage defaultWarningMessage = null;
     	boolean defaultRepeat = true;
@@ -87,7 +58,7 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.txt_call_list"));
+    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
     		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
@@ -151,7 +122,7 @@ public class EarlyWarningThread extends Thread {
     	try {  	
     		long id = CommonUtilities.getUniqueId();
 			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-			CallList callList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.txt_call_list"));
+			CallList callList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
 			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("gateway.text_to_speech");
 			WarningMessage message;
 			if (supportText2Speech)

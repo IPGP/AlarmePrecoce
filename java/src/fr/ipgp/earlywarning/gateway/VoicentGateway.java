@@ -202,43 +202,6 @@ public class VoicentGateway implements Gateway{
 		}
 	}
 	
-    public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode)
-    {
-        // call request url
-        String urlstr = "/ocall/callreqHandler.jsp";
-
-        // setting the http post string
-        String poststr = "info=";
-        poststr += URLEncoder.encode("Simple Call till Confirm");
-
-        poststr += "&phoneno=1111111"; // any number
-
-        poststr += "&firstocc=10";
-        poststr += "&selfdelete=0";
-
-        poststr += "&startexec=";
-        poststr += URLEncoder.encode(vcastexe);
-
-        String cmdline = "\"";
-        cmdline += vocfile;
-        cmdline += "\"";
-        cmdline += " -startnow";
-        cmdline += " -confirmcode ";
-        cmdline += ccode;
-        cmdline += " -wavfile ";
-        cmdline += "\"";
-        cmdline += wavfile;
-        cmdline += "\"";
-
-        // add -cleanstatus if necessary
-
-        poststr += "&cmdline=";
-        poststr += URLEncoder.encode(cmdline);
-
-        // Send like a Call Request
-        postToGateway(urlstr, poststr);
-    }
-	
 	public String callTillConfirm(String vcastexe, String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
 		try {
 			

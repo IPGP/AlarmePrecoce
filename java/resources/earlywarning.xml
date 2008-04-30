@@ -43,7 +43,7 @@
   <gateway>
     <text_to_speech>true</text_to_speech>
     <defaults>
-	  <txt_call_list>defaultCallList.txt</txt_call_list>
+	  <call_list>defaultCallList.txt</call_list>
   	  <warning_message>defaultWarningMessage.wav</warning_message>
   	  <error_message>defaultErrorMessage.wav</error_message>
   	</defaults>
@@ -52,7 +52,6 @@
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
   	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
-  	  <default_voc_call_list>defaultCallList.voc</default_voc_call_list>
   	</voicent>
   </gateway>
 </earlywarning>
