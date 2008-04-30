@@ -5,7 +5,6 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.telephones.PhoneCall;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.gateway.*;
 
