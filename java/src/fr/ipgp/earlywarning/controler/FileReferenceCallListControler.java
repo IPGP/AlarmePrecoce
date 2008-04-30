@@ -11,7 +11,6 @@ import fr.ipgp.earlywarning.view.*;
  */
 public class FileReferenceCallListControler {
 	public FileReferenceCallListView listView = null;
-	
 	private FileReferenceCallList fileReferenceCallList = null;
 	
 	public FileReferenceCallListControler(FileReferenceCallList fileReferenceCallList) {
