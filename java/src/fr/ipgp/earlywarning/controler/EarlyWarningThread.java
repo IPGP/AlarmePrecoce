@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.*;
+import fr.ipgp.earlywarning.gateway.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
@@ -58,7 +59,7 @@ public class EarlyWarningThread extends Thread {
 //    	//String [] phoneNumbers = {"0262275826", "0692703856", "0692703856", "0262275826", "0692703856", "0692703856"};
 //    	String [] phoneNumbers = {"0262275826"};
 //    	
-//    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe",
+//    	voicentGateway.callTillConfirm("C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe","C:/temp/log.voc","C:/temp/voicent.wav", "11");
 //                "C:/mygroup/log.voc",
 //                "C:/mygroup/hello.wav",
 //                "11", phoneNumbers);
