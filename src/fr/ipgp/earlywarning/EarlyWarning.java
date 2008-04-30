@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
-import javax.swing.*;
 /**
  * @author Patrice Boissier
  * Entry point for the application
@@ -29,7 +28,6 @@ public class EarlyWarning {
 		
 		setLogger();
 		
-		// Check unicity of the application. Exits if already launched.
 		try {
 			if (!CommonUtilities.appIsUnique("EarlyWarning")) {
 				appLogger.fatal("Application already running : exiting");
@@ -67,21 +65,12 @@ public class EarlyWarning {
 			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
 		}
 		
-//		SwingUtilities.invokeLater(new Runnable(){
-//			public void run(){
-//				EarlyWarningWindow window = new EarlyWarningWindow();
-//				window.setVisible(true);
-//			}
-//		});
-		
 		try {
-			FileReferenceCallList file = new FileReferenceCallList("callList2.voc");
+			FileReferenceCallList file = new FileReferenceCallList(configuration.getString("gateway.defaults.call_list"));
 			FileReferenceCallListControler fileReferenceCallListControler = new FileReferenceCallListControler(file);
 			fileReferenceCallListControler.displayView();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
+		} catch (InvalidFileNameException ifne) {
+			appLogger.error("An invalid call list : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");		}
 	}
 	
 	/**
