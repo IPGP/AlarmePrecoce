@@ -3,6 +3,7 @@
  */
 package fr.ipgp.earlywarning.telephones;
 
+import javax.swing.event.EventListenerList;
 /**
  * @author patriceboissier
  *
@@ -10,6 +11,7 @@ package fr.ipgp.earlywarning.telephones;
 public class FileReferenceCallList implements CallList {
 	private String file;
 	private String type;
+	private EventListenerList listeners;
 	
 	public FileReferenceCallList(String file) throws InvalidFileNameException {
 		String [] fileElements = file.split("\\.");
@@ -19,6 +21,7 @@ public class FileReferenceCallList implements CallList {
 			throw new InvalidFileNameException("Invalid File Name : " + file);
 		this.file = file;
 		this.type = fileElements[fileElements.length-1];
+		listeners = new EventListenerList();
 	}
 	
 	/**
@@ -27,6 +30,14 @@ public class FileReferenceCallList implements CallList {
 	public String toString() {
 		String result = file.toString();
 		return result;
+	}
+	
+	/**
+	 * 
+	 */
+	public void setFile(String file) {
+		this.file = file;
+		fireFileChanged();
 	}
 	
 	/**
@@ -48,5 +59,21 @@ public class FileReferenceCallList implements CallList {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public void addVolumeListener(FileReferenceCallListListener listener){
+		listeners.add(FileReferenceCallListListener.class, listener);
+	}
+	
+	public void removeVolumeListener(FileReferenceCallListListener listener){
+		listeners.remove(FileReferenceCallListListener.class, listener);
+	}
+	
+	public void fireFileChanged() {
+		FileReferenceCallListListener[] listenerList = (FileReferenceCallListListener[])listeners.getListeners(FileReferenceCallListListener.class);
+		
+		for(FileReferenceCallListListener listener : listenerList) {
+			listener.fileReferenceCallListChanged(new FileReferenceCallListChangedEvent(this, getFile()));
+		}
 	}
 }
