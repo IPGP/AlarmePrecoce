@@ -61,11 +61,11 @@ public class FileReferenceCallList implements CallList {
 		this.type = type;
 	}
 	
-	public void addVolumeListener(FileReferenceCallListListener listener){
+	public void addFileListener(FileReferenceCallListListener listener){
 		listeners.add(FileReferenceCallListListener.class, listener);
 	}
 	
-	public void removeVolumeListener(FileReferenceCallListListener listener){
+	public void removeFileListener(FileReferenceCallListListener listener){
 		listeners.remove(FileReferenceCallListListener.class, listener);
 	}
 	

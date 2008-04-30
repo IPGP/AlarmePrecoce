@@ -7,8 +7,8 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
-import fr.ipgp.earlywarning.view.EarlyWarningWindow;
-
+import fr.ipgp.earlywarning.telephones.*;
+import fr.ipgp.earlywarning.controler.*;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -67,12 +67,21 @@ public class EarlyWarning {
 			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
 		}
 		
-		SwingUtilities.invokeLater(new Runnable(){
-			public void run(){
-				EarlyWarningWindow window = new EarlyWarningWindow();
-				window.setVisible(true);
-			}
-		});
+//		SwingUtilities.invokeLater(new Runnable(){
+//			public void run(){
+//				EarlyWarningWindow window = new EarlyWarningWindow();
+//				window.setVisible(true);
+//			}
+//		});
+		
+		try {
+			FileReferenceCallList file = new FileReferenceCallList("callList2.voc");
+			FileReferenceCallListControler fileReferenceCallListControler = new FileReferenceCallListControler(file);
+			fileReferenceCallListControler.displayView();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	/**
