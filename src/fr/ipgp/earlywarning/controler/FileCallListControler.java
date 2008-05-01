@@ -15,7 +15,7 @@ public class FileCallListControler {
 	
 	public FileCallListControler(FileCallList fileCallList) {
 		this.fileCallList = fileCallList;
-		listView = new JComboBoxFileCallList(this, fileCallList.getFile());
+		listView = new JComboBoxFileCallList(this, fileCallList.getFileName());
 		this.fileCallList.addFileListener(listView);
 	}
 	
@@ -28,6 +28,6 @@ public class FileCallListControler {
 	}
 	
 	public void notifyFileChanged(String file) {
-		fileCallList.setFile(file);
+		fileCallList.setFileName(file);
 	}
 }
