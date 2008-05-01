@@ -15,12 +15,15 @@ import fr.ipgp.earlywarning.controler.*;
  */
 public class JComboBoxFileReferenceCallList extends FileReferenceCallListView implements ActionListener{
 	private JFrame frame = null;
-	private JPanel panel = null;
+	private JPanel panelTitle = null;
+	private JPanel panelCallList = null;
+	private JPanel panelSelectedCallList = null;
 	private JComboBox callListList = null;
 	private JLabel labelSelectedCallList = null;
 	private JLabel labelTitle = null;
 	private String [] files;
 	private JButton choseCallListButton = null;
+	private FlowLayout layout = new FlowLayout();
 	
 	public JComboBoxFileReferenceCallList(FileReferenceCallListControler controler) {
 		this(controler, "");
@@ -32,6 +35,8 @@ public class JComboBoxFileReferenceCallList extends FileReferenceCallListView im
 	}
 	
 	private void buildFrame(String file) {
+		
+		
 		frame = new JFrame();
 		frame.setTitle("EarlyWarning");
 		frame.setSize(400,200);
@@ -39,25 +44,34 @@ public class JComboBoxFileReferenceCallList extends FileReferenceCallListView im
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		panel = new JPanel();
-		panel.setLayout(new FlowLayout());
-		labelTitle = new JLabel("Earlywarning System");
-		panel.add(labelTitle);
+		layout.setAlignment(FlowLayout.CENTER);
 		
+		panelTitle = new JPanel();
+		panelTitle.setLayout(layout);
+		labelTitle = new JLabel("Earlywarning System");
+		panelTitle.add(labelTitle);
+		
+		panelCallList = new JPanel();
+		panelCallList.setLayout(layout);
 		files = new String[]{"callList1.voc", "callList2.voc", "callList3.voc"};		
 		callListList = new JComboBox(files);
 		callListList.setSelectedItem(file);
-		panel.add(callListList);
+		panelCallList.add(callListList);
 		
 		choseCallListButton = new JButton("Choisir");
 		choseCallListButton.addActionListener(this);
-		panel.add(choseCallListButton);
+		panelCallList.add(choseCallListButton);
 		
+		panelSelectedCallList = new JPanel();
+		panelSelectedCallList.setLayout(layout);
 		labelSelectedCallList = new JLabel("Liste d'appel selectionnee : " + file);
-		panel.add(labelSelectedCallList);
+		panelSelectedCallList.add(labelSelectedCallList);
+
+		panelCallList.add(panelSelectedCallList);
 		
-		frame.setContentPane(panel);
-		
+		frame.getContentPane().add(panelTitle, BorderLayout.NORTH);
+		frame.getContentPane().add(panelCallList, BorderLayout.CENTER);
+		//frame.getContentPane().add(panelSelectedCallList, BorderLayout.CENTER);
 	}
 	
 	@Override
