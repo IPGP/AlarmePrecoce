@@ -8,12 +8,12 @@ import javax.swing.event.EventListenerList;
  * @author patriceboissier
  *
  */
-public class FileReferenceCallList implements CallList {
+public class FileCallList implements CallList {
 	private String file;
 	private String type;
 	private EventListenerList listeners;
 	
-	public FileReferenceCallList(String file) throws InvalidFileNameException {
+	public FileCallList(String file) throws InvalidFileNameException {
 		String [] fileElements = file.split("\\.");
 		if (fileElements.length < 2)
 			throw new InvalidFileNameException("Invalid File Name : " + file);
@@ -61,19 +61,19 @@ public class FileReferenceCallList implements CallList {
 		this.type = type;
 	}
 	
-	public void addFileListener(FileReferenceCallListListener listener){
-		listeners.add(FileReferenceCallListListener.class, listener);
+	public void addFileListener(FileCallListListener listener){
+		listeners.add(FileCallListListener.class, listener);
 	}
 	
-	public void removeFileListener(FileReferenceCallListListener listener){
-		listeners.remove(FileReferenceCallListListener.class, listener);
+	public void removeFileListener(FileCallListListener listener){
+		listeners.remove(FileCallListListener.class, listener);
 	}
 	
 	public void fireFileChanged() {
-		FileReferenceCallListListener[] listenerList = (FileReferenceCallListListener[])listeners.getListeners(FileReferenceCallListListener.class);
+		FileCallListListener[] listenerList = (FileCallListListener[])listeners.getListeners(FileCallListListener.class);
 		
-		for(FileReferenceCallListListener listener : listenerList) {
-			listener.fileReferenceCallListChanged(new FileReferenceCallListChangedEvent(this, getFile()));
+		for(FileCallListListener listener : listenerList) {
+			listener.fileReferenceCallListChanged(new FileCallListChangedEvent(this, getFile()));
 		}
 	}
 }

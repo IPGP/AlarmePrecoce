@@ -23,7 +23,7 @@ public class EarlyWarning {
 
 	public static Configuration configuration;
 	public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-	public static FileReferenceCallList defaultCallList;
+	public static FileCallList defaultCallList;
 	
 	public static void main(String[] args)  {
 		
@@ -121,9 +121,9 @@ public class EarlyWarning {
 	 */
 	private static void createGui() {
 		try {
-			defaultCallList = new FileReferenceCallList(configuration.getString("gateway.defaults.call_list"));
-			FileReferenceCallListControler fileReferenceCallListControler = new FileReferenceCallListControler(defaultCallList);
-			fileReferenceCallListControler.displayView();
+			defaultCallList = new FileCallList(configuration.getString("gateway.defaults.call_list"));
+			FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList);
+			fileCallListControler.displayView();
 		} catch (InvalidFileNameException ifne) {
 			appLogger.error("An invalid call list : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
 		}

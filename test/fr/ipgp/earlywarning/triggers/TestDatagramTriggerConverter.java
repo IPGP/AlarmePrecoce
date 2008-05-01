@@ -38,7 +38,7 @@ public class TestDatagramTriggerConverter {
 		try {
 
 			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-			CallList callList = new FileReferenceCallList("defaultCallList.txt");
+			CallList callList = new FileCallList("defaultCallList.txt");
 			packet.setData(message.getBytes());
 			packet.setLength(message.length());
 			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
@@ -62,7 +62,7 @@ public class TestDatagramTriggerConverter {
 	public void testCreateV1Trigger() {
 		try {
 			WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-			CallList callList = new FileReferenceCallList("resources/defaultCallList.voc");
+			CallList callList = new FileCallList("resources/defaultCallList.voc");
 			String message = "Sismo 13/03/2008 13:22:04 Declenchement";
 			packet.setData(message.getBytes());
 			packet.setLength(message.length());

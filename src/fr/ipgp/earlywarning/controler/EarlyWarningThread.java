@@ -22,7 +22,7 @@ import fr.ipgp.earlywarning.utilities.CommonUtilities;
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
 	private QueueManagerThread queueManagerThread;
-	private FileReferenceCallList defaultCallList;
+	private FileCallList defaultCallList;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
@@ -42,7 +42,7 @@ public class EarlyWarningThread extends Thread {
     	packet = new DatagramPacket(buffer, buffer.length);
     }
     
-    public static synchronized EarlyWarningThread getInstance(FileReferenceCallList defaultCallList) throws IOException, ConversionException, NoSuchElementException {
+    public static synchronized EarlyWarningThread getInstance(FileCallList defaultCallList) throws IOException, ConversionException, NoSuchElementException {
     	if (uniqueInstance == null) {
     		uniqueInstance = new EarlyWarningThread();
     	}
@@ -60,7 +60,7 @@ public class EarlyWarningThread extends Thread {
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
+    		defaultCallList = new FileCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
     		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
@@ -124,7 +124,7 @@ public class EarlyWarningThread extends Thread {
     	try {  	
     		long id = CommonUtilities.getUniqueId();
 			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-			CallList callList = new FileReferenceCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
+			CallList callList = new FileCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
 			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("gateway.text_to_speech");
 			WarningMessage message;
 			if (supportText2Speech)

@@ -32,9 +32,9 @@ public class TestFileReferenceCallList {
 	@Test
 	public void testCreateTextCallList() {
 		try {
-			FileReferenceCallList frcl1 = new FileReferenceCallList(fileReference1);
-			FileReferenceCallList frcl2 = new FileReferenceCallList(fileReference2);
-			FileReferenceCallList frcl3 = new FileReferenceCallList(fileReference3);
+			FileCallList frcl1 = new FileCallList(fileReference1);
+			FileCallList frcl2 = new FileCallList(fileReference2);
+			FileCallList frcl3 = new FileCallList(fileReference3);
 	        Assert.assertEquals(fileReference1,frcl1.toString());
 	        Assert.assertEquals(fileReference1,frcl1.getFile());
 	        Assert.assertEquals("voc",frcl1.getType());
