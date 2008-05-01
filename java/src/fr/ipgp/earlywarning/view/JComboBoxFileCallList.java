@@ -13,7 +13,7 @@ import fr.ipgp.earlywarning.controler.*;
  * @author patriceboissier
  *
  */
-public class JComboBoxFileReferenceCallList extends FileReferenceCallListView implements ActionListener{
+public class JComboBoxFileCallList extends FileCallListView implements ActionListener{
 	private JFrame frame = null;
 	private JPanel panelTitle = null;
 	private JPanel panelCallList = null;
@@ -25,11 +25,11 @@ public class JComboBoxFileReferenceCallList extends FileReferenceCallListView im
 	private JButton choseCallListButton = null;
 	private FlowLayout layout = new FlowLayout();
 	
-	public JComboBoxFileReferenceCallList(FileReferenceCallListControler controler) {
+	public JComboBoxFileCallList(FileCallListControler controler) {
 		this(controler, "");
 	}
 	
-	public JComboBoxFileReferenceCallList(FileReferenceCallListControler controler, String file) {
+	public JComboBoxFileCallList(FileCallListControler controler, String file) {
 		super(controler); 
 		buildFrame(file);
 	}
@@ -85,7 +85,7 @@ public class JComboBoxFileReferenceCallList extends FileReferenceCallListView im
 		frame.setVisible(true);
 	}
 	
-	public void fileReferenceCallListChanged(FileReferenceCallListChangedEvent event) {
+	public void fileReferenceCallListChanged(FileCallListChangedEvent event) {
 		labelSelectedCallList.setText("Liste d'appel par defaut : " + event.getNewFileReferenceCallList());
 		callListList.setSelectedItem(event.getNewFileReferenceCallList());
 	}
