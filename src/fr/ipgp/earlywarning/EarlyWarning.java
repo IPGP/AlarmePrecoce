@@ -23,54 +23,24 @@ public class EarlyWarning {
 
 	public static Configuration configuration;
 	public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
+	public static FileReferenceCallList defaultCallList;
 	
-	public static void main(String[] args) throws IOException  {
+	public static void main(String[] args)  {
 		
 		setLogger();
 		
-		try {
-			if (!CommonUtilities.appIsUnique("EarlyWarning")) {
-				appLogger.fatal("Application already running : exiting");
-				System.exit(1);
-			}
-		} catch (FileNotFoundException fnfe) {
-			appLogger.warn("Unable to create lock file to ensure unicity of the application");
-		} catch (IOException ioe) {
-			appLogger.warn("Unable to set lock file to ensure unicity of the application");
-		}
-
+		checkUnicity();
+		
 		readConfiguration();
 		
 		appLogger.debug("Entering application.");
 		
-		try {
-			Thread earlyWarningThread = EarlyWarningThread.getInstance();
-			earlyWarningThread.start();
-		} catch (ConversionException ce) {
-			appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
-			System.exit(1);
-		}catch (NoSuchElementException nsee) {
-			appLogger.fatal("Fatal error : An element value is undefined : check network section of earlywarning.xml configuration file. Exiting application.");
-			System.exit(1);
-		}
+		startEarlyWarningThread();
 		
-		try {
-			if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-				Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
-				dataBaseHeartBeatThread.start();
-			}
-		} catch (ConversionException ce) {
-			appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
-		}catch (NoSuchElementException nsee) {
-			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
-		}
+		startDataBaseHeartBeatThread();
+
+		createGui();
 		
-		try {
-			FileReferenceCallList file = new FileReferenceCallList(configuration.getString("gateway.defaults.call_list"));
-			FileReferenceCallListControler fileReferenceCallListControler = new FileReferenceCallListControler(file);
-			fileReferenceCallListControler.displayView();
-		} catch (InvalidFileNameException ifne) {
-			appLogger.error("An invalid call list : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");		}
 	}
 	
 	/**
@@ -91,5 +61,71 @@ public class EarlyWarning {
 	 */
 	private static void setLogger() {
 		PropertyConfigurator.configure("resources/log4j.properties");
+	}
+	
+	/**
+	 * Check unicity of the application
+	 */
+	private static void checkUnicity() {
+		try {
+			if (!CommonUtilities.appIsUnique("EarlyWarning")) {
+				appLogger.fatal("Application already running : exiting");
+				System.exit(1);
+			}
+		} catch (FileNotFoundException fnfe) {
+			appLogger.warn("Unable to create lock file to ensure unicity of the application");
+		} catch (IOException ioe) {
+			appLogger.warn("Unable to set lock file to ensure unicity of the application");
+		}
+	}
+
+	/**
+	 * Start EarlyWarningThread
+	 */
+	private static void startEarlyWarningThread() {
+		try {
+			Thread earlyWarningThread = EarlyWarningThread.getInstance(defaultCallList);
+			earlyWarningThread.start();
+		} catch (ConversionException ce) {
+			appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
+			System.exit(1);
+		} catch (NoSuchElementException nsee) {
+			appLogger.fatal("Fatal error : An element value is undefined : check network section of earlywarning.xml configuration file. Exiting application.");
+			System.exit(1);
+		} catch (IOException ioe) {
+			appLogger.fatal("Fatal error : I/O exception : " + ioe.getMessage() + ". Exiting application.");
+			System.exit(1);
+		}
+	}
+	
+	/**
+	 * Start DataBaseHeartBeatThread
+	 */
+	private static void startDataBaseHeartBeatThread() {
+		try {
+			if (configuration.getBoolean("heartbeat.use_heartbeat")) {
+				Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
+				dataBaseHeartBeatThread.start();
+			}
+		} catch (ConversionException ce) {
+			appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+		} catch (NoSuchElementException nsee) {
+			appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");	
+		} catch (IOException ioe) {
+			appLogger.error("I/O exception : " + ioe.getMessage() + ". HearBeat notification disabled.");
+		}		
+	}
+	
+	/**
+	 * Create GUI
+	 */
+	private static void createGui() {
+		try {
+			defaultCallList = new FileReferenceCallList(configuration.getString("gateway.defaults.call_list"));
+			FileReferenceCallListControler fileReferenceCallListControler = new FileReferenceCallListControler(defaultCallList);
+			fileReferenceCallListControler.displayView();
+		} catch (InvalidFileNameException ifne) {
+			appLogger.error("An invalid call list : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+		}
 	}
 }

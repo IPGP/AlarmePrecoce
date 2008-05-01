@@ -22,6 +22,7 @@ import fr.ipgp.earlywarning.utilities.CommonUtilities;
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
 	private QueueManagerThread queueManagerThread;
+	private FileReferenceCallList defaultCallList;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
@@ -41,10 +42,11 @@ public class EarlyWarningThread extends Thread {
     	packet = new DatagramPacket(buffer, buffer.length);
     }
     
-    public static synchronized EarlyWarningThread getInstance() throws IOException, ConversionException, NoSuchElementException {
+    public static synchronized EarlyWarningThread getInstance(FileReferenceCallList defaultCallList) throws IOException, ConversionException, NoSuchElementException {
     	if (uniqueInstance == null) {
     		uniqueInstance = new EarlyWarningThread();
     	}
+    	uniqueInstance.defaultCallList = defaultCallList;
     	return uniqueInstance;
     }
     
