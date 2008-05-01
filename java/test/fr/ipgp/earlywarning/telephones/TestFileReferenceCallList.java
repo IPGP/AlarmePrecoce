@@ -36,10 +36,10 @@ public class TestFileReferenceCallList {
 			FileCallList frcl2 = new FileCallList(fileReference2);
 			FileCallList frcl3 = new FileCallList(fileReference3);
 	        Assert.assertEquals(fileReference1,frcl1.toString());
-	        Assert.assertEquals(fileReference1,frcl1.getFile());
+	        Assert.assertEquals(fileReference1,frcl1.getFileName());
 	        Assert.assertEquals("voc",frcl1.getType());
 	        Assert.assertEquals(fileReference2,frcl2.toString());
-	        Assert.assertEquals(fileReference2,frcl2.getFile());
+	        Assert.assertEquals(fileReference2,frcl2.getFileName());
 	        Assert.assertEquals("txt",frcl2.getType());
 	        Assert.assertEquals(fileReference3,frcl3.toString());
 		} catch (InvalidFileNameException ifne) {
