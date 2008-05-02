@@ -14,13 +14,13 @@ import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
 /**
- * @author Patrice Boissier
  * Entry point for the application<br/>
  * First start the logger (Log4J)<br/>
  * Then, it cheks its own unicity.<br/>
  * Reads the configuration file and then create the EarlyWarningThread.<br/>
  * If the configuration file specifies it, it starts the DataBaseHeartBeatThread.<br/>
  * Last, it creates the GUI
+ * @author Patrice Boissier
  */
 public class EarlyWarning {
 

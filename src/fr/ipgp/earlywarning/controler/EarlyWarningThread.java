@@ -15,10 +15,10 @@ import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 /**
- * @author Patrice Boissier
  * Thread that listen for incoming triggers from the network.<br/>
  * When a trigger arrives, it is passed to the queue manager.<br/>
  * Implements the singleton pattern.
+ * @author Patrice Boissier
  */
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;

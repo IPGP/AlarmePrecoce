@@ -10,8 +10,8 @@ import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 /**
- * @author Patrice Boissier
  * Create a trigger object from a datagram packet
+ * @author Patrice Boissier
  */
 public class DatagramTriggerConverter implements TriggerConverter {
     protected DatagramPacket packet = null;

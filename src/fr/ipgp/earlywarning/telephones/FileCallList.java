@@ -7,9 +7,9 @@ package fr.ipgp.earlywarning.telephones;
 import javax.swing.event.EventListenerList;
 import java.io.*;
 /**
- * @author Patrice Boissier
  * Class representing file call lists. File call lists must be txt (comma separated values) or voc (Voicent call list).<br/>
  * Implements the observer pattern (subject)
+ * @author Patrice Boissier
  */
 public class FileCallList implements CallList {
 	private File file;

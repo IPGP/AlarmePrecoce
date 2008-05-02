@@ -13,9 +13,9 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.commons.configuration.ConversionException;
 /**
- * @author Patrice Boissier
  * Manage a trigger queue based on priorities.<br/>
  * Implements the singleton pattern.
+ * @author Patrice Boissier
  */
 public class QueueManagerThread extends Thread {
 	private static QueueManagerThread uniqueInstance;
