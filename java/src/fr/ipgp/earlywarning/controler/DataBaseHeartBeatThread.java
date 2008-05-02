@@ -10,11 +10,10 @@ import java.sql.*;
 import java.util.*;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.EarlyWarning;
-
 /**
- * Sends heartbeat represented by an update in the "fonctionnement" database (for OVPF only!)
  * @author Patrice Boissier
- *
+ * Sends heartbeat represented by an update in the "fonctionnement" database (for OVPF only!)<br/>
+ * Implements the singleton pattern.
  */
 public class DataBaseHeartBeatThread extends Thread {
 	private static DataBaseHeartBeatThread uniqueInstance;
@@ -64,6 +63,7 @@ public class DataBaseHeartBeatThread extends Thread {
 			EarlyWarning.appLogger.debug("Thread is stopping");
             return;			
 		}
+		
 		// Notify the start time
 		try {
 			int result = dataBaseHeartBeat.sendHeartBeat(startMessage, CommonUtilities.dateToISO());
