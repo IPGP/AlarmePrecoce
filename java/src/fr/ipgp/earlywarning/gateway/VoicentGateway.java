@@ -14,8 +14,6 @@ import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 /**
- * @author Patrice Boissier
- * 
  * Implementation of the voicent phone gateway.<br/>
  * Implements the singleton pattern.<br/>
  * <br/>
@@ -58,6 +56,7 @@ import java.net.ProtocolException;
  * [removed]<br/>
  * If it does not exist :<br/>
  * ERROR: no such call record: 1208431448218<br/>
+ * @author Patrice Boissier
  */
 public class VoicentGateway implements Gateway{
 	private static VoicentGateway uniqueInstance;

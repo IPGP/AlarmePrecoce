@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.telephones;
 
 /**
- * @author Patrice Boissier
  * Class representing text call lists.
+ * @author Patrice Boissier
  */
 public class TextCallList implements CallList{
 	private String text;

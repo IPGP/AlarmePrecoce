@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.messages;
 
 /**
- * @author Patrice Boissier
  * This class represents the file warning message to be delivered by phone call
+ * @author Patrice Boissier
  */
 public class FileWarningMessage implements WarningMessage {
 	private String file;

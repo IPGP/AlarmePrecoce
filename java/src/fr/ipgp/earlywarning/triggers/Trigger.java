@@ -10,8 +10,8 @@ import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.messages.*;
 
 /**
- * @author Patrice Boissier
  * Trigger object that "triggers" phone calls.
+ * @author Patrice Boissier
  */
 public class Trigger implements Comparable {
 	private Long id;

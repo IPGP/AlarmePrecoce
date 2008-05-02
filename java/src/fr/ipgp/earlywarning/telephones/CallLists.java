@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.telephones;
 
 /**
- * @author Patrice Boissier
  * Interface representing the available call lists.
+ * @author Patrice Boissier
  */
 public interface CallLists {
 
