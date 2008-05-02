@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.telephones;
 
 /**
- * @author Patrice Boissier
  * Thrown to indicate that the file call list name is invalid
+ * @author Patrice Boissier
  */
 public class InvalidFileNameException extends Exception {
 	private static final long serialVersionUID = 633692405543453454L;

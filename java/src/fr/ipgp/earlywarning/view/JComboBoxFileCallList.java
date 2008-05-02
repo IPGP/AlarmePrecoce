@@ -11,8 +11,8 @@ import java.awt.event.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.controler.*;
 /**
- * @author Patrice Boissier
  * File call list JComboBox representation.
+ * @author Patrice Boissier
  */
 public class JComboBoxFileCallList extends FileCallListView implements ActionListener{
 	private JFrame frame = null;

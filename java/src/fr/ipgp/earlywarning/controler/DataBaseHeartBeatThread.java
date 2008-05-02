@@ -11,9 +11,9 @@ import java.util.*;
 import fr.ipgp.earlywarning.utilities.*;
 import fr.ipgp.earlywarning.EarlyWarning;
 /**
- * @author Patrice Boissier
  * Sends heartbeat represented by an update in the "fonctionnement" database (for OVPF only!)<br/>
  * Implements the singleton pattern.
+ * @author Patrice Boissier
  */
 public class DataBaseHeartBeatThread extends Thread {
 	private static DataBaseHeartBeatThread uniqueInstance;
