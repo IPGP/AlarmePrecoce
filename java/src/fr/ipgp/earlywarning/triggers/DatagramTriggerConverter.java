@@ -49,7 +49,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
     /**
      * Decode the properties of the received message from the DatagramPacket.
      * Set the Trigger attributes.
-     * @param received the received message of the DatagramPacket
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
     public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
@@ -82,7 +81,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     /**
      * Decode the old OVPF format : type 01
      * Sismo dd/MM/yyyy HH:mm:ss Declenchement
-     * @param elements the elements of the received message 
+     * @param packetContentElements the elements of the received message 
      * @throws InvalidTriggerFieldException
      */
     private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
@@ -111,7 +110,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * repeat : true or false<br/>
      * confirmcode : confirmation code, a digit sequence (1 to 6 digits)
      * message : warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
-     * @param elements the elements of the received message
+     * @param packetContentElements the elements of the received message
      * @return true if the decoding was successful else false
      */
     private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
