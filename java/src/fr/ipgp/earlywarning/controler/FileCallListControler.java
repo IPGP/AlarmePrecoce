@@ -14,9 +14,9 @@ public class FileCallListControler {
 	public FileCallListView listView = null;
 	private FileCallList fileCallList = null;
 	
-	public FileCallListControler(FileCallList fileCallList) {
+	public FileCallListControler(FileCallList fileCallList, FileCallLists fileCallLists) {
 		this.fileCallList = fileCallList;
-		listView = new JComboBoxFileCallList(this, fileCallList.getFileName());
+		listView = new JComboBoxFileCallList(this, fileCallList.getFileName(), fileCallLists);
 		this.fileCallList.addFileListener(listView);
 	}
 	
