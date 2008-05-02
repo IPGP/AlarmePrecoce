@@ -8,9 +8,8 @@ import org.apache.commons.configuration.*;
 import java.sql.*;
 import java.util.NoSuchElementException;
 /**
- *  
  * @author Patrice Boissier
- *
+ * Database heartbeat class. Updates the database on a regular basis.
  */
 public class DataBaseHeartBeat {
 	private String host;
