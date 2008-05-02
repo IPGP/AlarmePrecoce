@@ -1,6 +1,25 @@
 /**
- * Outbound API is documented here : http://www.voicent.com/devnet/docs/callreqref.htm
+ * Created Mar 25, 2008 09:29:15 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+ */
+package fr.ipgp.earlywarning.gateway;
+
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+/**
+ * @author Patrice Boissier
  * 
+ * Implementation of the voicent phone gateway.<br/>
+ * Implements the singleton pattern.<br/>
+ * <br/>
+ * Outbound API is documented here : http://www.voicent.com/devnet/docs/callreqref.htm<br/>
  * Example of use of a simple text to speech call :<br/>
  * http://195.83.188.145:8155/ocall/callreqHandler.jsp?info=SimpleTextCall0692703856&phoneno=0692703856&firstocc=10&selfdelete=0&txt=Test<br/>
  * Your call is scheduled for Mon Apr 21 11:51:18 BST 2008. [ReqId=1208775078314]<br/>
@@ -21,7 +40,7 @@
  * Wrong reqID :<br/>
  * ERROR: no such call record: 1208431448217<br/>
  * <br/>
- * Test  : ne pas répondre ou ne pas laisser le message être dit :<br/>
+ * Return values when the call is not picked :<br/>
  * Retry :<br/>
  * [0^null^retry^2008 3 18 6 18^2008 3 18 6 18^No answer. Try in 1 minute ^^^^^<br/>
  * ]<br/>
@@ -39,21 +58,6 @@
  * [removed]<br/>
  * If it does not exist :<br/>
  * ERROR: no such call record: 1208431448218<br/>
- */
-package fr.ipgp.earlywarning.gateway;
-
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-/**
- * @author patriceboissier
- *
  */
 public class VoicentGateway implements Gateway{
 	private static VoicentGateway uniqueInstance;
@@ -202,6 +206,10 @@ public class VoicentGateway implements Gateway{
 		}
 	}
 	
+	/**
+	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
+	 * This is ideal for using it in a phone notification escalation process.
+	 */
 	public String callTillConfirm(String vcastexe, String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
 		try {
 			

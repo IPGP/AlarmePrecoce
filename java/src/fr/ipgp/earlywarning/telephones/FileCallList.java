@@ -1,56 +1,52 @@
 /**
- * 
+ * Created Mar 5, 2008 8:24:15 PM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.telephones;
 
 import javax.swing.event.EventListenerList;
 import java.io.*;
 /**
- * @author patriceboissier
- *
+ * @author Patrice Boissier
+ * Class representing file call lists. File call lists must be txt (comma separated values) or voc (Voicent call list).<br/>
+ * Implements the observer pattern (subject)
  */
 public class FileCallList implements CallList {
-	private String fileName;
 	private File file;
 	private String type;
 	private EventListenerList listeners;
 	
 	public FileCallList(String fileName) throws InvalidFileNameException {
-		this.fileName = fileName;
 		this.file = new File(fileName);
-		this.type = extractExtension(fileName);
+		this.type = extractExtension(file);
 		listeners = new EventListenerList();
 	}
 
 	public FileCallList(File file) throws InvalidFileNameException {
 		this.file = file;
-		this.fileName = file.getName();
-		this.type = extractExtension(fileName);
+		this.type = extractExtension(file);
 		listeners = new EventListenerList();
 	}
 	
-	private String extractExtension(String fileName) throws InvalidFileNameException {
-		String [] fileElements = fileName.split("\\.");
+	/**
+	 * Extracts and returns the file extension
+	 * @param file the file to extract the extension from
+	 * @return the file extension (String)
+	 * @throws InvalidFileNameException if the extension is not "txt" or "voc"
+	 */
+	private String extractExtension(File file) throws InvalidFileNameException {
+		String [] fileElements = file.getName().split("\\.");
 		if (fileElements.length < 2)
-			throw new InvalidFileNameException("Invalid File Name : " + fileName);
+			throw new InvalidFileNameException("Invalid File Name : " + file.getName());
 		if ((!fileElements[fileElements.length-1].equals("txt")) && (!fileElements[fileElements.length-1].equals("voc")))
-			throw new InvalidFileNameException("Invalid File Name : " + fileName);
+			throw new InvalidFileNameException("Invalid File Name : " + file.getName());
 		return fileElements[fileElements.length-1];
 	}
-	
+		
 	/**
-	 * @return a String representing the object
-	 */
-//	public String toString() {
-//		String result = file.toString();
-//		return result;
-//	}
-	
-	/**
-	 * 
+	 * @param fileName the file name to set
 	 */
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
 		this.file = new File(fileName);
 		//this.type = extractExtension(fileName);
 		fireFileChanged();
@@ -60,7 +56,7 @@ public class FileCallList implements CallList {
 	 * @return the file to get
 	 */
 	public String getFileName() {
-		return fileName;
+		return file.getName();
 	}
 
 	/**
@@ -91,14 +87,23 @@ public class FileCallList implements CallList {
 		this.type = type;
 	}
 	
+	/**
+	 * @param listener the listener to add
+	 */
 	public void addFileListener(FileCallListListener listener){
 		listeners.add(FileCallListListener.class, listener);
 	}
 	
+	/**
+	 * @param listener the listener to remove
+	 */
 	public void removeFileListener(FileCallListListener listener){
 		listeners.remove(FileCallListListener.class, listener);
 	}
 	
+	/**
+	 * Actions to be made upon file change
+	 */
 	public void fireFileChanged() {
 		FileCallListListener[] listenerList = (FileCallListListener[])listeners.getListeners(FileCallListListener.class);
 		

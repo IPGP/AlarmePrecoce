@@ -1,6 +1,6 @@
 /**
  * Created Mar 01, 2008 11:01:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP. COUCOU
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning;
 
@@ -9,15 +9,18 @@ import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.controler.*;
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import org.apache.commons.configuration.*;
 import org.apache.log4j.*;
 /**
  * @author Patrice Boissier
- * Entry point for the application
- * Reads the configuration file and then create the EarlyWarningThread.
+ * Entry point for the application<br/>
+ * First start the logger (Log4J)<br/>
+ * Then, it cheks its own unicity.<br/>
+ * Reads the configuration file and then create the EarlyWarningThread.<br/>
+ * If the configuration file specifies it, it starts the DataBaseHeartBeatThread.<br/>
+ * Last, it creates the GUI
  */
 public class EarlyWarning {
 
