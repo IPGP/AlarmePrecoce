@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.triggers;
 
 /**
- * @author Patrice Boissier
  * Thrown to indicate that one or more trigger fields are missing
+ * @author Patrice Boissier
  */
 public class MissingTriggerFieldException  extends Exception {
 	private static final long serialVersionUID = 633692405405400554L;

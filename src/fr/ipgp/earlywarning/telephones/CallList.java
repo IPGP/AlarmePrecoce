@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.telephones;
 
 /**
- * @author Patrice Boissier
  * Call list interface.
+ * @author Patrice Boissier
  */
 public interface CallList {
     public static final String NAME = "name";

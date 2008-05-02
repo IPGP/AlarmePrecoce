@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.telephones;
 
 /**
- * @author Patrice Boissier
  * Class representing the available file call lists.
+ * @author Patrice Boissier
  */
 public class FileCallLists implements CallLists {
 

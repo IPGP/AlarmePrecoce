@@ -7,8 +7,8 @@ package fr.ipgp.earlywarning.gateway;
 import java.util.Random;
 
 /**
- * @author Patrice Boissier
  * Mock phone gateway for testing purpose.
+ * @author Patrice Boissier
  */
 public class MockGateway implements Gateway {
 	

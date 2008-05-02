@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.gateway;
 
 /**
- * @author Patrice Boissier
  * The phone gateway interface
+ * @author Patrice Boissier
  */
 public interface Gateway {
 	public String callText(String phoneNumber, String text, boolean selfDelete);

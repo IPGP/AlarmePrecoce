@@ -7,8 +7,8 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.view.*;
 /**
- * @author Patrice Boissier
  * The file call list controler (part of the Observer/MVC pattern)
+ * @author Patrice Boissier
  */
 public class FileCallListControler {
 	public FileCallListView listView = null;

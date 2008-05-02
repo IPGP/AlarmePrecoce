@@ -5,8 +5,8 @@
 package fr.ipgp.earlywarning.messages;
 
 /**
- * @author Patrice Boissier
  * This interface represents the warning message to be delivered by phone call
+ * @author Patrice Boissier
  */
 public interface WarningMessage {
 
