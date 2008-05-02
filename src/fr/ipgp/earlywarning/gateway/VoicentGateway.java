@@ -124,9 +124,9 @@ public class VoicentGateway implements Gateway{
 	 * Example of return value from the Voicent Gateway :<br/>
 	 * Your call is scheduled for Mon Apr 21 11:51:18 BST 2008. [ReqId=1208775078314]<br/>
 	 *
-	 * @param phoneno Phone number to call, exactly as it should be dialed
+	 * @param phoneNumber Phone number to call, exactly as it should be dialed
 	 * @param text Text to play over the phone using text-to-speech
-	 * @param selfdelete After the call, delete the call request automatically if set to 1
+	 * @param selfDelete After the call, delete the call request automatically if set to 1
 	 * @return Call request ID
 	 */
 	public String callText(String phoneNumber, String text, boolean selfDelete){
@@ -148,9 +148,9 @@ public class VoicentGateway implements Gateway{
 	/**
 	 * Make a call to the number specified and play the audio file. The audio file should be of PCM 8KHz, 16bit, mono.
 	 *
-	 * @param phoneno Phone number to call, exactly as it should be dialed
-	 * @param audiofile Audio file path name
-	 * @param selfdelete After the call, delete the call request automatically if set to 1
+	 * @param phoneNumber Phone number to call, exactly as it should be dialed
+	 * @param audioFile Audio file path name
+	 * @param selfDelete After the call, delete the call request automatically if set to 1
 	 * @return Call request ID
 	 */
 	public String callAudio(String phoneNumber, String audioFile, boolean selfDelete){
@@ -173,7 +173,7 @@ public class VoicentGateway implements Gateway{
 	 * 
 	 * http://195.83.188.145:8155/ocall/callstatusHandler.jsp
 	 * returns :
-	 * @param reqID Call request ID on the gateway
+	 * @param requestID Call request ID on the gateway
 	 * @return call status
 	 */
 	public String callStatus(String requestID) {
@@ -190,7 +190,7 @@ public class VoicentGateway implements Gateway{
 	
 	/**
 	 * Remove a call if this call is not in progress
-	 * @param reqID Call request ID on the gateway
+	 * @param requestID Call request ID on the gateway
 	 * @return the result of the remove command
 	 */
 	public String callRemove(String requestID) {
@@ -208,6 +208,12 @@ public class VoicentGateway implements Gateway{
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
 	 * This is ideal for using it in a phone notification escalation process.
+	 * @param vcastexe Voicent Broadcast By Phone executable
+	 * @param vocFile the voc file used for logging
+	 * @param waveFile the wave file to be played on the phone
+	 * @param confirmCode the confirm code to be entered
+	 * @param phoneNumbers the phone numbers
+	 * @return call status
 	 */
 	public String callTillConfirm(String vcastexe, String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
 		try {
