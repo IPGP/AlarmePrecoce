@@ -1,11 +1,12 @@
 /**
- * Thrown to indicate that one or more trigger fields are missing
+ * Created Mar 13, 2008 11:07:36 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.triggers;
 
 /**
- * @author boissier
- *
+ * @author Patrice Boissier
+ * Thrown to indicate that one or more trigger fields are missing
  */
 public class MissingTriggerFieldException  extends Exception {
 	private static final long serialVersionUID = 633692405405400554L;

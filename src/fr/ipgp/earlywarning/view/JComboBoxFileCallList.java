@@ -1,5 +1,6 @@
 /**
- * 
+ * Created Apr 30, 2008 11:01:05 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.view;
 
@@ -10,8 +11,8 @@ import java.awt.event.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.controler.*;
 /**
- * @author patriceboissier
- *
+ * @author Patrice Boissier
+ * File call list JComboBox representation.
  */
 public class JComboBoxFileCallList extends FileCallListView implements ActionListener{
 	private JFrame frame = null;
@@ -34,9 +35,7 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		buildFrame(file);
 	}
 	
-	private void buildFrame(String file) {
-		
-		
+	private void buildFrame(String file) {		
 		frame = new JFrame();
 		frame.setTitle("EarlyWarning");
 		frame.setSize(400,200);
@@ -71,7 +70,6 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		
 		frame.getContentPane().add(panelTitle, BorderLayout.NORTH);
 		frame.getContentPane().add(panelCallList, BorderLayout.CENTER);
-		//frame.getContentPane().add(panelSelectedCallList, BorderLayout.CENTER);
 	}
 	
 	@Override
@@ -81,7 +79,6 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 
 	@Override
 	public void display() {
-		System.out.println("Display!!!");
 		frame.setVisible(true);
 	}
 	

@@ -22,6 +22,9 @@ public class TextWarningMessage implements WarningMessage {
 		return text;
 	}
 	
+	/**
+	 * @return the text message
+	 */
 	public String getText() {
 		return text;
 	}

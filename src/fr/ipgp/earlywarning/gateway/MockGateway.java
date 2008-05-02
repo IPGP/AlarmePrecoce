@@ -1,13 +1,14 @@
 /**
- * 
+ * Created Mar 21, 2008 11:20:01 AM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.gateway;
 
 import java.util.Random;
 
 /**
- * @author patriceboissier
- *
+ * @author Patrice Boissier
+ * Mock phone gateway for testing purpose.
  */
 public class MockGateway implements Gateway {
 	

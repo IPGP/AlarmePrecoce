@@ -65,6 +65,12 @@ public class CommonUtilities {
 		return(simpleFormat.format(date));
 	}
 	
+	/**
+	 * Test if the given date String is a valid date based on the format String
+	 * @param dateString the date to test
+	 * @param format the format used
+	 * @return true if the date is valid, else returns false
+	 */
 	public static boolean isDate(String dateString, String format) {
 		DateFormat formatter = new SimpleDateFormat(format);
 		formatter.setLenient(false);
@@ -74,7 +80,5 @@ public class CommonUtilities {
         } catch (ParseException pe) {
         	return false;        	
         }
-		
-		
 	}
 }

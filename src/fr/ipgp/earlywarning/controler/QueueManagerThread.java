@@ -13,9 +13,9 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.commons.configuration.ConversionException;
 /**
- * Manage a trigger queue based on priorities. Launch the CallManager thread.
  * @author Patrice Boissier
- *
+ * Manage a trigger queue based on priorities.<br/>
+ * Implements the singleton pattern.
  */
 public class QueueManagerThread extends Thread {
 	private static QueueManagerThread uniqueInstance;

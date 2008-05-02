@@ -16,8 +16,9 @@ import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 /**
  * @author Patrice Boissier
- * Thread that listen for incoming triggers from the network.
- * When a trigger arrives, it is passed to the queue manager.
+ * Thread that listen for incoming triggers from the network.<br/>
+ * When a trigger arrives, it is passed to the queue manager.<br/>
+ * Implements the singleton pattern.
  */
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
@@ -53,14 +54,12 @@ public class EarlyWarningThread extends Thread {
     public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
-    	CallList defaultCallList = null;
     	WarningMessage defaultWarningMessage = null;
     	boolean defaultRepeat = true;
     	String defaultConfirmCode = null;
     	int defaultPriority=1;
     	
     	try {
-    		defaultCallList = new FileCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
     		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
     		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
     		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
@@ -70,9 +69,6 @@ public class EarlyWarningThread extends Thread {
         	System.exit(-1);
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-        	System.exit(-1);
-        } catch (InvalidFileNameException ifne) {
-        	EarlyWarning.appLogger.fatal("Default call list has an invalid name (*.txt or *.voc) in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
         	System.exit(-1);
         }
     	
@@ -165,6 +161,10 @@ public class EarlyWarningThread extends Thread {
         }
     }
     
+    /**
+     * Adds an error trigger to the queue manager
+     * @param errorMessage the error message to be delivered
+     */
     private void addErrorTrigger (String errorMessage) {
     	if (triggerOnError) {
         	Trigger trig = createErrorTrigger(errorMessage);
