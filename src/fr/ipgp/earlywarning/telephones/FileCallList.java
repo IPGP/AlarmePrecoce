@@ -64,6 +64,13 @@ public class FileCallList implements CallList {
 	}
 
 	/**
+	 * @return the file call list name
+	 */
+	public String getName() {
+		return file.getName();
+	}
+	
+	/**
 	 * @return the file
 	 */
 	public File getFile() {

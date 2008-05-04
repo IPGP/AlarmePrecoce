@@ -21,4 +21,9 @@ public interface CallList {
 	 * @return a String representing the CallList type
 	 */
 	public String getType();
+	
+	/**
+	 * 
+	 */
+	public String getName();
 }

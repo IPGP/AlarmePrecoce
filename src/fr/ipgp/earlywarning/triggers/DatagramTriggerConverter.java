@@ -54,7 +54,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
     public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
     	String[] packetContentSplit = this.packetContent.split(" ");
     	int version;
-    	
     	if (packetContentSplit[0].matches("\\d\\d"))
     		version = Integer.parseInt(packetContentSplit[0]);
     	else {
