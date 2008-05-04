@@ -125,12 +125,16 @@ public class EarlyWarning {
 	 */
 	private static void createGui() {
 		try {
-			defaultCallList = new FileCallList(configuration.getString("gateway.defaults.call_list"));
+			defaultCallList = new FileCallList(configuration.getString("gateway.voicent.resources_path") + "/" + configuration.getString("gateway.defaults.call_list"));
 			fileCallLists = new FileCallLists(new File(configuration.getString("gateway.voicent.resources_path")));
 			FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
 			fileCallListControler.displayView();
 		} catch (InvalidFileNameException ifne) {
-			appLogger.error("An invalid call list : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+			appLogger.fatal("An invalid call list : check hearbeat section of earlywarning.xml configuration file. Exiting.");
+			System.exit(1);
+		} catch (FileNotFoundException fnfe) {
+			appLogger.fatal("Default file call list or resource path not found : " + fnfe.getMessage() + ". check gateway section of earlywarning.xml configuration file. Exiting.");
+			System.exit(1);
 		}
 	}
 }

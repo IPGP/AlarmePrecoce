@@ -120,7 +120,6 @@ public class EarlyWarningThread extends Thread {
     	try {  	
     		long id = CommonUtilities.getUniqueId();
 			int priority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-			CallList callList = new FileCallList(EarlyWarning.configuration.getString("gateway.defaults.call_list"));
 			boolean supportText2Speech = EarlyWarning.configuration.getBoolean("gateway.text_to_speech");
 			WarningMessage message;
 			if (supportText2Speech)
@@ -136,7 +135,7 @@ public class EarlyWarningThread extends Thread {
 			String confirmCode = new String(EarlyWarning.configuration.getString("triggers.defaults.confirm_code"));
 	    	Trigger trig = new Trigger(id, priority);
 			trig.setApplication(application);
-			trig.setCallList(callList);
+			trig.setCallList(defaultCallList);
 			InetAddress inetAddress = InetAddress.getByName("localhost");
 			trig.setInetAddress(inetAddress);
 			trig.setMessage(message);
@@ -155,9 +154,6 @@ public class EarlyWarningThread extends Thread {
 		} catch (NoSuchElementException nsee) {
 			EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
 			return null;
-        } catch (InvalidFileNameException ifne) {
-        	EarlyWarning.appLogger.fatal("Invalid default call list. Check gateway section of earlywarning.xml configuration file. Trigger not sent.");
-        	return null;
         }
     }
     
