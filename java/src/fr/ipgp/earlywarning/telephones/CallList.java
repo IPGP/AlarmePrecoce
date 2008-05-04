@@ -23,7 +23,7 @@ public interface CallList {
 	public String getType();
 	
 	/**
-	 * 
+	 * @return a String representing the CallList name
 	 */
 	public String getName();
 }
