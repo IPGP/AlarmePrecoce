@@ -8,12 +8,13 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.apache.commons.configuration.ConversionException;
+import javax.mail.internet.*;
+import org.apache.commons.configuration.*;
 import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.*;
-import fr.ipgp.earlywarning.utilities.CommonUtilities;
+import fr.ipgp.earlywarning.utilities.*;
 /**
  * Thread that listen for incoming triggers from the network.<br/>
  * When a trigger arrives, it is passed to the queue manager.<br/>
@@ -30,6 +31,11 @@ public class EarlyWarningThread extends Thread {
     protected byte[] buffer = new byte[512];
     protected int port;
     protected boolean triggerOnError;
+	private WarningMessage defaultWarningMessage = null;
+	private boolean defaultRepeat = true;
+	private String defaultConfirmCode = null;
+	private int defaultPriority=1;
+	private List emails;
 	
     private EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
@@ -54,23 +60,12 @@ public class EarlyWarningThread extends Thread {
     public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
-    	WarningMessage defaultWarningMessage = null;
-    	boolean defaultRepeat = true;
-    	String defaultConfirmCode = null;
-    	int defaultPriority=1;
+    	configureThread();
     	
-    	try {
-    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
-    		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
-    		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
-    		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-    	} catch (ConversionException ce) {
-        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-        	System.exit(-1);
-        } catch (NoSuchElementException nsee) {
-        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-        	System.exit(-1);
-        }
+    	emails = configureMailer();
+    	for(Iterator it = emails.iterator(); it.hasNext();) {
+    		System.out.println(it.next().toString());
+    	}
     	
     	queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
@@ -86,6 +81,7 @@ public class EarlyWarningThread extends Thread {
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
+                
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
@@ -169,5 +165,43 @@ public class EarlyWarningThread extends Thread {
         		EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
         	}
         }
+    }
+    
+    /**
+     * Configure the thread, based on the configuration file.
+     */
+    private void configureThread() {
+     	try {
+    		defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
+    		defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
+    		defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
+    		defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        	System.exit(-1);
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        	System.exit(-1);
+        }
+    }
+    
+    /**
+     * Configure Mail facility
+     */
+    private List<InternetAddress> configureMailer() {
+    	List fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist");
+    	List<InternetAddress> mails = new ArrayList<InternetAddress>();
+    	for(Iterator it = fields.iterator(); it.hasNext();) {
+    	    HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
+    	    String mail = sub.getString("email");
+    	    try {
+    	    	InternetAddress internetAddress = new InternetAddress(mail);
+    	    	internetAddress.validate();
+    	    	mails.add(internetAddress);
+    	    } catch (AddressException ae) {
+    	    	EarlyWarning.appLogger.fatal("Invalid E-mail address in configuration file : check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
+    	    }    
+    	}
+    	return mails;
     }
 }

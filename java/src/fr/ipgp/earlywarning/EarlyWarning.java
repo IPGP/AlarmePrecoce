@@ -24,7 +24,7 @@ import org.apache.log4j.*;
  */
 public class EarlyWarning {
 
-	public static Configuration configuration;
+	public static XMLConfiguration configuration;
 	public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
 	private static FileCallList defaultCallList;
 	private static FileCallLists fileCallLists;
