@@ -27,15 +27,15 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 	private FlowLayout layout = new FlowLayout();
 	
 	public JComboBoxFileCallList(FileCallListControler controler) {
-		this(controler, "", null);
+		this(controler, null, null);
 	}
 	
-	public JComboBoxFileCallList(FileCallListControler controler, String file, FileCallLists fileCallLists) {
+	public JComboBoxFileCallList(FileCallListControler controler, FileCallList fileCallList, FileCallLists fileCallLists) {
 		super(controler); 
-		buildFrame(file, fileCallLists);
+		buildFrame(fileCallList, fileCallLists);
 	}
 	
-	private void buildFrame(String file, FileCallLists fileCallLists) {		
+	private void buildFrame(FileCallList fileCallList, FileCallLists fileCallLists) {		
 		frame = new JFrame();
 		frame.setTitle("EarlyWarning");
 		frame.setSize(400,200);
@@ -55,9 +55,9 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		files = new String[fileCallLists.getFileCallLists().size()];
 		for (int i = 0; i < fileCallLists.getFileCallLists().size(); i++) {
 			files[i] = fileCallLists.getFileCallLists().get(i).getFileName();
-		}
+		};
 		callListList = new JComboBox(files);
-		callListList.setSelectedItem(file);
+		callListList.setSelectedItem(fileCallList.getFileName());
 		panelCallList.add(callListList);
 		
 		choseCallListButton = new JButton("Choisir");
@@ -66,7 +66,7 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		
 		panelSelectedCallList = new JPanel();
 		panelSelectedCallList.setLayout(layout);
-		labelSelectedCallList = new JLabel("Liste d'appel selectionnee : " + file);
+		labelSelectedCallList = new JLabel("Liste d'appel selectionnee : " + fileCallList.getFileName());
 		panelSelectedCallList.add(labelSelectedCallList);
 
 		panelCallList.add(panelSelectedCallList);
