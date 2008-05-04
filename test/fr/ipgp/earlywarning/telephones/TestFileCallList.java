@@ -47,6 +47,8 @@ public class TestFileCallList {
 	        Assert.assertEquals(file2,frcl2.getFile());
 		} catch (InvalidFileNameException ifne) {
 			System.out.println(ifne.getMessage());
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(fnfe.getMessage());
 		}
 	}
 	
@@ -57,6 +59,8 @@ public class TestFileCallList {
 			FileCallList frcl3 = new FileCallList(file3);
 		} catch (InvalidFileNameException ifne) {
 			System.out.println(ifne.getMessage());
+		} catch (FileNotFoundException fnfe) {
+			System.out.println(fnfe.getMessage());
 		}	
 	}
 	

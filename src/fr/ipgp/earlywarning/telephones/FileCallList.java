@@ -16,14 +16,18 @@ public class FileCallList implements CallList {
 	private String type;
 	private EventListenerList listeners;
 	
-	public FileCallList(String fileName) throws InvalidFileNameException {
+	public FileCallList(String fileName) throws InvalidFileNameException, FileNotFoundException {
 		this.file = new File(fileName);
+		if (!this.file.exists())
+			throw new FileNotFoundException("File call list does not exists");
 		this.type = extractExtension(file);
 		listeners = new EventListenerList();
 	}
 
-	public FileCallList(File file) throws InvalidFileNameException {
+	public FileCallList(File file) throws InvalidFileNameException, FileNotFoundException {
 		this.file = file;
+		if (!this.file.exists())
+			throw new FileNotFoundException("File call list does not exists");
 		this.type = extractExtension(file);
 		listeners = new EventListenerList();
 	}

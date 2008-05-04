@@ -24,7 +24,11 @@ public class FileCallLists implements CallLists {
 	    } else {
 	        for (int i = 0; i<files.length; i++) {
 	        	System.out.println("Iteration "+ i);
-	        	fileCallLists.add(new FileCallList(files[i]));
+	        	try {
+	        		fileCallLists.add(new FileCallList(files[i]));
+	        	} catch (FileNotFoundException fnfe) {
+	        		
+	        	}
 	        }
 		}
 	}
