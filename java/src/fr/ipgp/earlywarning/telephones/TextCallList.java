@@ -36,4 +36,11 @@ public class TextCallList implements CallList{
 	public String getText() {
 		return text;
 	}
+	
+	/**
+	 * @return the Text Call List name
+	 */
+	public String getName() {
+		return "Text call list";
+	}
 }

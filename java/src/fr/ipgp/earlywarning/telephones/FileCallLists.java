@@ -12,7 +12,7 @@ import java.util.*;
 public class FileCallLists implements CallLists {
 	private List<FileCallList> fileCallLists = new ArrayList<FileCallList>();
 	
-	public FileCallLists(File directory) throws InvalidFileNameException {
+	public FileCallLists(File directory) throws InvalidFileNameException, FileNotFoundException {
 		File[] files = directory.listFiles(
 		    new FilenameFilter() {
 		        public boolean accept(File dir, String name) {
@@ -20,10 +20,9 @@ public class FileCallLists implements CallLists {
 		        }
 		    });
 	    if (files == null) {
-	    	System.out.println("No call lists or " + directory.getName() + " not a directory.");
+	    	throw new FileNotFoundException("No call lists or " + directory.getName() + " not a directory.");
 	    } else {
 	        for (int i = 0; i<files.length; i++) {
-	        	System.out.println("Iteration "+ i);
 	        	try {
 	        		fileCallLists.add(new FileCallList(files[i]));
 	        	} catch (FileNotFoundException fnfe) {

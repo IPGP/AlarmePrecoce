@@ -54,8 +54,16 @@ public class EarlyWarning {
 	private static void readConfiguration() {
 		try {
 		    configuration = new XMLConfiguration("resources/earlywarning.xml");
+		    defaultCallList = new FileCallList(configuration.getString("gateway.voicent.resources_path") + "/" + configuration.getString("gateway.defaults.call_list"));
+			fileCallLists = new FileCallLists(new File(configuration.getString("gateway.voicent.resources_path")));
 		} catch(ConfigurationException cex) {
 			appLogger.fatal("Fatal error : configuration file not present or not readable. Exiting application");
+			System.exit(1);
+		} catch (InvalidFileNameException ifne) {
+			appLogger.fatal("An invalid call list : check hearbeat section of earlywarning.xml configuration file. Exiting.");
+			System.exit(1);
+		} catch (FileNotFoundException fnfe) {
+			appLogger.fatal("Default file call list or resource path not found : " + fnfe.getMessage() + ". check gateway section of earlywarning.xml configuration file. Exiting.");
 			System.exit(1);
 		}
 	}
@@ -124,17 +132,7 @@ public class EarlyWarning {
 	 * Create GUI
 	 */
 	private static void createGui() {
-		try {
-			defaultCallList = new FileCallList(configuration.getString("gateway.voicent.resources_path") + "/" + configuration.getString("gateway.defaults.call_list"));
-			fileCallLists = new FileCallLists(new File(configuration.getString("gateway.voicent.resources_path")));
-			FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
-			fileCallListControler.displayView();
-		} catch (InvalidFileNameException ifne) {
-			appLogger.fatal("An invalid call list : check hearbeat section of earlywarning.xml configuration file. Exiting.");
-			System.exit(1);
-		} catch (FileNotFoundException fnfe) {
-			appLogger.fatal("Default file call list or resource path not found : " + fnfe.getMessage() + ". check gateway section of earlywarning.xml configuration file. Exiting.");
-			System.exit(1);
-		}
+		FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
+		fileCallListControler.displayView();
 	}
 }
