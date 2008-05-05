@@ -36,6 +36,7 @@ public class EarlyWarningThread extends Thread {
 	private String defaultConfirmCode = null;
 	private int defaultPriority=1;
 	private List emails;
+	private Mailer mailer;
 	
     private EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
@@ -189,7 +190,21 @@ public class EarlyWarningThread extends Thread {
      * Configure Mail facility
      */
     private List<InternetAddress> configureMailer() {
-    	List fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist");
+    	boolean useMail;
+    	try {
+    		 useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
+    		 EarlyWarning.configuration.getString("mail.smtp.host");
+    		 EarlyWarning.configuration.getString("mail.smtp.username");
+    		 EarlyWarning.configuration.getString("mail.smtp.password");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("mail or use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	return null;
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("mail or use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	return null;
+        }
+    	
+    	List fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
     	List<InternetAddress> mails = new ArrayList<InternetAddress>();
     	for(Iterator it = fields.iterator(); it.hasNext();) {
     	    HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
@@ -199,7 +214,7 @@ public class EarlyWarningThread extends Thread {
     	    	internetAddress.validate();
     	    	mails.add(internetAddress);
     	    } catch (AddressException ae) {
-    	    	EarlyWarning.appLogger.fatal("Invalid E-mail address in configuration file : check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
+    	    	EarlyWarning.appLogger.error("Invalid E-mail address in configuration file : " + mail + " check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
     	    }    
     	}
     	return mails;

@@ -38,11 +38,21 @@
   </triggers>
   <mail>
     <use_mail>true</use_mail>
-    <smtp_host></smtp_host>
-    <smtp_port></smtp_port>
+    <smtp>
+      <host>smtp.mail.yahoo.com</host>
+      <username>tibuche</username>
+      <password>6"MIYo-k</password>
+    </smtp>
     <mailinglist>
-      <email>boissier@ipgp.jussieu.fr</email>
-      <email>arnaudl@ipgp.jussieu.fr</email>
+      <contact>
+        <email>boissier@ipgp.jussieu.fr</email>
+      </contact>
+      <contact>
+        <email>arnaudlipgp.jussieu.fr</email>
+      </contact>
+      <contact>
+        <email>staudacher@ipgp.jussieu.fr</email>
+      </contact>
     </mailinglist>
   </mail>
   <gateway>
