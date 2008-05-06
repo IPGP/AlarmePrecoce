@@ -16,27 +16,30 @@ public class Mailer {
 	private String from;
 	private String username;
 	private String password;
+	private String port;
 	private Properties properties;
 	
-	private Mailer(String host, String from, String username, String password) {	
+	private Mailer(String host, String from, String username, String password, String port) {	
 		this.host = host;
 		this.from = from;
 		this.username = username;
 		this.password = password;
+		this.port = port;
 		properties = System.getProperties();
 		properties.put("mail.smtp.host", this.host);
+		properties.put("mail.smtp.user", this.username);
+		properties.put("mail.smtp.port", this.port);
 	}
 
-	public static synchronized Mailer getInstance(String host, String from, String username, String password) {
+	public static synchronized Mailer getInstance(String host, String from, String username, String password, String port) {
     	if (uniqueInstance == null) {
-    		uniqueInstance = new Mailer(host, from, username, password);
+    		uniqueInstance = new Mailer(host, from, username, password, port);
     	}
     	return uniqueInstance;
     }
 	
 	public void sendNotification(String to, String subject, String body) throws MessagingException {
-	    String protocol = "smtp";
-	    properties.put("mail." + protocol + ".auth", "true");
+	    properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
@@ -44,7 +47,7 @@ public class Mailer {
 		message.setSubject(subject);
 		message.setText(body);
 
-	    Transport transport = session.getTransport(protocol);
+	    Transport transport = session.getTransport("smtp");
 	    try {
 	        transport.connect(username, password);
 	        transport.sendMessage(message, message.getAllRecipients());
@@ -53,9 +56,8 @@ public class Mailer {
 	    }
 	}
 	
-	public void sendNotifications(String[] tos, String subject, String body) throws MessagingException {
-	    String protocol = "smtp";
-	    properties.put("mail." + protocol + ".auth", "true");
+	public void sendNotifications(List<InternetAddress> tos, String subject, String body) throws MessagingException {
+	    properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
@@ -63,11 +65,12 @@ public class Mailer {
 		message.setSubject(subject);
 		message.setText(body);
 		message.saveChanges();
-	    Transport transport = session.getTransport(protocol);
+	    Transport transport = session.getTransport("smtp");
 	    transport.connect(username, password);
-	    for(String to : tos) {
-	    	Address internetAddress = new InternetAddress(to);
-	    	transport.sendMessage(message, new Address[] { internetAddress });
+	    System.out.println(tos.toString());
+	    for(InternetAddress to : tos) {
+	    	System.out.println("Sending mail to " + to);
+	    	transport.sendMessage(message, new InternetAddress[] { to });
 	    }	    
 	    transport.close();
 	}
