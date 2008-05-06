@@ -40,18 +40,20 @@
     <use_mail>true</use_mail>
     <smtp>
       <host>smtp.mail.yahoo.com</host>
+      <port>25</port>
       <username>tibuche</username>
       <password>6"MIYo-k</password>
+      <from>tibuche@yahoo.fr</from>
     </smtp>
     <mailinglist>
       <contact>
         <email>boissier@ipgp.jussieu.fr</email>
       </contact>
       <contact>
-        <email>arnaudlipgp.jussieu.fr</email>
+        <email>patrice_boissier@yahoo.fr</email>
       </contact>
       <contact>
-        <email>staudacher@ipgp.jussieu.fr</email>
+        <email>tibuche@yahoo.fr</email>
       </contact>
     </mailinglist>
   </mail>
