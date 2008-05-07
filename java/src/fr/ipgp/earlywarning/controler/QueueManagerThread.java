@@ -11,6 +11,8 @@ import fr.ipgp.earlywarning.gateway.*;
 import java.util.NoSuchElementException;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import javax.mail.MessagingException;
+
 import org.apache.commons.configuration.ConversionException;
 /**
  * Manage a trigger queue based on priorities.<br/>
@@ -22,6 +24,9 @@ public class QueueManagerThread extends Thread {
 	private PriorityBlockingQueue<Trigger> queue;
     protected boolean moreTriggers = true;
     private Gateway gateway;
+    private MailerThread mailerThread;
+	private boolean useMail;
+
 	
     private QueueManagerThread() {
     	this("QueueManagerThread");
@@ -75,9 +80,24 @@ public class QueueManagerThread extends Thread {
 		return queue.size() + " Triggers : " + queue.toString();
 	}
 	
+	/**
+	 * @param useMail the useMail to set
+	 */
+	protected void setUseMail(boolean useMail) {
+		this.useMail = useMail;
+	}
+	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	gateway = VoicentGateway.getInstance();
+    	
+    	configureMailerThread();
+
+    	if (useMail) {
+    		mailerThread = MailerThread.getInstance(this);
+    		mailerThread.start();
+        }
+    	
     	while (moreTriggers) {
     		if (queue.size() > 0) {
     			try {
@@ -92,19 +112,34 @@ public class QueueManagerThread extends Thread {
     				else //TODO Generer le fichier dynamiquement!!!
     					vocFile = EarlyWarning.configuration.getString("gateway.voicent.resources_path") + "/" + "log20080428.voc";
     				gateway.callTillConfirm(vcastExe, vocFile, wavFile, confirmCode, phoneNumbers);
+                    if (useMail)
+                    	mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());
     			} catch (ConversionException ce) {
     	        	EarlyWarning.appLogger.fatal("has a wrong value in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
     	        } catch (NoSuchElementException nsee) {
     	        	EarlyWarning.appLogger.fatal("is missing in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
-    	        }
+    	        } catch (MessagingException me) {
+            		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
+            	}
     		} else {
 	    		try {
 					Thread.sleep(5000);
-					System.out.println("Waiting for triggers. Sleeping for 5 seconds...");
 				} catch (InterruptedException ie) {
 					EarlyWarning.appLogger.error("Error while sleeping!");
 				}
     		}
     	}
 	}
+	
+    private void configureMailerThread() {
+    	try {
+   		 	useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
+        	useMail = false;
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
+        	useMail = false;
+        }
+    }
 }

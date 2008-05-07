@@ -30,6 +30,7 @@ public class MailerThread extends Thread {
 	private String smtpHost;
 	private String smtpPort;
 	private String smtpFrom;
+	private static QueueManagerThread queueManagerThread;
 	
 	private MailerThread() {
 		this("MailerThread");
@@ -39,10 +40,11 @@ public class MailerThread extends Thread {
 		super(name);
 	}
 	
-	public static synchronized MailerThread getInstance() {
+	public static synchronized MailerThread getInstance(QueueManagerThread queue) {
 		if (uniqueInstance == null) {
     		uniqueInstance = new MailerThread();
     	}
+		queueManagerThread = queue;
     	return uniqueInstance;
 	}
 	
@@ -52,12 +54,23 @@ public class MailerThread extends Thread {
     		emails = configureMailer();
     	} catch (ConversionException ce) {
         	EarlyWarning.appLogger.error("mail or use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	queueManagerThread.setUseMail(false);
         	return;
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.error("mail or use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	queueManagerThread.setUseMail(false);
         	return;
         }
-
+        if (emails == null) {
+        	EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	queueManagerThread.setUseMail(false);
+        	return;        	
+        }
+        if (emails.size() == 0) {
+        	EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	queueManagerThread.setUseMail(false);
+        	return;
+        }
     }
     
     /**
@@ -89,6 +102,12 @@ public class MailerThread extends Thread {
 		return mails;
     }
     
+    /**
+     * Send a notification to a mailing list
+     * @param subject the mail subject
+     * @param body the mail body
+     * @throws MessagingException
+     */
     public void sendNotification(String subject, String body) throws MessagingException{
     	mailer.sendNotificationsAuth(emails, subject, body);
     }

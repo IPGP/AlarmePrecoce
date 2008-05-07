@@ -24,7 +24,6 @@ import fr.ipgp.earlywarning.utilities.*;
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
 	private QueueManagerThread queueManagerThread;
-	private MailerThread mailerThread;
 	private FileCallList defaultCallList;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
@@ -36,7 +35,6 @@ public class EarlyWarningThread extends Thread {
 	private boolean defaultRepeat = true;
 	private String defaultConfirmCode = null;
 	private int defaultPriority=1;
-	private boolean useMail;
 	
     private EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
     	this("EarlyWarningThread");
@@ -62,14 +60,7 @@ public class EarlyWarningThread extends Thread {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
     	configureThread();
-    	
-    	configureMailerThread();
-    	
-    	if (useMail) {
-    		mailerThread = MailerThread.getInstance();
-    		mailerThread.start();
-        }
-    	
+
     	queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
 
@@ -87,16 +78,6 @@ public class EarlyWarningThread extends Thread {
                 
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
-                
-                if (useMail) {
-                	try {
-                		mailerThread.sendNotification(trigger.getApplication(), trigger.showTrigger());
-                	} catch (MessagingException me) {
-                		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
-                	}
-                }
-                
-                
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
                 addErrorTrigger("Input Output error while receiving datagram");
@@ -196,18 +177,6 @@ public class EarlyWarningThread extends Thread {
         } catch (NoSuchElementException nsee) {
         	EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
         	System.exit(-1);
-        }
-    }
-    
-    private void configureMailerThread() {
-    	try {
-   		 	useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
-    	} catch (ConversionException ce) {
-        	EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
-        	useMail = false;
-        } catch (NoSuchElementException nsee) {
-        	EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
-        	useMail = false;
         }
     }
 }
