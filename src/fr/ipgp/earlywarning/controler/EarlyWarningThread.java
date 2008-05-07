@@ -8,8 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.mail.internet.*;
-import javax.mail.*;
+import javax.mail.MessagingException;
 import org.apache.commons.configuration.*;
 import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.messages.*;
@@ -25,6 +24,7 @@ import fr.ipgp.earlywarning.utilities.*;
 public class EarlyWarningThread extends Thread {
 	private static EarlyWarningThread uniqueInstance;
 	private QueueManagerThread queueManagerThread;
+	private MailerThread mailerThread;
 	private FileCallList defaultCallList;
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
@@ -36,13 +36,6 @@ public class EarlyWarningThread extends Thread {
 	private boolean defaultRepeat = true;
 	private String defaultConfirmCode = null;
 	private int defaultPriority=1;
-	private List emails;
-	private Mailer mailer;
-	private String smtpUsername;
-	private String smtpPassword;
-	private String smtpHost;
-	private String smtpPort;
-	private String smtpFrom;
 	private boolean useMail;
 	
     private EarlyWarningThread() throws IOException, ConversionException, NoSuchElementException {
@@ -70,10 +63,12 @@ public class EarlyWarningThread extends Thread {
     	
     	configureThread();
     	
-    	emails = configureMailer();
-    	for(Iterator it = emails.iterator(); it.hasNext();) {
-    		System.out.println(it.next().toString());
-    	}
+    	configureMailerThread();
+    	
+    	if (useMail) {
+    		mailerThread = MailerThread.getInstance();
+    		mailerThread.start();
+        }
     	
     	queueManagerThread = QueueManagerThread.getInstance();
     	queueManagerThread.start();
@@ -93,7 +88,14 @@ public class EarlyWarningThread extends Thread {
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
                 
-                mailer.sendNotifications(emails, trigger.getMessage().toString(), trigger.toString());
+                if (useMail) {
+                	try {
+                		mailerThread.sendNotification(trigger.getApplication(), trigger.showTrigger());
+                	} catch (MessagingException me) {
+                		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
+                	}
+                }
+                
                 
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram");
@@ -110,8 +112,6 @@ public class EarlyWarningThread extends Thread {
             } catch (InvalidFileNameException ifne) {
             	EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
             	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
-            } catch (MessagingException me) {
-            	EarlyWarning.appLogger.error("Mail problem : " + me.getMessage());
             }
             
             if (Thread.interrupted()) {
@@ -199,44 +199,15 @@ public class EarlyWarningThread extends Thread {
         }
     }
     
-    /**
-     * Configure Mail facility
-     */
-    private List<InternetAddress> configureMailer() {
+    private void configureMailerThread() {
     	try {
-    		 useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
-    		 smtpHost = EarlyWarning.configuration.getString("mail.smtp.host");
-    		 smtpUsername = EarlyWarning.configuration.getString("mail.smtp.username");
-    		 smtpPassword = EarlyWarning.configuration.getString("mail.smtp.password");
-    		 smtpFrom = EarlyWarning.configuration.getString("mail.smtp.from");
-    		 smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
+   		 	useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
     	} catch (ConversionException ce) {
-        	EarlyWarning.appLogger.fatal("mail or use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
         	useMail = false;
-        	return null;
         } catch (NoSuchElementException nsee) {
-        	EarlyWarning.appLogger.fatal("mail or use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        	EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
         	useMail = false;
-        	return null;
         }
-    	if (useMail) {
-    		mailer = Mailer.getInstance(smtpHost, smtpFrom, smtpUsername, smtpPassword, smtpPort);
-    		List fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
-    		List<InternetAddress> mails = new ArrayList<InternetAddress>();
-    		for(Iterator it = fields.iterator(); it.hasNext();) {
-    			HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
-    			String mail = sub.getString("email");
-    			try {
-    				InternetAddress internetAddress = new InternetAddress(mail);
-    				internetAddress.validate();
-    				mails.add(internetAddress);
-    			} catch (AddressException ae) {
-    				EarlyWarning.appLogger.error("Invalid E-mail address in configuration file : " + mail + " check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
-    			}    
-    		}
-    		return mails;
-    	} else {
-    		return null;
-    	}
     }
 }
