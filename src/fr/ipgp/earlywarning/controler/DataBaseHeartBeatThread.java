@@ -42,7 +42,7 @@ public class DataBaseHeartBeatThread extends Thread {
     }
     
     public void run() {
-    	EarlyWarning.appLogger.debug("Thread creation");
+    	EarlyWarning.appLogger.debug("DataBase HeartBeat Thread creation");
     	// Loading the driver
     	try {
 			dataBaseHeartBeat = new DataBaseHeartBeat(EarlyWarning.configuration);
