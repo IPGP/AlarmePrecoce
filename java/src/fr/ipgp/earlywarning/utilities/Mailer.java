@@ -38,7 +38,7 @@ public class Mailer {
     	return uniqueInstance;
     }
 	
-	public void sendNotification(String to, String subject, String body) throws MessagingException {
+	public void sendNotificationAuth(String to, String subject, String body) throws MessagingException {
 	    properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
@@ -56,21 +56,20 @@ public class Mailer {
 	    }
 	}
 	
-	public void sendNotifications(List<InternetAddress> tos, String subject, String body) throws MessagingException {
-	    properties.put("mail.smtp.auth", "true");
+	public void sendNotificationsAuth(List<InternetAddress> addresses, String subject, String body) throws MessagingException {
+		properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
-//		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 		message.setSubject(subject);
 		message.setText(body);
 		message.saveChanges();
 	    Transport transport = session.getTransport("smtp");
 	    transport.connect(username, password);
-	    System.out.println(tos.toString());
-	    for(InternetAddress to : tos) {
-	    	System.out.println("Sending mail to " + to);
-	    	transport.sendMessage(message, new InternetAddress[] { to });
+	    System.out.println(addresses.toString());
+	    for(InternetAddress address : addresses) {
+	    	System.out.println("Sending mail to " + address);
+	    	transport.sendMessage(message, new InternetAddress[] { address });
 	    }	    
 	    transport.close();
 	}
