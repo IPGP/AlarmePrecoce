@@ -7,6 +7,7 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.gateway.*;
+import fr.ipgp.earlywarning.messages.*;
 import java.util.NoSuchElementException;
 import java.util.concurrent.PriorityBlockingQueue;
 import javax.mail.MessagingException;
@@ -23,6 +24,7 @@ public class QueueManagerThread extends Thread {
     private Gateway gateway;
     private MailerThread mailerThread;
 	private boolean useMail;
+	private static FileWarningMessage defaultWarningMessage;
 	
     private QueueManagerThread() {
     	this("QueueManagerThread");
@@ -33,10 +35,11 @@ public class QueueManagerThread extends Thread {
     	queue = new PriorityBlockingQueue<Trigger>();
     }
     
-    public static synchronized QueueManagerThread getInstance() {
+    public static synchronized QueueManagerThread getInstance(FileWarningMessage warningMessage) {
     	if (uniqueInstance == null) {
     		uniqueInstance = new QueueManagerThread();
     	}
+    	defaultWarningMessage = warningMessage;
     	return uniqueInstance;
     }
     	
@@ -93,7 +96,7 @@ public class QueueManagerThread extends Thread {
     	while (moreTriggers) {
     		if (queue.size() > 0) {
     			Trigger trig = queue.poll();
-    			gateway.callTillConfirm(trig);
+    			gateway.callTillConfirm(trig, defaultWarningMessage);
     			if (useMail) {
     				try {
     					mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());

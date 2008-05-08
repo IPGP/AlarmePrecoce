@@ -69,7 +69,18 @@ public class FileCallList implements CallList {
 	 */
 	public void setFileName(String fileName) {
 		this.file = new File(fileName);
-		//this.type = extractExtension(fileName);
+		try {
+			String extension = extractExtension(file);
+			if (extension.equals("txt")) {
+				type = CallListType.TXT;
+			} else {
+				if (extension.equals("voc")) {
+					type = CallListType.VOC;
+				}
+			}
+		} catch (InvalidFileNameException ifne) {
+			
+		}
 		fireFileChanged();
 	}
 	
@@ -99,6 +110,19 @@ public class FileCallList implements CallList {
 	 */
 	public void setFile(File file) {
 		this.file = file;
+		try {
+			String extension = extractExtension(file);
+			if (extension.equals("txt")) {
+				type = CallListType.TXT;
+			} else {
+				if (extension.equals("voc")) {
+					type = CallListType.VOC;
+				}
+			}
+		} catch (InvalidFileNameException ifne) {
+			
+		}
+		fireFileChanged();
 	}
 
 	/**
