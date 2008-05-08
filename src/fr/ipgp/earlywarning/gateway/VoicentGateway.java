@@ -459,7 +459,7 @@ public class VoicentGateway implements Gateway{
 		Date date = new Date();
 		String logVoc = simpleFormat.format(date) + ".voc";
 		File logVocFile = new File(logDir.getAbsolutePath() + "/" + logVoc);
-		File vocFile = new File(logDir.getAbsolutePath() + "/" + voc);
+		File vocFile = new File(resources + "/" + voc);
 		copyFile(vocFile, logVocFile);
 		return logVoc;
 	}
