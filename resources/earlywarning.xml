@@ -65,7 +65,7 @@
   	  <error_message>defaultErrorMessage.wav</error_message>
   	</defaults>
   	<voicent>
-  	  <host>195.83.188.41</host>
+  	  <host>195.83.188.145</host>
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
   	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
