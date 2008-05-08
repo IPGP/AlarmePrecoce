@@ -7,12 +7,9 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.gateway.*;
-
 import java.util.NoSuchElementException;
 import java.util.concurrent.PriorityBlockingQueue;
-
 import javax.mail.MessagingException;
-
 import org.apache.commons.configuration.ConversionException;
 /**
  * Manage a trigger queue based on priorities.<br/>
@@ -95,16 +92,8 @@ public class QueueManagerThread extends Thread {
     	
     	while (moreTriggers) {
     		if (queue.size() > 0) {
-    			String vocFile;
     			Trigger trig = queue.poll();
-    			String confirmCode = trig.getConfirmCode();
-    			String wavFile = "";
-    			String [] phoneNumbers = {""};
-    			if (trig.getCallList().getType().equals("voc"))
-    				vocFile = trig.getCallList().toString();
-    			else //TODO Generer le fichier dynamiquement!!!
-    				vocFile = "log20080428.voc";
-    			gateway.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
+    			gateway.callTillConfirm(trig);
     			if (useMail) {
     				try {
     					mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());
@@ -152,8 +141,5 @@ public class QueueManagerThread extends Thread {
         	EarlyWarning.appLogger.fatal("gataway values are missing in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
         	System.exit(-1);
         }
-    	
-    	//gateway = VoicentGateway.getInstance();
-
     }
 }
