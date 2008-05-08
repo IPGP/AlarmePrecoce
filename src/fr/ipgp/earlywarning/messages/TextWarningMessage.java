@@ -10,6 +10,7 @@ package fr.ipgp.earlywarning.messages;
  */
 public class TextWarningMessage implements WarningMessage {
 	private String text;
+	private final String type = "text";
 	
 	public TextWarningMessage(String text) {
 		this.text = text;
@@ -27,5 +28,12 @@ public class TextWarningMessage implements WarningMessage {
 	 */
 	public String getText() {
 		return text;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
 	}
 }

@@ -20,7 +20,7 @@ public interface CallList {
 	/**
 	 * @return a String representing the CallList type
 	 */
-	public String getType();
+	public CallListType getType();
 	
 	/**
 	 * @return a String representing the CallList name
