@@ -6,6 +6,7 @@ package fr.ipgp.earlywarning.controler;
 import org.junit.*;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.*;
+import fr.ipgp.earlywarning.messages.*;
 import java.util.concurrent.PriorityBlockingQueue;
 /**
  * @author Patrice Boissier
@@ -25,6 +26,7 @@ public class TestQueueManagerThread {
 	
 	@Test
 	public void testCreateQueueManagerThread() {
+		FileWarningMessage mess = new FileWarningMessage("toto.wav");
 		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);
@@ -32,7 +34,7 @@ public class TestQueueManagerThread {
 		pbq1.offer(trig1);
 		pbq1.offer(trig2);
 		pbq1.offer(trig3);
-		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
+		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance(mess);
     	queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
     	queueManagerThread.addTrigger(trig2);
@@ -46,10 +48,11 @@ public class TestQueueManagerThread {
 	
 	@Test
 	public void testAddTriggerInQueueManagerThread () {
+		FileWarningMessage mess = new FileWarningMessage("toto.wav");
 		Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(),2);
 		Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(),1);		
-		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance();
+		QueueManagerThread queueManagerThread = QueueManagerThread.getInstance(mess);
     	//queueManagerThread.start();
     	queueManagerThread.addTrigger(trig1);
     	queueManagerThread.addTrigger(trig2);
