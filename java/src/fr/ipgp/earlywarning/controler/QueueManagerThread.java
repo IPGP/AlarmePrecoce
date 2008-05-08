@@ -26,7 +26,6 @@ public class QueueManagerThread extends Thread {
     private Gateway gateway;
     private MailerThread mailerThread;
 	private boolean useMail;
-
 	
     private QueueManagerThread() {
     	this("QueueManagerThread");
@@ -89,38 +88,30 @@ public class QueueManagerThread extends Thread {
 	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
-    	gateway = VoicentGateway.getInstance();
+    	
+    	configureGateway();
     	
     	configureMailerThread();
-
-    	if (useMail) {
-    		mailerThread = MailerThread.getInstance(this);
-    		mailerThread.start();
-        }
     	
     	while (moreTriggers) {
     		if (queue.size() > 0) {
-    			try {
-    				String vocFile;
-    				String vcastExe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
-    				Trigger trig = queue.poll();
-    				String confirmCode = trig.getConfirmCode();
-    				String wavFile = "";
-    				String [] phoneNumbers = {""};
-    				if (trig.getCallList().getType().equals("voc"))
-    					vocFile = EarlyWarning.configuration.getString("gateway.voicent.resources_path") + "/" + trig.getCallList().toString();
-    				else //TODO Generer le fichier dynamiquement!!!
-    					vocFile = EarlyWarning.configuration.getString("gateway.voicent.resources_path") + "/" + "log20080428.voc";
-    				gateway.callTillConfirm(vcastExe, vocFile, wavFile, confirmCode, phoneNumbers);
-                    if (useMail)
-                    	mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());
-    			} catch (ConversionException ce) {
-    	        	EarlyWarning.appLogger.fatal("has a wrong value in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
-    	        } catch (NoSuchElementException nsee) {
-    	        	EarlyWarning.appLogger.fatal("is missing in configuration file : check voicent section of earlywarning.xml configuration file. Exiting application.");
-    	        } catch (MessagingException me) {
-            		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
-            	}
+    			String vocFile;
+    			Trigger trig = queue.poll();
+    			String confirmCode = trig.getConfirmCode();
+    			String wavFile = "";
+    			String [] phoneNumbers = {""};
+    			if (trig.getCallList().getType().equals("voc"))
+    				vocFile = trig.getCallList().toString();
+    			else //TODO Generer le fichier dynamiquement!!!
+    				vocFile = "log20080428.voc";
+    			gateway.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
+    			if (useMail) {
+    				try {
+    					mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());
+    	        	} catch (MessagingException me) {
+    	        		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
+            		}
+    			}
     		} else {
 	    		try {
 					Thread.sleep(5000);
@@ -141,5 +132,28 @@ public class QueueManagerThread extends Thread {
         	EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
         	useMail = false;
         }
+    	if (useMail) {
+    		mailerThread = MailerThread.getInstance(this);
+    		mailerThread.start();
+        }
+    }
+    
+    private void configureGateway() {
+    	try {
+    		String host = EarlyWarning.configuration.getString("gateway.voicent.host");
+    		int port = EarlyWarning.configuration.getInt("gateway.voicent.port");
+    		String vcastexe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
+    		String resourcesPath = EarlyWarning.configuration.getString("gateway.voicent.resources_path");
+    		gateway = VoicentGateway.getInstance(host, port, resourcesPath, vcastexe);
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("gateway has wrong values in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
+        	System.exit(-1);
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("gataway values are missing in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
+        	System.exit(-1);
+        }
+    	
+    	//gateway = VoicentGateway.getInstance();
+
     }
 }
