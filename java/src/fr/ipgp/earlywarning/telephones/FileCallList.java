@@ -13,14 +13,23 @@ import java.io.*;
  */
 public class FileCallList implements CallList {
 	private File file;
-	private String type;
+	private CallListType type;
 	private EventListenerList listeners;
 	
 	public FileCallList(String fileName) throws InvalidFileNameException, FileNotFoundException {
 		this.file = new File(fileName);
 		if (!this.file.exists())
 			throw new FileNotFoundException("File call list does not exists");
-		this.type = extractExtension(file);
+		String extension = extractExtension(file);
+		if (extension.equals("txt")) {
+			type = CallListType.TXT;
+		} else {
+			if (extension.equals("voc")) {
+				type = CallListType.VOC;
+			} else
+				throw new InvalidFileNameException("File call list has an invalid extension : " + extension);
+		}
+			
 		listeners = new EventListenerList();
 	}
 
@@ -28,7 +37,15 @@ public class FileCallList implements CallList {
 		this.file = file;
 		if (!this.file.exists())
 			throw new FileNotFoundException("File call list does not exists");
-		this.type = extractExtension(file);
+		String extension = extractExtension(file);
+		if (extension.equals("txt")) {
+			type = CallListType.TXT;
+		} else {
+			if (extension.equals("voc")) {
+				type = CallListType.VOC;
+			} else
+				throw new InvalidFileNameException("File call list has an invalid extension : " + extension);
+		}
 		listeners = new EventListenerList();
 	}
 	
@@ -87,17 +104,10 @@ public class FileCallList implements CallList {
 	/**
 	 * @return the type
 	 */
-	public String getType() {
+	public CallListType getType() {
 		return type;
 	}
 
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-	
 	/**
 	 * @param listener the listener to add
 	 */
