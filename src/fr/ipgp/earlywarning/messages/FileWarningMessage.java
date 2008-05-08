@@ -10,7 +10,7 @@ package fr.ipgp.earlywarning.messages;
  */
 public class FileWarningMessage implements WarningMessage {
 	private String file;
-	private final String type = "wav";
+	private final WarningMessageType type = WarningMessageType.WAV;
 	
 	public FileWarningMessage(String file) {
 		this.file = file;
@@ -34,7 +34,7 @@ public class FileWarningMessage implements WarningMessage {
 	/**
 	 * @return the type
 	 */
-	public String getType() {
+	public WarningMessageType getType() {
 		return type;
 	}
 }
