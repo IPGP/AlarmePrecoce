@@ -247,7 +247,7 @@ public class VoicentGateway implements Gateway{
 			
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
-		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
@@ -283,7 +283,7 @@ public class VoicentGateway implements Gateway{
 
 			String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
-		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
@@ -319,7 +319,7 @@ public class VoicentGateway implements Gateway{
 
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
-		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
@@ -353,7 +353,7 @@ public class VoicentGateway implements Gateway{
 
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
-		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
