@@ -5,6 +5,7 @@
 package fr.ipgp.earlywarning.gateway;
 
 import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.messages.FileWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
 /**
  * The phone gateway interface
@@ -18,5 +19,5 @@ public interface Gateway {
 	public String callTillConfirm(String logFile, String messageFile, String confirmCode, String [] phoneNumbers);
 	public String callTillConfirm(String logFile, String messageFile, String confirmCode, FileCallList callList);
 	public String callTillConfirm(String callList, String messageFile, String confirmCode);
-	public String callTillConfirm(Trigger trigger);
+	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage);
 }

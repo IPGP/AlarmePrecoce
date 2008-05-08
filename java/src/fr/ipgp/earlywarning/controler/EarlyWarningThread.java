@@ -30,7 +30,7 @@ public class EarlyWarningThread extends Thread {
     protected byte[] buffer = new byte[512];
     protected int port;
     protected boolean triggerOnError;
-	private WarningMessage defaultWarningMessage = null;
+	private FileWarningMessage defaultWarningMessage = null;
 	private boolean defaultRepeat = true;
 	private String defaultConfirmCode = null;
 	private int defaultPriority=1;
@@ -60,7 +60,7 @@ public class EarlyWarningThread extends Thread {
     	
     	configureThread();
 
-    	queueManagerThread = QueueManagerThread.getInstance();
+    	queueManagerThread = QueueManagerThread.getInstance(defaultWarningMessage);
     	queueManagerThread.start();
 
     	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
