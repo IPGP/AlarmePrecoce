@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.Trigger;
 /**
@@ -285,28 +286,44 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 
-	public String callTillConfirm(Trigger trigger) {
+	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {
 		
 		String confirmCode = trigger.getConfirmCode();
-		
-		//switch () {
-		
-		//}
-		
-		String wavFile = "";//TODO gérer le cas des wavFile
-		String [] phoneNumbers;
-		if (trigger.getCallList().getType().equals("voc")) {
-			return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
-		} else { //TODO Generer le fichier dynamiquement!!!
-			String vocFile = "log20080428.voc";
-			if (trigger.getCallList().getType().equals("txt")) {
-				return this.callTillConfirm(vocFile, wavFile, confirmCode);
-			} else {
-				phoneNumbers = new String[2];
-				return this.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
-			}
+		String fileName;
+		switch (trigger.getMessage().getType()) {
+			case WAV :
+				FileWarningMessage fileWarningMessage = (FileWarningMessage) trigger.getMessage();
+				fileName = fileWarningMessage.getFile();
+			break;
+			case TEXT :
+				fileName = defaultWarningMessage.getFile();
+			break;
 		}
-
+		
+		switch (trigger.getCallList().getType()) {
+			case VOC :
+				
+			break;
+			case TXT :
+				
+			break;
+			case TEXT :
+				
+			break;
+		}
+		
+//		if (trigger.getCallList().getType().equals("voc")) {
+//			return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
+//		} else { //TODO Generer le fichier dynamiquement!!!
+//			String vocFile = "log20080428.voc";
+//			if (trigger.getCallList().getType().equals("txt")) {
+//				return this.callTillConfirm(vocFile, wavFile, confirmCode);
+//			} else {
+//				phoneNumbers = new String[2];
+//				return this.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
+//			}
+//		}
+		return "";
 	}
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
