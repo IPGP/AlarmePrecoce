@@ -142,8 +142,10 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		if (packetContentElements[5].matches("\\w+\\.voc"))
     			trigger.setCallList(new FileCallList(packetContentElements[5]));
     		else {
-    			if (packetContentElements[5].matches("(\\d*)(,\\d*)*"))
-    				trigger.setCallList(new TextCallList(packetContentElements[5]));
+    			if (packetContentElements[5].matches("(\\d*)(,\\d*)*")) {
+    				String phoneNumbers = packetContentElements[5].replaceAll(",", " ");
+    				trigger.setCallList(new TextCallList(phoneNumbers));
+    			}
     			else
     				throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
     		}
