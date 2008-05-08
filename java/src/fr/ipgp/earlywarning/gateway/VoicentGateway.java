@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import fr.ipgp.earlywarning.telephones.*;
+import fr.ipgp.earlywarning.triggers.Trigger;
 /**
  * Implementation of the voicent phone gateway.<br/>
  * Implements the singleton pattern.<br/>
@@ -214,7 +215,6 @@ public class VoicentGateway implements Gateway{
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
 	 * This is ideal for using it in a phone notification escalation process.
-	 * @param vcastexe Voicent Broadcast By Phone executable
 	 * @param vocFile the voc file used for logging
 	 * @param waveFile the wave file to be played on the phone
 	 * @param confirmCode the confirm code to be entered
@@ -257,11 +257,10 @@ public class VoicentGateway implements Gateway{
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
 	 * This is ideal for using it in a phone notification escalation process.
-	 * @param vcastexe Voicent Broadcast By Phone executable
 	 * @param vocFile the voc file used for logging
 	 * @param waveFile the wave file to be played on the phone
 	 * @param confirmCode the confirm code to be entered
-	 * @param phoneNumbers the phone numbers
+	 * @param callList the phone numbers
 	 * @return call status
 	 */
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, FileCallList callList) {
@@ -273,7 +272,7 @@ public class VoicentGateway implements Gateway{
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
-		    cmdline += " -import" + "\"" + resources + "/" + callList + "\"";
+		    cmdline += " -import" + "\"" + resources + "/" + callList.getFileName() + "\"";
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
@@ -286,6 +285,57 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 
+	public String callTillConfirm(Trigger trigger) {
+		String confirmCode = trigger.getConfirmCode();
+		String wavFile = "";//TODO gérer le cas des wavFile
+		String [] phoneNumbers;
+		if (trigger.getCallList().getType().equals("voc")) {
+			return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
+		} else { //TODO Generer le fichier dynamiquement!!!
+			String vocFile = "log20080428.voc";
+			if (trigger.getCallList().getType().equals("txt")) {
+				return this.callTillConfirm(vocFile, wavFile, confirmCode);
+			} else {
+				phoneNumbers = new String[2];
+				return this.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
+			}
+		}
+
+	}
+	/**
+	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
+	 * This is ideal for using it in a phone notification escalation process.
+	 * @param vocFile the voc file used for logging
+	 * @param waveFile the wave file to be played on the phone
+	 * @param confirmCode the confirm code to be entered
+	 * @return call status
+	 */
+	public String callTillConfirm(String vocFile, String waveFile, String confirmCode) {
+		try {
+			
+		    String urlString = "/ocall/callreqHandler.jsp";
+		    String postString = createCallTillConfirmPostString(confirmCode);
+		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    cmdline += " -startnow";
+		    cmdline += " -confirmcode " + confirmCode;
+		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
+		
+		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
+		
+		    System.out.println("URL : " + urlString + "?" + postString);
+		    String requestCallTillConfirm = postToGateway(urlString, postString);
+		    System.out.println("Server answer : " + requestCallTillConfirm);
+		    return requestCallTillConfirm;
+	    } catch (UnsupportedEncodingException uee) {
+	    	return null;
+	    }
+	}
+
+	/**
+	 * Create the postString for the gateway
+	 * @param confirmCode the confirm code
+	 * @return the postString
+	 */
 	private String createCallTillConfirmPostString(String confirmCode){
 		try {
 			String postString = "info=" + URLEncoder.encode("Simple Call till Confirm", encoding);
