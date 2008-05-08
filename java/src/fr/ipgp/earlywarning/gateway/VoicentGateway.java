@@ -13,9 +13,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.io.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
 import fr.ipgp.earlywarning.triggers.Trigger;
+import fr.ipgp.earlywarning.EarlyWarning;
 /**
  * Implementation of the voicent phone gateway.<br/>
  * Implements the singleton pattern.<br/>
@@ -242,7 +246,7 @@ public class VoicentGateway implements Gateway{
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
-		    cmdline += " -numbers" + " \"" + phoneNumberList + "\"";
+		    cmdline += " -numbers " + "\"" + phoneNumberList + "\"";
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
@@ -255,6 +259,36 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 
+	/**
+	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
+	 * This is ideal for using it in a phone notification escalation process.
+	 * @param vocFile the voc file used for logging
+	 * @param waveFile the wave file to be played on the phone
+	 * @param confirmCode the confirm code to be entered
+	 * @param phoneNumbers the phone numbers
+	 * @return call status
+	 */
+	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String phoneNumbers) {
+		try {			
+		    String urlString = "/ocall/callreqHandler.jsp";
+		    String postString = createCallTillConfirmPostString(confirmCode);
+		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    cmdline += " -startnow";
+		    cmdline += " -confirmcode " + confirmCode;
+		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
+		    cmdline += " -numbers " + "\"" + phoneNumbers + "\"";
+		
+		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
+		
+		    System.out.println("URL : " + urlString + "?" + postString);
+		    String requestCallTillConfirm = postToGateway(urlString, postString);
+		    System.out.println("Server answer : " + requestCallTillConfirm);
+		    return requestCallTillConfirm;
+	    } catch (UnsupportedEncodingException uee) {
+	    	return null;
+	    }
+	}	
+	
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
 	 * This is ideal for using it in a phone notification escalation process.
@@ -286,45 +320,6 @@ public class VoicentGateway implements Gateway{
 	    }
 	}
 
-	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {
-		
-		String confirmCode = trigger.getConfirmCode();
-		String fileName;
-		switch (trigger.getMessage().getType()) {
-			case WAV :
-				FileWarningMessage fileWarningMessage = (FileWarningMessage) trigger.getMessage();
-				fileName = fileWarningMessage.getFile();
-			break;
-			case TEXT :
-				fileName = defaultWarningMessage.getFile();
-			break;
-		}
-		
-		switch (trigger.getCallList().getType()) {
-			case VOC :
-				
-			break;
-			case TXT :
-				
-			break;
-			case TEXT :
-				
-			break;
-		}
-		
-//		if (trigger.getCallList().getType().equals("voc")) {
-//			return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
-//		} else { //TODO Generer le fichier dynamiquement!!!
-//			String vocFile = "log20080428.voc";
-//			if (trigger.getCallList().getType().equals("txt")) {
-//				return this.callTillConfirm(vocFile, wavFile, confirmCode);
-//			} else {
-//				phoneNumbers = new String[2];
-//				return this.callTillConfirm(vocFile, wavFile, confirmCode, phoneNumbers);
-//			}
-//		}
-		return "";
-	}
 	/**
 	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
 	 * This is ideal for using it in a phone notification escalation process.
@@ -355,6 +350,44 @@ public class VoicentGateway implements Gateway{
 	}
 
 	/**
+	 * 
+	 */
+	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {		
+		String confirmCode = trigger.getConfirmCode();
+		String wavFile;
+		switch (trigger.getMessage().getType()) {
+			case WAV :
+				FileWarningMessage fileWarningMessage = (FileWarningMessage) trigger.getMessage();
+				wavFile = fileWarningMessage.getFile();
+			break;
+			default :
+				wavFile = defaultWarningMessage.getFile();
+			break;
+		}
+		
+		try {
+			switch (trigger.getCallList().getType()) {
+				case VOC :
+					return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
+				case TXT :
+					String vocFile1 = createLogVocFile();
+					return this.callTillConfirm(vocFile1, wavFile, confirmCode, (FileCallList)trigger.getCallList());
+				case TEXT :
+					String vocFile2 = createLogVocFile();
+					TextCallList callList = (TextCallList)trigger.getCallList();
+					return this.callTillConfirm(vocFile2, wavFile, confirmCode, callList.getText());
+				default :
+					return "";
+			}
+		} catch (IOException ioe) {
+			EarlyWarning.appLogger.fatal("Fatal error while creating log file : " + ioe.getMessage() + ". Exiting.");
+			System.exit(-1);
+		}
+		return null;
+	}
+
+	
+	/**
 	 * Create the postString for the gateway
 	 * @param confirmCode the confirm code
 	 * @return the postString
@@ -370,6 +403,20 @@ public class VoicentGateway implements Gateway{
 		} catch (UnsupportedEncodingException uee) {
 	    	return null;
 	    }
+	}
+	
+	/**
+	 * 
+	 * @return the created log voc file
+	 */
+	private String createLogVocFile() throws FileNotFoundException, IOException {
+		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
+		Date date = new Date();
+		String logVoc = simpleFormat.format(date) + ".voc";
+		File logVocFile = new File(resources + "/" + logVoc);
+		File emptyVocFile = new File(resources + "/empty.voc");
+		copyFile(emptyVocFile, logVocFile);
+		return logVoc;
 	}
 	
 	/**
@@ -456,5 +503,27 @@ public class VoicentGateway implements Gateway{
 	    	return "Call successfully removed";
 	    else
 	    	return "Call id unknown"; 
+	}
+	
+	private void copyFile(File srcFile, File dstFile) throws FileNotFoundException, IOException {
+		InputStream in = new FileInputStream(srcFile);
+		OutputStream out = new FileOutputStream(dstFile);
+		try{
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0){
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			System.out.println("File copied.");
+		} catch(FileNotFoundException ex) {
+			System.out.println(ex.getMessage() + " in the specified directory.");
+		} catch(IOException e) {
+			System.out.println(e.getMessage());      
+		} finally {
+	        if (in != null) in.close();
+	        if (out != null) out.close();
+	    }
 	}
 }
