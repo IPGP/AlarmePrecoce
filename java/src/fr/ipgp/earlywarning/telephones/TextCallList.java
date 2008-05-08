@@ -10,7 +10,7 @@ package fr.ipgp.earlywarning.telephones;
  */
 public class TextCallList implements CallList{
 	private String text;
-    private final String type = "text";
+    private CallListType type = CallListType.TEXT;
 	
 	public TextCallList(String text) {
 		this.text = text;
@@ -26,10 +26,10 @@ public class TextCallList implements CallList{
 	/**
 	 * @return the type
 	 */
-	public String getType() {
+	public CallListType getType() {
 		return type;
 	}
-	
+
 	/**
 	 * @return the text to get
 	 */
