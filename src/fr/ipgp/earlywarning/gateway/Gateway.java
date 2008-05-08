@@ -4,6 +4,7 @@
  */
 package fr.ipgp.earlywarning.gateway;
 
+import fr.ipgp.earlywarning.telephones.*;
 /**
  * The phone gateway interface
  * @author Patrice Boissier
@@ -13,5 +14,6 @@ public interface Gateway {
 	public String callAudio(String phoneNumber, String audioFile, boolean selfDelete);
 	public String callStatus(String requestID);
 	public String callRemove(String requestID);
-	public String callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode, String [] phoneNumbers);
+	public String callTillConfirm(String logFile, String messageFile, String confirmCode, String [] phoneNumbers);
+	public String callTillConfirm(String logFile, String messageFile, String confirmCode, FileCallList callList);
 }

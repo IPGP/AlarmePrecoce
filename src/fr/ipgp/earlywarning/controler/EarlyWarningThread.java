@@ -8,7 +8,6 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.mail.MessagingException;
 import org.apache.commons.configuration.*;
 import fr.ipgp.earlywarning.*;
 import fr.ipgp.earlywarning.messages.*;
