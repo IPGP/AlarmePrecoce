@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import fr.ipgp.earlywarning.telephones.*;
 /**
  * Implementation of the voicent phone gateway.<br/>
  * Implements the singleton pattern.<br/>
@@ -61,17 +62,22 @@ import java.net.ProtocolException;
 public class VoicentGateway implements Gateway{
 	private static VoicentGateway uniqueInstance;
 	private String host;
+	private String resources;
 	private int port;
+	private String vcastexe;
 	private String encoding = "UTF-8";
 	
 	private VoicentGateway () {
 	    this.host = "localhost";
 	    this.port = 8155;
+	    this.resources = null;
 	}
 	
-	private VoicentGateway (String host, int port) {
+	private VoicentGateway (String host, int port, String resources, String vcastexe) {
 		this.host = host;
 		this.port = port;
+		this.resources = resources;
+		this.vcastexe = vcastexe;
 	}
 	
     public static synchronized VoicentGateway getInstance() {
@@ -81,9 +87,9 @@ public class VoicentGateway implements Gateway{
     	return uniqueInstance;
     }
 
-    public static synchronized VoicentGateway getInstance(String host, int port) {
+    public static synchronized VoicentGateway getInstance(String host, int port, String resources, String vcastexe) {
     	if (uniqueInstance == null) {
-    		uniqueInstance = new VoicentGateway(host, port);
+    		uniqueInstance = new VoicentGateway(host, port, resources, vcastexe);
     	}
     	uniqueInstance.setHost(host);
     	uniqueInstance.setPort(port);
@@ -160,7 +166,7 @@ public class VoicentGateway implements Gateway{
 		    postString += "&phoneno="+phoneNumber;
 		    postString += "&firstocc=10";
 		    postString += "&selfdelete="+(selfDelete ? "1" : "0");
-		    postString += "&audiofile="+URLEncoder.encode(audioFile, encoding);
+		    postString += "&audiofile="+URLEncoder.encode(resources + "/" + audioFile, encoding);
 		    String requestCallString = postToGateway(urlString, postString);
 		    return getRequestId(requestCallString);
 	    } catch (UnsupportedEncodingException uee) {
@@ -215,7 +221,7 @@ public class VoicentGateway implements Gateway{
 	 * @param phoneNumbers the phone numbers
 	 * @return call status
 	 */
-	public String callTillConfirm(String vcastexe, String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
+	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
 		try {
 			
 			String phoneNumberList = "";
@@ -230,19 +236,12 @@ public class VoicentGateway implements Gateway{
 			}
 			
 		    String urlString = "/ocall/callreqHandler.jsp";
-		    String postString = "info=" + URLEncoder.encode("Simple Call till Confirm", encoding);
-		    postString += "&phoneno=666";
-		    postString += "&firstocc=10"; // the call can happen any time between now and 10 minutes later. After 10 minutes, the gateway will issue a "Too late to call" error message.
-		    postString += "&selfdelete=0";
-		    postString += "&startexec=" + URLEncoder.encode(vcastexe, encoding);
-		
-		    String cmdline = "\"" + vocFile + "\"";
+		    String postString = createCallTillConfirmPostString(confirmCode);
+		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
-		    cmdline += " -wavfile " + "\"" +  waveFile + "\"";
+		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
 		    cmdline += " -numbers" + " \"" + phoneNumberList + "\"";
-		    //cmdline += " -import" + " \"C:/temp/test.txt\"";
-		    //cmdline += " -cleanstatus";
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
@@ -251,6 +250,51 @@ public class VoicentGateway implements Gateway{
 		    System.out.println("Server answer : " + requestCallTillConfirm);
 		    return requestCallTillConfirm;
 	    } catch (UnsupportedEncodingException uee) {
+	    	return null;
+	    }
+	}
+
+	/**
+	 * Keep calling a list of people until anyone enters the confirmation code. The message is the specified audio file. 
+	 * This is ideal for using it in a phone notification escalation process.
+	 * @param vcastexe Voicent Broadcast By Phone executable
+	 * @param vocFile the voc file used for logging
+	 * @param waveFile the wave file to be played on the phone
+	 * @param confirmCode the confirm code to be entered
+	 * @param phoneNumbers the phone numbers
+	 * @return call status
+	 */
+	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, FileCallList callList) {
+		try {
+			
+		    String urlString = "/ocall/callreqHandler.jsp";
+		    String postString = createCallTillConfirmPostString(confirmCode);
+		    String cmdline = "\"" + resources + "/" + vocFile + "\"";
+		    cmdline += " -startnow";
+		    cmdline += " -confirmcode " + confirmCode;
+		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
+		    cmdline += " -import" + "\"" + resources + "/" + callList + "\"";
+		
+		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
+		
+		    System.out.println("URL : " + urlString + "?" + postString);
+		    String requestCallTillConfirm = postToGateway(urlString, postString);
+		    System.out.println("Server answer : " + requestCallTillConfirm);
+		    return requestCallTillConfirm;
+	    } catch (UnsupportedEncodingException uee) {
+	    	return null;
+	    }
+	}
+
+	private String createCallTillConfirmPostString(String confirmCode){
+		try {
+			String postString = "info=" + URLEncoder.encode("Simple Call till Confirm", encoding);
+			postString += "&phoneno=911911";
+			postString += "&firstocc=10"; // the call can happen any time between now and 10 minutes later. After 10 minutes, the gateway will issue a "Too late to call" error message.
+			postString += "&selfdelete=0";
+			postString += "&startexec=" + URLEncoder.encode(vcastexe, encoding);
+			return postString;
+		} catch (UnsupportedEncodingException uee) {
 	    	return null;
 	    }
 	}
