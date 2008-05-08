@@ -5,7 +5,7 @@
 package fr.ipgp.earlywarning.gateway;
 
 import java.util.Random;
-
+import fr.ipgp.earlywarning.telephones.*;
 /**
  * Mock phone gateway for testing purpose.
  * @author Patrice Boissier
@@ -54,7 +54,12 @@ public class MockGateway implements Gateway {
 	public String callRemove(String reqID) {
 		return "";
 	}
-	public String callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode, String [] phoneNumbers) {
+	
+	public String callTillConfirm(String vocfile, String wavfile, String ccode, String [] phoneNumbers) {
+		return "";
+	}
+
+	public String callTillConfirm(String vocfile, String wavfile, String ccode, FileCallList callList) {
 		return "";
 	}
 }
