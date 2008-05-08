@@ -368,7 +368,8 @@ public class VoicentGateway implements Gateway{
 		try {
 			switch (trigger.getCallList().getType()) {
 				case VOC :
-					return this.callTillConfirm(trigger.getCallList().getName(), wavFile, confirmCode);
+					String vocFile3 = createLogVocFile(trigger.getCallList().getName());
+					return this.callTillConfirm(vocFile3, wavFile, confirmCode);
 				case TXT :
 					String vocFile1 = createLogVocFile();
 					return this.callTillConfirm(vocFile1, wavFile, confirmCode, (FileCallList)trigger.getCallList());
@@ -418,6 +419,21 @@ public class VoicentGateway implements Gateway{
 		copyFile(emptyVocFile, logVocFile);
 		return logVoc;
 	}
+
+	/**
+	 * 
+	 * @return the created log voc file
+	 */
+	private String createLogVocFile(String voc) throws FileNotFoundException, IOException {
+		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
+		Date date = new Date();
+		String logVoc = simpleFormat.format(date) + ".voc";
+		File logVocFile = new File(resources + "/" + logVoc);
+		File vocFile = new File(resources + "/" + voc);
+		copyFile(vocFile, logVocFile);
+		return logVoc;
+	}
+
 	
 	/**
 	 * Sends a request to the gateway using the HTTP interface.
