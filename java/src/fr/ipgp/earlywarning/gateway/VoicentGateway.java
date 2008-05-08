@@ -435,11 +435,14 @@ public class VoicentGateway implements Gateway{
 	 * @return the created log voc file
 	 */
 	private String createLogVocFile() throws FileNotFoundException, IOException {
+		File logDir = new File(resources + "/log");
+		if (!logDir.exists())
+			logDir.mkdir();
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
 		Date date = new Date();
 		String logVoc = simpleFormat.format(date) + ".voc";
-		File logVocFile = new File(resources + "/" + logVoc);
-		File emptyVocFile = new File(resources + "/empty.voc");
+		File logVocFile = new File(logDir.getAbsolutePath() + "/" + logVoc);
+		File emptyVocFile = new File(logDir.getAbsolutePath() + "/empty.voc");
 		copyFile(emptyVocFile, logVocFile);
 		return logVoc;
 	}
@@ -449,11 +452,14 @@ public class VoicentGateway implements Gateway{
 	 * @return the created log voc file
 	 */
 	private String createLogVocFile(String voc) throws FileNotFoundException, IOException {
+		File logDir = new File(resources + "/log");
+		if (!logDir.exists())
+			logDir.mkdir();
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
 		Date date = new Date();
 		String logVoc = simpleFormat.format(date) + ".voc";
-		File logVocFile = new File(resources + "/" + logVoc);
-		File vocFile = new File(resources + "/" + voc);
+		File logVocFile = new File(logDir.getAbsolutePath() + "/" + logVoc);
+		File vocFile = new File(logDir.getAbsolutePath() + "/" + voc);
 		copyFile(vocFile, logVocFile);
 		return logVoc;
 	}
