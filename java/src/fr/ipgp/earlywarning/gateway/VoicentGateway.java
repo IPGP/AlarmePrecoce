@@ -286,11 +286,10 @@ public class VoicentGateway implements Gateway{
 	}
 
 	public String callTillConfirm(Trigger trigger) {
+		
 		String confirmCode = trigger.getConfirmCode();
 		
-		String type = trigger.getMessage().getType();
-
-		//switch (type) {
+		//switch () {
 		
 		//}
 		
