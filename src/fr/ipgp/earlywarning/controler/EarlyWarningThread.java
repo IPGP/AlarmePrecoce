@@ -78,8 +78,8 @@ public class EarlyWarningThread extends Thread {
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
-                EarlyWarning.appLogger.error("Input Output error while receiving datagram");
-                addErrorTrigger("Input Output error while receiving datagram");
+                EarlyWarning.appLogger.error("Input Output error while receiving datagram : " + ioe.getMessage());
+                addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
             } catch (UnknownTriggerFormatException utfe) {
             	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
             	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
@@ -136,7 +136,7 @@ public class EarlyWarningThread extends Thread {
 			trig.setConfirmCode(confirmCode);
 			return trig;
 		} catch (UnknownHostException uh) {
-			EarlyWarning.appLogger.error("localhost unknown : check hosts file");
+			EarlyWarning.appLogger.error("localhost unknown : check hosts file : " + uh.getMessage());
 			return null;
 		} catch (ConversionException ce) {
 			EarlyWarning.appLogger.error("Error : an element value has wrong type : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
