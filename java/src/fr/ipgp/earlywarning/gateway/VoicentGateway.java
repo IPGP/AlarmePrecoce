@@ -229,11 +229,6 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String [] phoneNumbers) {
 		try {
 			
-			System.out.println("Voc file : " + vocFile);
-			System.out.println("Wave file : " + waveFile);
-			System.out.println("Confirm code : " + confirmCode);
-			System.out.println("Call list : " + phoneNumbers.toString());
-			
 			String phoneNumberList = "";
 			boolean firstPhoneNumber = true;
 			for (String phoneNumber : phoneNumbers) {
@@ -244,6 +239,11 @@ public class VoicentGateway implements Gateway{
 					phoneNumberList += " " + phoneNumber;
 				}
 			}
+
+			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
+			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
+			System.out.println("Confirm code : " + confirmCode);
+			System.out.println("Call list : " + "\"" + phoneNumberList + "\"");
 			
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
