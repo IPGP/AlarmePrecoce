@@ -392,13 +392,13 @@ public class VoicentGateway implements Gateway{
 		try {
 			switch (trigger.getCallList().getType()) {
 				case VOC :
-					String vocFile3 = createLogVocFile(trigger.getCallList().getName());
+					String vocFile3 = resources + "/log/" + createLogVocFile(trigger.getCallList().getName());
 					return this.callTillConfirm(vocFile3, wavFile, confirmCode);
 				case TXT :
-					String vocFile1 = createLogVocFile();
+					String vocFile1 = resources + "/log/" +  createLogVocFile();
 					return this.callTillConfirm(vocFile1, wavFile, confirmCode, (FileCallList)trigger.getCallList());
 				case TEXT :
-					String vocFile2 = createLogVocFile();
+					String vocFile2 = resources + "/log/" +  createLogVocFile();
 					TextCallList callList = (TextCallList)trigger.getCallList();
 					return this.callTillConfirm(vocFile2, wavFile, confirmCode, callList.getText());
 				default :
