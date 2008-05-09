@@ -276,8 +276,8 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String phoneNumbers) {
 		try {			
 
-			System.out.println("Voc file : " + vocFile);
-			System.out.println("Wave file : " + waveFile);
+			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
+			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
 			System.out.println("Confirm code : " + confirmCode);
 			System.out.println("Call list : " + phoneNumbers);
 
@@ -312,10 +312,10 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, FileCallList callList) {
 		try {
 
-			System.out.println("Voc file : " + vocFile);
-			System.out.println("Wave file : " + waveFile);
+			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
+			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
 			System.out.println("Confirm code : " + confirmCode);
-			System.out.println("Call list : " + callList.toString());
+			System.out.println("Call list : " + "\"" + resources + "/" + callList.getFileName() + "\"");
 
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
@@ -323,7 +323,7 @@ public class VoicentGateway implements Gateway{
 		    cmdline += " -startnow";
 		    cmdline += " -confirmcode " + confirmCode;
 		    cmdline += " -wavfile " + "\"" + resources + "/" +  waveFile + "\"";
-		    cmdline += " -import" + "\"" + resources + "/" + callList.getFileName() + "\"";
+		    cmdline += " -import " + "\"" + resources + "/" + callList.getFileName() + "\"";
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
@@ -347,8 +347,8 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode) {
 		try {
 			
-			System.out.println("Voc file : " + vocFile);
-			System.out.println("Wave file : " + waveFile);
+			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
+			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
 			System.out.println("Confirm code : " + confirmCode);
 
 		    String urlString = "/ocall/callreqHandler.jsp";
@@ -392,13 +392,13 @@ public class VoicentGateway implements Gateway{
 		try {
 			switch (trigger.getCallList().getType()) {
 				case VOC :
-					String vocFile3 = resources + "/log/" + createLogVocFile(trigger.getCallList().getName());
+					String vocFile3 =  createLogVocFile(trigger.getCallList().getName());
 					return this.callTillConfirm(vocFile3, wavFile, confirmCode);
 				case TXT :
-					String vocFile1 = resources + "/log/" +  createLogVocFile();
+					String vocFile1 = createLogVocFile();
 					return this.callTillConfirm(vocFile1, wavFile, confirmCode, (FileCallList)trigger.getCallList());
 				case TEXT :
-					String vocFile2 = resources + "/log/" +  createLogVocFile();
+					String vocFile2 = createLogVocFile();
 					TextCallList callList = (TextCallList)trigger.getCallList();
 					return this.callTillConfirm(vocFile2, wavFile, confirmCode, callList.getText());
 				default :
