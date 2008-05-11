@@ -99,7 +99,7 @@ public class QueueManagerThread extends Thread {
     			gateway.callTillConfirm(trig, defaultWarningMessage);
     			if (useMail) {
     				try {
-    					mailerThread.sendNotification(trig.getApplication(), trig.showTrigger());
+    					mailerThread.sendNotification("[EarlyWarning] Alert from " + trig.getApplication(), trig.mailTrigger());
     	        	} catch (MessagingException me) {
     	        		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
             		}

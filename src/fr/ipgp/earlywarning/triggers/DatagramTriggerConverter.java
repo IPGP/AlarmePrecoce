@@ -19,13 +19,13 @@ public class DatagramTriggerConverter implements TriggerConverter {
     protected int senderPort;
     protected Trigger trigger;
     protected String packetContent;
-    protected CallList defaultCallList;
+    protected FileCallList defaultCallList;
     protected WarningMessage defaultWarningMessage;
     protected boolean defaultRepeat;
     protected String defaultConfirmCode;
     protected int defaultPriority;
     
-    public DatagramTriggerConverter(DatagramPacket packet, CallList defaultCallList, WarningMessage defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
+    public DatagramTriggerConverter(DatagramPacket packet, FileCallList defaultCallList, WarningMessage defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
     	this.packet = packet;                
     	this.senderAddress=packet.getAddress();
     	this.senderPort=packet.getPort();
@@ -136,11 +136,17 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid repeat " + packetContentElements[6]);
     	if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
-    	if (packetContentElements[5].matches("\\w+\\.txt"))
-    		trigger.setCallList(new FileCallList(packetContentElements[5]));
+    	if (packetContentElements[5].matches("\\w+\\.txt")) {
+    		System.out.println("File call list : " + defaultCallList.getFilePath() + "/" + packetContentElements[5]);
+    		trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
+    		System.out.println("File call list : " + trigger.getCallList().toString());
+    	}
     	else {
-    		if (packetContentElements[5].matches("\\w+\\.voc"))
-    			trigger.setCallList(new FileCallList(packetContentElements[5]));
+    		if (packetContentElements[5].matches("\\w+\\.voc")) {
+        		System.out.println("File call list : " + defaultCallList.getFilePath() + "/" + packetContentElements[5]);
+    			trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
+    			System.out.println("File call list : " + trigger.getCallList().toString());
+    		}
     		else {
     			if (packetContentElements[5].matches("(\\d*)(,\\d*)*")) {
     				String phoneNumbers = packetContentElements[5].replaceAll(",", " ");

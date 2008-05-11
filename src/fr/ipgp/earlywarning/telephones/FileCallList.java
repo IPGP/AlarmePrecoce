@@ -92,9 +92,23 @@ public class FileCallList implements CallList {
 	}
 
 	/**
+	 * @return the pathname
+	 */
+	public String getFilePath() {
+		return file.getParent();
+	}
+	
+	/**
 	 * @return the file call list name
 	 */
 	public String getName() {
+		return file.getName();
+	}
+	
+	/**
+	 * String representation of the object
+	 */
+	public String toString() {
 		return file.getName();
 	}
 	
