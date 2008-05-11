@@ -137,15 +137,10 @@ public class DatagramTriggerConverter implements TriggerConverter {
     	if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
     		throw new InvalidTriggerFieldException ("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
     	if (packetContentElements[5].matches("\\w+\\.txt")) {
-    		System.out.println("File call list : " + defaultCallList.getFilePath() + "/" + packetContentElements[5]);
-    		trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
-    		System.out.println("File call list : " + trigger.getCallList().toString());
-    	}
+    		trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));    	}
     	else {
     		if (packetContentElements[5].matches("\\w+\\.voc")) {
-        		System.out.println("File call list : " + defaultCallList.getFilePath() + "/" + packetContentElements[5]);
     			trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
-    			System.out.println("File call list : " + trigger.getCallList().toString());
     		}
     		else {
     			if (packetContentElements[5].matches("(\\d*)(,\\d*)*")) {
