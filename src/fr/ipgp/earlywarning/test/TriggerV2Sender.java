@@ -6,9 +6,6 @@ package fr.ipgp.earlywarning.test;
 
 import java.io.*;
 import java.net.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * @author Patrice Boissier
  *
@@ -32,8 +29,6 @@ public class TriggerV2Sender {
 		message = new byte[512];
 		
 		//Format V2 : vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
-		Date date1 = new Date();
-		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		//String messageString = "02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 alerte.wav";
 		String messageString = "02 1 2008/03/21 11:00:33 nagios defaultCallList.txt true 11 |Alerte, plus de place sur partage|";
 			
