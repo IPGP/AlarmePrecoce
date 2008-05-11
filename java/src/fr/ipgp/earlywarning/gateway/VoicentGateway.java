@@ -239,11 +239,6 @@ public class VoicentGateway implements Gateway{
 					phoneNumberList += " " + phoneNumber;
 				}
 			}
-
-			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
-			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
-			System.out.println("Confirm code : " + confirmCode);
-			System.out.println("Call list : " + "\"" + phoneNumberList + "\"");
 			
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
@@ -255,9 +250,7 @@ public class VoicentGateway implements Gateway{
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
-		    System.out.println("URL : " + urlString + "?" + postString);
 		    String requestCallTillConfirm = postToGateway(urlString, postString);
-		    System.out.println("Server answer : " + requestCallTillConfirm);
 		    return requestCallTillConfirm;
 	    } catch (UnsupportedEncodingException uee) {
 	    	return null;
@@ -276,11 +269,6 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String phoneNumbers) {
 		try {			
 
-			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
-			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
-			System.out.println("Confirm code : " + confirmCode);
-			System.out.println("Call list : " + phoneNumbers);
-
 			String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
 		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
@@ -291,9 +279,7 @@ public class VoicentGateway implements Gateway{
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
-		    System.out.println("URL : " + urlString + "?" + postString);
 		    String requestCallTillConfirm = postToGateway(urlString, postString);
-		    System.out.println("Server answer : " + requestCallTillConfirm);
 		    return requestCallTillConfirm;
 	    } catch (UnsupportedEncodingException uee) {
 	    	return null;
@@ -312,11 +298,6 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode, FileCallList callList) {
 		try {
 
-			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
-			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
-			System.out.println("Confirm code : " + confirmCode);
-			System.out.println("Call list : " + "\"" + resources + "/" + callList.getFileName() + "\"");
-
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
 		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
@@ -327,9 +308,7 @@ public class VoicentGateway implements Gateway{
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
-		    System.out.println("URL : " + urlString + "?" + postString);
 		    String requestCallTillConfirm = postToGateway(urlString, postString);
-		    System.out.println("Server answer : " + requestCallTillConfirm);
 		    return requestCallTillConfirm;
 	    } catch (UnsupportedEncodingException uee) {
 	    	return null;
@@ -347,10 +326,6 @@ public class VoicentGateway implements Gateway{
 	public String callTillConfirm(String vocFile, String waveFile, String confirmCode) {
 		try {
 			
-			System.out.println("Voc file : " + "\"" + resources + "/log/" + vocFile + "\"");
-			System.out.println("Wave file : " + "\"" + resources + "/" +  waveFile + "\"");
-			System.out.println("Confirm code : " + confirmCode);
-
 		    String urlString = "/ocall/callreqHandler.jsp";
 		    String postString = createCallTillConfirmPostString(confirmCode);
 		    String cmdline = "\"" + resources + "/log/" + vocFile + "\"";
@@ -360,9 +335,7 @@ public class VoicentGateway implements Gateway{
 		
 		    postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 		
-		    System.out.println("URL : " + urlString + "?" + postString);
 		    String requestCallTillConfirm = postToGateway(urlString, postString);
-		    System.out.println("Server answer : " + requestCallTillConfirm);
 		    return requestCallTillConfirm;
 	    } catch (UnsupportedEncodingException uee) {
 	    	return null;
@@ -373,9 +346,6 @@ public class VoicentGateway implements Gateway{
 	 * 
 	 */
 	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {		
-
-		System.out.println("Trigger : " + trigger.showTrigger());
-		System.out.println("Warning message : " + defaultWarningMessage.getFile());
 
 		String confirmCode = trigger.getConfirmCode();
 		String wavFile;
@@ -562,7 +532,6 @@ public class VoicentGateway implements Gateway{
 			}
 			in.close();
 			out.close();
-			System.out.println("File copied.");
 		} catch(FileNotFoundException ex) {
 			System.out.println(ex.getMessage() + " in the specified directory.");
 		} catch(IOException e) {
