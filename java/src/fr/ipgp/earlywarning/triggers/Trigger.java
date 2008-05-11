@@ -239,4 +239,19 @@ public class Trigger implements Comparable {
     	" - Application : " + application + " - Repeat : " + repeat + " - Date : " + date + " - Confirm Code : " + confirmCode +
     	" - Call List : " + callList.toString() + " - Warning Message : " + message.toString();
     }
+    
+    /**
+     * Represent a trigger for mail notification
+     */
+    public String mailTrigger() {
+    	String body = "Trigger " + id + " received on " + date + "\n";
+    	body += "Priority : " + priority  + "\n";
+    	body += "Type : " + type + "\n";
+    	body += "From host : " + inetAddress.toString() + "\n";
+    	body += "From application : " + application + "\n";
+    	body += "Confirmation code : " + confirmCode + "\n";
+    	body += "Call list : "+ callList.toString() + "\n";
+    	body += "Warning message : " + message.toString() + "\n";
+    	return body;
+    }
 }
