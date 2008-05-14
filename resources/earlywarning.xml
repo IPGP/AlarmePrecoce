@@ -68,8 +68,8 @@
   	  <host>localhost</host>
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
-  	  <!-- <resources_path>C:/Program Files/Voicent/resources</resources_path> -->
-  	  <resources_path>/Users/patriceboissier/Documents/workspace/AlarmePrecoce/calllists</resources_path>
+  	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
+  	  <!-- <resources_path>/Users/patriceboissier/Documents/workspace/AlarmePrecoce/calllists</resources_path> --> 
   	</voicent>
   </gateway>
 </earlywarning>
