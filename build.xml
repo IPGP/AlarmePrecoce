@@ -99,4 +99,7 @@
 			</batchtest>
 		</junit>
 	</target>
+	
+	<target name="rebuild" depends="clean,dist" description="Cleans and build">
+	</target>
 </project>
