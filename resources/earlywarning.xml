@@ -41,7 +41,7 @@
       <port>25</port>
       <username>obs_karthala</username>
       <password>k4rth4l4</password>
-      <from>tibuche@yahoo.fr</from>
+      <from>obs_karthala@yahoo.fr</from>
     </smtp>
     <mailinglist>
       <contact>
@@ -58,7 +58,7 @@
   <gateway>
     <text_to_speech>false</text_to_speech>
     <defaults>
-	  <call_list>defaultCallList.txt</call_list>
+	  <call_list>defaultCallList.voc</call_list>
   	  <warning_message>defaultWarningMessage.wav</warning_message>
   	  <error_message>defaultErrorMessage.wav</error_message>
   	</defaults>
@@ -67,7 +67,6 @@
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
   	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
-  	  <!-- <resources_path>/Users/patriceboissier/Documents/workspace/AlarmePrecoce/calllists</resources_path> --> 
   	</voicent>
   </gateway>
 </earlywarning>
