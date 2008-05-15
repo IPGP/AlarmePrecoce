@@ -32,9 +32,7 @@
   	  <priority>2</priority>
   	  <confirm_code>11</confirm_code>
   	  <repeat>true</repeat>
-  	  <resources_path>resources</resources_path>
   	</defaults>
-  	<call_on_unknown_message>true</call_on_unknown_message>
   </triggers>
   <mail>
     <use_mail>true</use_mail>
