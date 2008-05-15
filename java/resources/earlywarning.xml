@@ -39,8 +39,8 @@
     <smtp>
       <host>smtp.mail.yahoo.com</host>
       <port>25</port>
-      <username>tibuche</username>
-      <password>6"MIYo-k</password>
+      <username>obs_karthala</username>
+      <password>k4rth4l4</password>
       <from>tibuche@yahoo.fr</from>
     </smtp>
     <mailinglist>
