@@ -25,6 +25,7 @@ public class QueueManagerThread extends Thread {
     private MailerThread mailerThread;
 	private boolean useMail;
 	private static FileWarningMessage defaultWarningMessage;
+	private int retry;
 	
     private QueueManagerThread() {
     	this("QueueManagerThread");
@@ -96,7 +97,11 @@ public class QueueManagerThread extends Thread {
     	while (moreTriggers) {
     		if (queue.size() > 0) {
     			Trigger trig = queue.poll();
-    			gateway.callTillConfirm(trig, defaultWarningMessage);
+    			int retryCounter = 0;
+    			while (gateway.callTillConfirm(trig, defaultWarningMessage) == null && retryCounter < retry) {
+    				EarlyWarning.appLogger.info("Server response : null. Retrying for the " + retryCounter + " time.");
+    				retryCounter++;
+    			}
     			if (useMail) {
     				try {
     					mailerThread.sendNotification("[EarlyWarning] Alert from " + trig.getApplication(), trig.mailTrigger());
@@ -136,6 +141,7 @@ public class QueueManagerThread extends Thread {
     		int port = EarlyWarning.configuration.getInt("gateway.voicent.port");
     		String vcastexe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
     		String resourcesPath = EarlyWarning.configuration.getString("gateway.voicent.resources_path");
+    		retry = EarlyWarning.configuration.getInt("gateway.voicent.retry");
     		gateway = VoicentGateway.getInstance(host, port, resourcesPath, vcastexe);
     	} catch (ConversionException ce) {
         	EarlyWarning.appLogger.fatal("gateway has wrong values in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
