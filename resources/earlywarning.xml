@@ -67,6 +67,7 @@
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
   	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
+  	  <retry>10</retry>
   	</voicent>
   </gateway>
 </earlywarning>
