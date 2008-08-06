@@ -10,7 +10,7 @@ import java.net.*;
  * @author Patrice Boissier
  *
  */
-public class TriggerV2Sender {
+public class TriggerV2Sender3 {
 
 	private static byte[] message = null;
 	private static int port = 4445;
@@ -21,7 +21,7 @@ public class TriggerV2Sender {
 	public static void main(String[] args) {
 
 		try {
-			address = InetAddress.getByName("195.83.188.255");
+			address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		}
@@ -30,7 +30,7 @@ public class TriggerV2Sender {
 		
 		//Format V2 : vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
 		//String messageString = "02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 alerte.wav";
-		String messageString = "02 1 2008/03/21 11:00:33 nagios defaultCallList.txt true 11 |Message d'alerte de test|";
+		String messageString = "02 1 2008/03/21 11:00:33 nagios defaultCallList.txt true 11 |Alerte, plus de place sur partage|";
 			
 		message = new byte[messageString.length()];
 		message = messageString.getBytes();
