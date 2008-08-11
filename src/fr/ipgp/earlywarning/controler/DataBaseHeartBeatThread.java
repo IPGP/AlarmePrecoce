@@ -81,8 +81,6 @@ public class DataBaseHeartBeatThread extends Thread {
 				int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, CommonUtilities.dateToISO());
 				if (result == 0 )
 					EarlyWarning.appLogger.error("HeartBeat not sent : update returned 0");
-				else
-					EarlyWarning.appLogger.debug("HeartBeat sent. Database updated");
 			} catch (SQLException sqle) {
 				EarlyWarning.appLogger.error("Database connection problem. This could be a network problem or a configuration problem in dbms section of earlywarning.xml. HeartBeat not sent.");
 			}
