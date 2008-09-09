@@ -83,7 +83,7 @@ public class EarlyWarningThread extends Thread {
                 addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
             } catch (UnknownTriggerFormatException utfe) {
             	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
-            	EarlyWarning.appLogger.debug("Unknown trigger format received");
+            	//EarlyWarning.appLogger.debug("Unknown trigger format received");
             	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
             } catch (InvalidTriggerFieldException itfe) {
             	//EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
