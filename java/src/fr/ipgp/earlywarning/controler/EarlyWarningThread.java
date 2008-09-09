@@ -75,22 +75,27 @@ public class EarlyWarningThread extends Thread {
                 Trigger trigger = datagramTriggerConverter.getTrigger();
                 queueManagerThread.addTrigger(trigger);
                 
-                EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
+                //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
+                EarlyWarning.appLogger.info("A new trigger has been added to the queue");
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram : " + ioe.getMessage());
                 addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
             } catch (UnknownTriggerFormatException utfe) {
-            	EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+            	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+            	EarlyWarning.appLogger.error("Unknown trigger format received");
             	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
             } catch (InvalidTriggerFieldException itfe) {
-            	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
+            	//EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
+            	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger");
             	addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
             } catch (MissingTriggerFieldException mtfe) {
-            	EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+            	//EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+            	EarlyWarning.appLogger.error("Missing field(s) in the received trigger");
             	addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
             } catch (InvalidFileNameException ifne) {
-            	EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
+            	//EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
+            	EarlyWarning.appLogger.error("Invalid call list in the received trigger");
             	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
             }
             
