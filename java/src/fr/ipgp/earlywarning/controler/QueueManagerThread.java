@@ -23,7 +23,9 @@ public class QueueManagerThread extends Thread {
     protected boolean moreTriggers = true;
     private Gateway gateway;
     private MailerThread mailerThread;
+    private AudioSerialMessageThread audioSerialMessageThread;
 	private boolean useMail;
+	private boolean useSound;
 	private static FileWarningMessage defaultWarningMessage;
 	private int retry;
 	
@@ -87,12 +89,21 @@ public class QueueManagerThread extends Thread {
 		this.useMail = useMail;
 	}
 	
+	/**
+	 * @param useSound the useSound to set
+	 */
+	protected void setUseSound(boolean useSound) {
+		this.useSound = useSound;
+	}
+	
 	public void run() {
     	EarlyWarning.appLogger.debug("Thread creation");
     	
     	configureGateway();
     	
     	configureMailerThread();
+    	
+    	configureAudioSerialMessageThread();
     	
     	while (moreTriggers) {
     		if (queue.size() > 0) {
@@ -108,6 +119,23 @@ public class QueueManagerThread extends Thread {
     	        	} catch (MessagingException me) {
     	        		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
             		}
+    			}
+    			if (useSound) {
+    				EarlyWarning.appLogger.debug("Opening serial port");
+    				EarlyWarning.appLogger.debug("Sending text to serial port");
+    				EarlyWarning.appLogger.debug("Sleeping for 10 seconds");
+    				try {
+    					Thread.sleep(5000);
+    				} catch (InterruptedException ie) {
+    					EarlyWarning.appLogger.error("Error while sleeping!");
+    				}
+    				EarlyWarning.appLogger.debug("Playing sound for trigger");
+    				try {
+    					Thread.sleep(5000);
+    				} catch (InterruptedException ie) {
+    					EarlyWarning.appLogger.error("Error while sleeping!");
+    				}
+    				EarlyWarning.appLogger.debug("Closing serial port");
     			}
     		} else {
 	    		try {
@@ -132,6 +160,22 @@ public class QueueManagerThread extends Thread {
     	if (useMail) {
     		mailerThread = MailerThread.getInstance(this);
     		mailerThread.start();
+        }
+    }
+    
+    private void configureAudioSerialMessageThread() {
+    	try {
+   		 	useSound = EarlyWarning.configuration.getBoolean("audioserial.use_audioserial");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("audioserial.use_audioserial has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
+        	useSound = false;
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("audioserial.use_audioserial is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
+        	useSound = false;
+        }
+    	if (useSound) {
+    		audioSerialMessageThread = AudioSerialMessageThread.getInstance(this);
+    		audioSerialMessageThread.start();
         }
     }
     

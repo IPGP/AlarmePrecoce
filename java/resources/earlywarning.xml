@@ -55,6 +55,12 @@
       </contact>
     </mailinglist>
   </mail>
+  <audioserial>
+    <use_audioserial>true</use_audioserial>
+    <serial>
+    
+    </serial>
+  </audioserial>
   <gateway>
     <text_to_speech>false</text_to_speech>
     <defaults>
