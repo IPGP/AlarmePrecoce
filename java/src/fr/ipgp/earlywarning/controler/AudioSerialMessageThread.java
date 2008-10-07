@@ -4,6 +4,7 @@
 package fr.ipgp.earlywarning.controler;
 
 import java.util.NoSuchElementException;
+import java.io.*;
 import javax.comm.*;
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.EarlyWarning;
@@ -18,7 +19,7 @@ public class AudioSerialMessageThread extends Thread{
 	private String comPort;
 	private CommPortIdentifier comPortId;
     private SerialPort serialPort;
-	
+	private OutputStream outStream;	
 	private AudioSerialMessageThread() {
 		this("AudioSerialMessageThread");
 	}
@@ -38,19 +39,40 @@ public class AudioSerialMessageThread extends Thread{
 	public void run() {
     	EarlyWarning.appLogger.debug("Audio/Serial Message Thread creation");
 	}
-	
-	private void configureAudioSerial() throws ConversionException, NoSuchElementException, NoSuchPortException, PortInUseException, UnsupportedCommOperationException {
+	// NoSuchPortException, PortInUseException, UnsupportedCommOperationException
+	private void configureAudioSerial() throws ConversionException, NoSuchElementException, NoSuchPortException {
 		comSpeed = EarlyWarning.configuration.getInt("audioserial.serial.speed");
 		comPort = EarlyWarning.configuration.getString("audioserial.serial.port");
 		comPortId=CommPortIdentifier.getPortIdentifier(comPort);
-		serialPort=(SerialPort)comPortId.open("Envoi",5000);
-		serialPort.setFlowControlMode(SerialPort.);
-		serialPort.setSerialPortParams(comSpeed,SerialPort.DATABITS_8, SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+	}
+	
+	public void sendMessage(String message) {
+		try {
+			serialPort=(SerialPort)comPortId.open("Envoi",5000);
+		} catch (PortInUseException piue) {
+			EarlyWarning.appLogger.error("Serial port already "+comPort+" in use");
+		}
+		try {
+			serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN);
+			serialPort.setSerialPortParams(comSpeed,SerialPort.DATABITS_8, SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+		} catch (UnsupportedCommOperationException ucoe) {
+			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
+		}
 		EarlyWarning.appLogger.debug("Ouverture du port "+comPort);
-
-			//pour lire et Žcrire avec des streams:
-			//in=new BufferedReader(
-			//new InputStreamReader(serialPort.getInputStream()));
-			//out=new PrintWriter(serialPort.getOutputStream());
+		try {
+			outStream = serialPort.getOutputStream();
+			byte[] data = message.getBytes();
+			outStream.write(data);
+		} catch (IOException ioe) {
+			EarlyWarning.appLogger.error("");
+		} finally {
+			if (outStream != null) {
+				try {
+					outStream.close( );
+				} catch (IOException ex) {
+					System.err.println(ex);
+				}
+			}
+		}
 	}
 }
