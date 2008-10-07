@@ -58,8 +58,10 @@
   <audioserial>
     <use_audioserial>true</use_audioserial>
     <serial>
-    
+      <port>COM1</port>
+      <speed>9600</speed>
     </serial>
+    <delay>10<delay>
   </audioserial>
   <gateway>
     <text_to_speech>false</text_to_speech>
