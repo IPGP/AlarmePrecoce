@@ -6,8 +6,12 @@ package fr.ipgp.earlywarning.controler;
 import java.util.NoSuchElementException;
 import java.io.*;
 import javax.comm.*;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.EarlyWarning;
+import fr.ipgp.earlywarning.audio.MessagePlayback;
 /**
  * @author patriceboissier
  *
@@ -77,20 +81,29 @@ public class AudioSerialMessageThread extends Thread{
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
 
+		String file="./resources/test.wav";
+		
 		try {
 			outStream = serialPort.getOutputStream();
 			byte[] data = message.getBytes();
 			outStream.write(data);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
-			Thread.sleep(5000);
-			EarlyWarning.appLogger.debug("Sleeping for 5 seconds");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			EarlyWarning.appLogger.debug("Sleeping for 10 seconds");
+			MessagePlayback messagePlayback = new MessagePlayback(file);
+			messagePlayback.playClip();
+			while (messagePlayback.isPlaying()) {
+				Thread.sleep(1000);
+			}
 			EarlyWarning.appLogger.debug("Playing sound for trigger");
-
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
 		} catch (IOException ioe) {
 			EarlyWarning.appLogger.error("Error while sending data to the serial port");
+		} catch (UnsupportedAudioFileException uafe) {
+			EarlyWarning.appLogger.error("Unsupported audio file exception : " + uafe.getMessage());
+		} catch (LineUnavailableException lue) {
+			EarlyWarning.appLogger.error("Line anavailable exception : " + lue.getMessage());
 		} finally {
 			if (outStream != null) {
 				try {
