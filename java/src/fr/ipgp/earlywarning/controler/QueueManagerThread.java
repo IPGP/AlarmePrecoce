@@ -121,21 +121,7 @@ public class QueueManagerThread extends Thread {
             		}
     			}
     			if (useSound) {
-    				EarlyWarning.appLogger.debug("Opening serial port");
-    				EarlyWarning.appLogger.debug("Sending text to serial port");
-    				EarlyWarning.appLogger.debug("Sleeping for 10 seconds");
-    				try {
-    					Thread.sleep(5000);
-    				} catch (InterruptedException ie) {
-    					EarlyWarning.appLogger.error("Error while sleeping!");
-    				}
-    				EarlyWarning.appLogger.debug("Playing sound for trigger");
-    				try {
-    					Thread.sleep(5000);
-    				} catch (InterruptedException ie) {
-    					EarlyWarning.appLogger.error("Error while sleeping!");
-    				}
-    				EarlyWarning.appLogger.debug("Closing serial port");
+    				audioSerialMessageThread.sendMessage("Test d'envoi de message");
     			}
     		} else {
 	    		try {

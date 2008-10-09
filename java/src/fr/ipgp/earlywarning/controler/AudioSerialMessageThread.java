@@ -38,8 +38,23 @@ public class AudioSerialMessageThread extends Thread{
 	
 	public void run() {
     	EarlyWarning.appLogger.debug("Audio/Serial Message Thread creation");
+    	try {
+    		configureAudioSerial();
+    	} catch (ConversionException ce) {
+    		EarlyWarning.appLogger.error("Audio Serial speed or port has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
+    		queueManagerThread.setUseSound(false);
+        	return;
+    	} catch (NoSuchElementException nsee) {
+    		EarlyWarning.appLogger.error("Audio Serial speed or port is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
+    		queueManagerThread.setUseSound(false);
+        	return;
+    	} catch (NoSuchPortException nspe) {
+    		EarlyWarning.appLogger.error("No such port "+comPort+". Audio Serial disabled.");
+    		queueManagerThread.setUseSound(false);
+        	return;
+    	}
 	}
-	// NoSuchPortException, PortInUseException, UnsupportedCommOperationException
+
 	private void configureAudioSerial() throws ConversionException, NoSuchElementException, NoSuchPortException {
 		comSpeed = EarlyWarning.configuration.getInt("audioserial.serial.speed");
 		comPort = EarlyWarning.configuration.getString("audioserial.serial.port");
@@ -49,28 +64,40 @@ public class AudioSerialMessageThread extends Thread{
 	public void sendMessage(String message) {
 		try {
 			serialPort=(SerialPort)comPortId.open("Envoi",5000);
+			EarlyWarning.appLogger.debug("Opening serial port");
 		} catch (PortInUseException piue) {
 			EarlyWarning.appLogger.error("Serial port already "+comPort+" in use");
 		}
 		try {
-			serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN);
+			serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+			serialPort.setDTR(true);
 			serialPort.setSerialPortParams(comSpeed,SerialPort.DATABITS_8, SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+			EarlyWarning.appLogger.debug("Configuring serial port");
 		} catch (UnsupportedCommOperationException ucoe) {
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
-		EarlyWarning.appLogger.debug("Ouverture du port "+comPort);
+
 		try {
 			outStream = serialPort.getOutputStream();
 			byte[] data = message.getBytes();
 			outStream.write(data);
+			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
+			Thread.sleep(5000);
+			EarlyWarning.appLogger.debug("Sleeping for 5 seconds");
+			Thread.sleep(5000);
+			EarlyWarning.appLogger.debug("Playing sound for trigger");
+
+		} catch (InterruptedException ie) {
+			EarlyWarning.appLogger.error("Error while sleeping!");
 		} catch (IOException ioe) {
-			EarlyWarning.appLogger.error("");
+			EarlyWarning.appLogger.error("Error while sending data to the serial port");
 		} finally {
 			if (outStream != null) {
 				try {
 					outStream.close( );
+					EarlyWarning.appLogger.debug("Closing the serial port");
 				} catch (IOException ex) {
-					System.err.println(ex);
+					EarlyWarning.appLogger.error("Error while closing the serial port");
 				}
 			}
 		}
