@@ -1,5 +1,6 @@
 /**
- * 
+ * Created Sep 08, 2008 2:54:12 PM
+ * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -13,8 +14,9 @@ import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.MessagePlayback;
 /**
+ * This class manages the serial port and the audio card of the computer. The aim is to send an audio and ASCII message to an UHF radio system.<br/>
+ * Implements the singleton pattern
  * @author patriceboissier
- *
  */
 public class AudioSerialMessageThread extends Thread{
 	private static AudioSerialMessageThread uniqueInstance;
@@ -23,7 +25,8 @@ public class AudioSerialMessageThread extends Thread{
 	private String comPort;
 	private CommPortIdentifier comPortId;
     private SerialPort serialPort;
-	private OutputStream outStream;	
+	private OutputStream outStream;
+	private int delay;
 	private AudioSerialMessageThread() {
 		this("AudioSerialMessageThread");
 	}
@@ -59,13 +62,23 @@ public class AudioSerialMessageThread extends Thread{
     	}
 	}
 
+	/**
+	 * Get information for the serial port from the configuration file.
+	 */
 	private void configureAudioSerial() throws ConversionException, NoSuchElementException, NoSuchPortException {
 		comSpeed = EarlyWarning.configuration.getInt("audioserial.serial.speed");
 		comPort = EarlyWarning.configuration.getString("audioserial.serial.port");
+		delay = EarlyWarning.configuration.getInt("audioserial.delay");
 		comPortId=CommPortIdentifier.getPortIdentifier(comPort);
 	}
 	
-	public void sendMessage(String message) {
+	/**
+	 * Opens and configures the serial port, sets the DTR to true and then sends the message ASCII text. 
+	 * It then waits for "delay" seconds and starts to play the audio message.
+	 * Finally the serial port is closed.
+	 * @param message the ASCII message
+	 */
+	public void sendMessage(String message, String wavFile) {
 		try {
 			serialPort=(SerialPort)comPortId.open("Envoi",5000);
 			EarlyWarning.appLogger.debug("Opening serial port");
@@ -81,16 +94,14 @@ public class AudioSerialMessageThread extends Thread{
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
 
-		String file="./resources/test.wav";
-		
 		try {
 			outStream = serialPort.getOutputStream();
 			byte[] data = message.getBytes();
 			outStream.write(data);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
-			Thread.sleep(10000);
-			EarlyWarning.appLogger.debug("Sleeping for 10 seconds");
-			MessagePlayback messagePlayback = new MessagePlayback(file);
+			Thread.sleep(1000 * delay);
+			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
+			MessagePlayback messagePlayback = new MessagePlayback(wavFile);
 			messagePlayback.playClip();
 			while (messagePlayback.isPlaying()) {
 				Thread.sleep(1000);

@@ -121,7 +121,7 @@ public class QueueManagerThread extends Thread {
             		}
     			}
     			if (useSound) {
-    				audioSerialMessageThread.sendMessage("Test d'envoi de message");
+    				audioSerialMessageThread.sendMessage("Test d'envoi de message", defaultWarningMessage.getFile());
     			}
     		} else {
 	    		try {
