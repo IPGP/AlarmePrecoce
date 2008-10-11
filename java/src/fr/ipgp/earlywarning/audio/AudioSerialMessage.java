@@ -21,6 +21,7 @@ import fr.ipgp.earlywarning.controler.QueueManagerThread;
 public class AudioSerialMessage {
 	private static AudioSerialMessage uniqueInstance;
 	private static QueueManagerThread queueManagerThread;
+	private MessagePlayback messagePlayback;
 	private int comSpeed;
 	private String comPort;
 	private CommPortIdentifier comPortId;
@@ -95,12 +96,11 @@ public class AudioSerialMessage {
 			Thread.sleep(1000 * delay);
 			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
 			EarlyWarning.appLogger.debug("Playing audio message "+wavFile);
-			MessagePlayback messagePlayback = new MessagePlayback(wavFile);
+			messagePlayback = new MessagePlayback(wavFile);
 			messagePlayback.playClip();
 			while (messagePlayback.isPlaying()) {
 				Thread.sleep(1000);
 			}
-			EarlyWarning.appLogger.debug("Playing sound for trigger");
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
 		} catch (IOException ioe) {
@@ -119,5 +119,9 @@ public class AudioSerialMessage {
 				}
 			}
 		}
+	}
+	
+	public boolean isPlaying() {
+		return messagePlayback.isPlaying();
 	}
 }
