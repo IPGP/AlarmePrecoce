@@ -6,6 +6,7 @@ package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.triggers.*;
+import fr.ipgp.earlywarning.audio.AudioSerialMessage;
 import fr.ipgp.earlywarning.gateway.*;
 import fr.ipgp.earlywarning.messages.*;
 import java.util.NoSuchElementException;
@@ -24,7 +25,7 @@ public class QueueManagerThread extends Thread {
     private Gateway gateway;
     private String resourcesPath;
     private MailerThread mailerThread;
-    private AudioSerialMessageThread audioSerialMessageThread;
+    private AudioSerialMessage audioSerialMessage;
 	private boolean useMail;
 	private boolean useSound;
 	private static FileWarningMessage defaultWarningMessage;
@@ -93,7 +94,7 @@ public class QueueManagerThread extends Thread {
 	/**
 	 * @param useSound the useSound to set
 	 */
-	protected void setUseSound(boolean useSound) {
+	public void setUseSound(boolean useSound) {
 		this.useSound = useSound;
 	}
 	
@@ -104,7 +105,7 @@ public class QueueManagerThread extends Thread {
     	
     	configureMailerThread();
     	
-    	configureAudioSerialMessageThread();
+    	configureAudioSerialMessage();
     	
     	while (moreTriggers) {
     		if (queue.size() > 0) {
@@ -122,7 +123,7 @@ public class QueueManagerThread extends Thread {
             		}
     			}
     			if (useSound) {
-    				audioSerialMessageThread.sendMessage("Test d'envoi de message", resourcesPath+"/"+defaultWarningMessage.getFile());
+    				audioSerialMessage.sendMessage("Test d'envoi de message", resourcesPath+"/"+defaultWarningMessage.getFile());
     			}
     		} else {
 	    		try {
@@ -150,7 +151,7 @@ public class QueueManagerThread extends Thread {
         }
     }
     
-    private void configureAudioSerialMessageThread() {
+    private void configureAudioSerialMessage() {
     	try {
    		 	useSound = EarlyWarning.configuration.getBoolean("audioserial.use_audioserial");
     	} catch (ConversionException ce) {
@@ -161,8 +162,7 @@ public class QueueManagerThread extends Thread {
         	useSound = false;
         }
     	if (useSound) {
-    		audioSerialMessageThread = AudioSerialMessageThread.getInstance(this);
-    		audioSerialMessageThread.start();
+    		audioSerialMessage = AudioSerialMessage.getInstance(this);
         }
     }
     

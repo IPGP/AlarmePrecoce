@@ -2,7 +2,7 @@
  * Created Sep 08, 2008 2:54:12 PM
  * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
-package fr.ipgp.earlywarning.controler;
+package fr.ipgp.earlywarning.audio;
 
 import java.util.NoSuchElementException;
 import java.io.*;
@@ -12,14 +12,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.audio.MessagePlayback;
+import fr.ipgp.earlywarning.controler.QueueManagerThread;
 /**
  * This class manages the serial port and the audio card of the computer. The aim is to send an audio and ASCII message to an UHF radio system.<br/>
  * Implements the singleton pattern
  * @author patriceboissier
  */
-public class AudioSerialMessageThread extends Thread{
-	private static AudioSerialMessageThread uniqueInstance;
+public class AudioSerialMessage {
+	private static AudioSerialMessage uniqueInstance;
 	private static QueueManagerThread queueManagerThread;
 	private int comSpeed;
 	private String comPort;
@@ -27,23 +27,8 @@ public class AudioSerialMessageThread extends Thread{
     private SerialPort serialPort;
 	private OutputStream outStream;
 	private int delay;
-	private AudioSerialMessageThread() {
-		this("AudioSerialMessageThread");
-	}
-	
-	private AudioSerialMessageThread(String name) {
-		super(name);
-	}
-	
-	public static synchronized AudioSerialMessageThread getInstance (QueueManagerThread queue) {
-		if (uniqueInstance == null) {
-    		uniqueInstance = new AudioSerialMessageThread();
-		}
-		queueManagerThread = queue;
-    	return uniqueInstance;
-	}
-	
-	public void run() {
+
+	private AudioSerialMessage() {
     	EarlyWarning.appLogger.debug("Audio/Serial Message Thread creation");
     	try {
     		configureAudioSerial();
@@ -61,7 +46,15 @@ public class AudioSerialMessageThread extends Thread{
         	return;
     	}
 	}
-
+		
+	public static synchronized AudioSerialMessage getInstance (QueueManagerThread queue) {
+		if (uniqueInstance == null) {
+    		uniqueInstance = new AudioSerialMessage();
+		}
+		queueManagerThread = queue;
+    	return uniqueInstance;
+	}
+	
 	/**
 	 * Get information for the serial port from the configuration file.
 	 */
