@@ -81,7 +81,6 @@ public class EarlyWarningThread extends Thread {
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram : " + ioe.getMessage());
                 addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
-                EarlyWarning.appLogger.error("DEBUG!!!!!!!!!");
             } catch (UnknownTriggerFormatException utfe) {
             	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
             	//EarlyWarning.appLogger.debug("Unknown trigger format received");
@@ -98,6 +97,8 @@ public class EarlyWarningThread extends Thread {
             	//EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
             	EarlyWarning.appLogger.error("Invalid call list in the received trigger");
             	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
+            } finally {
+            	System.out.println("FINALLY");
             }
             
             if (Thread.interrupted()) {
