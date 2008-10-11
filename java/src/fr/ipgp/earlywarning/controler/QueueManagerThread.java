@@ -22,6 +22,7 @@ public class QueueManagerThread extends Thread {
 	private PriorityBlockingQueue<Trigger> queue;
     protected boolean moreTriggers = true;
     private Gateway gateway;
+    private String resourcesPath;
     private MailerThread mailerThread;
     private AudioSerialMessageThread audioSerialMessageThread;
 	private boolean useMail;
@@ -121,7 +122,7 @@ public class QueueManagerThread extends Thread {
             		}
     			}
     			if (useSound) {
-    				audioSerialMessageThread.sendMessage("Test d'envoi de message", defaultWarningMessage.getFile());
+    				audioSerialMessageThread.sendMessage("Test d'envoi de message", resourcesPath+"/"+defaultWarningMessage.getFile());
     			}
     		} else {
 	    		try {
@@ -170,7 +171,7 @@ public class QueueManagerThread extends Thread {
     		String host = EarlyWarning.configuration.getString("gateway.voicent.host");
     		int port = EarlyWarning.configuration.getInt("gateway.voicent.port");
     		String vcastexe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
-    		String resourcesPath = EarlyWarning.configuration.getString("gateway.voicent.resources_path");
+    		resourcesPath = EarlyWarning.configuration.getString("gateway.voicent.resources_path");
     		retry = EarlyWarning.configuration.getInt("gateway.voicent.retry");
     		gateway = VoicentGateway.getInstance(host, port, resourcesPath, vcastexe);
     	} catch (ConversionException ce) {
