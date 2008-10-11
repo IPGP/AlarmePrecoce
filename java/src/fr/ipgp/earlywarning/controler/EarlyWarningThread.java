@@ -81,6 +81,13 @@ public class EarlyWarningThread extends Thread {
             } catch (IOException ioe) {
                 EarlyWarning.appLogger.error("Input Output error while receiving datagram : " + ioe.getMessage());
                 addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
+                if (socket.isClosed()) {
+                	try {
+                		socket  = new DatagramSocket(port);
+                	} catch (SocketException se) {
+                		EarlyWarning.appLogger.error("Socket Exception : cannot open socket : " + se.getMessage());
+                	}
+        		}
             } catch (UnknownTriggerFormatException utfe) {
             	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
             	//EarlyWarning.appLogger.debug("Unknown trigger format received");
