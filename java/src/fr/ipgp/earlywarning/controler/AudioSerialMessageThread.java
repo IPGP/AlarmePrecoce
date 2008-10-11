@@ -101,6 +101,7 @@ public class AudioSerialMessageThread extends Thread{
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
 			Thread.sleep(1000 * delay);
 			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
+			EarlyWarning.appLogger.debug("Playing audio message "+wavFile);
 			MessagePlayback messagePlayback = new MessagePlayback(wavFile);
 			messagePlayback.playClip();
 			while (messagePlayback.isPlaying()) {
