@@ -23,7 +23,7 @@ public class TriggerV2Sender {
 	public static void main(String[] args) {
 
 		try {
-			address = InetAddress.getByName("195.83.188.255");
+			address = InetAddress.getByName("127.0.0.1");
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();
 		}
