@@ -27,7 +27,7 @@
     <hearbeat_delay>6</hearbeat_delay>
   </heartbeat>
   <triggers>
-  	<create_trigger_on_errors>true</create_trigger_on_errors>
+  	<create_trigger_on_errors>false</create_trigger_on_errors>
   	<defaults>
   	  <priority>2</priority>
   	  <confirm_code>11</confirm_code>
@@ -35,7 +35,7 @@
   	</defaults>
   </triggers>
   <mail>
-    <use_mail>true</use_mail>
+    <use_mail>false</use_mail>
     <smtp>
       <host>smtp.mail.yahoo.com</host>
       <port>25</port>
