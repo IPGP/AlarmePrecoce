@@ -27,6 +27,7 @@ public class AudioSerialMessage {
 	private CommPortIdentifier comPortId;
     private SerialPort serialPort;
 	private OutputStream outStream;
+	private String textMessage;
 	private int delay;
 
 	private AudioSerialMessage() {
@@ -63,6 +64,7 @@ public class AudioSerialMessage {
 		comSpeed = EarlyWarning.configuration.getInt("audioserial.serial.speed");
 		comPort = EarlyWarning.configuration.getString("audioserial.serial.port");
 		delay = EarlyWarning.configuration.getInt("audioserial.delay");
+		textMessage = EarlyWarning.configuration.getString("audioserial.message");
 		comPortId=CommPortIdentifier.getPortIdentifier(comPort);
 	}
 	
@@ -87,10 +89,10 @@ public class AudioSerialMessage {
 		} catch (UnsupportedCommOperationException ucoe) {
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
-
+		String finalMessage = textMessage + message;
 		try {
 			outStream = serialPort.getOutputStream();
-			byte[] data = message.getBytes();
+			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
 			Thread.sleep(1000 * delay);

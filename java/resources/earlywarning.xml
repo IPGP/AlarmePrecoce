@@ -62,6 +62,7 @@
       <speed>9600</speed>
     </serial>
     <delay>10</delay>
+    <message>Message d'alerte de l'Observatoire Volcanologique du Karthala. Une alerte a été envoyée par </message>
   </audioserial>
   <gateway>
     <text_to_speech>false</text_to_speech>
