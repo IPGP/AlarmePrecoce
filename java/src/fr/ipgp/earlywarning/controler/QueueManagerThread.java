@@ -124,6 +124,13 @@ public class QueueManagerThread extends Thread {
     			}
     			if (useSound) {
     				audioSerialMessage.sendMessage("Test d'envoi de message", resourcesPath+"/"+defaultWarningMessage.getFile());
+    				while(audioSerialMessage.isPlaying()) {
+    					try {
+    						Thread.sleep(1000);
+    					} catch (InterruptedException ie) {
+    						EarlyWarning.appLogger.error("Error while sleeping!");
+    					}
+    				}
     			}
     		} else {
 	    		try {
