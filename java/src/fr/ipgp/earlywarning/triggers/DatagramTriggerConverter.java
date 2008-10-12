@@ -152,7 +152,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
     		}
     	}
     	if (warningMessage.matches("\\w+\\.wav"))
-    		trigger.setMessage(new FileWarningMessage(warningMessage));
+    		trigger.setMessage(new FileWarningMessage(warningMessage));	
     	else {
     		if (warningMessage.matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
     			trigger.setMessage(new TextWarningMessage(warningMessage));
