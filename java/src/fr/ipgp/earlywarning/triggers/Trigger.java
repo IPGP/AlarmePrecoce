@@ -21,6 +21,7 @@ public class Trigger implements Comparable {
 	private String application;
 	private CallList callList;
 	private WarningMessage message;
+	private String textMessage;
 	private boolean repeat;
 	private String date;
 	private String confirmCode;
@@ -31,6 +32,20 @@ public class Trigger implements Comparable {
             throw new NullPointerException();
 		this.id = id;
 		this.priority = priority;
+	}
+	
+	/**
+	 * @return the textMessage
+	 */
+	public String getTextMessage() {
+		return textMessage;
+	}
+	
+	/**
+	 * @param textMessage the textMessage to set
+	 */
+	public void setTextMessage(String textMessage) {
+		this.textMessage = textMessage;
 	}
 	
 	/**
@@ -252,6 +267,8 @@ public class Trigger implements Comparable {
     	body += "Confirmation code : " + confirmCode + "\n";
     	body += "Call list : "+ callList.toString() + "\n";
     	body += "Warning message : " + message.toString() + "\n";
+    	if (message.getType() == WarningMessageType.WAV)
+    		body += "Text Warning message : " + textMessage + "\n";
     	return body;
     }
 }

@@ -8,5 +8,5 @@ package fr.ipgp.earlywarning.messages;
  *
  */
 public enum WarningMessageType {
-	WAV, TEXT
+	WAV, TEXT, TXT
 }
