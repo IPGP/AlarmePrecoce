@@ -62,7 +62,7 @@
       <speed>9600</speed>
     </serial>
     <delay>10</delay>
-    <message>Message d'alerte de l'Observatoire Volcanologique du Karthala. Une alerte a été envoyée par </message>
+    <message>Message d'alerte de l'Observatoire Volcanologique du Karthala. Une alerte a ete envoyee par </message>
     <begin_commands>./resources/beginCMD</begin_commands>
     <end_commands>./resources/endCMD</end_commands>
   </audioserial>
