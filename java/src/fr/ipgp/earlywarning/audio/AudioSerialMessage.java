@@ -99,7 +99,9 @@ public class AudioSerialMessage {
 			copy(beginCommands, outStream);	
 			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
+			copy(endCommands, outStream);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + finalMessage);
+			
 			Thread.sleep(1000 * delay);
 			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
 			EarlyWarning.appLogger.debug("Playing audio message "+wavFile);
@@ -108,7 +110,7 @@ public class AudioSerialMessage {
 			while (messagePlayback.isPlaying()) {
 				Thread.sleep(1000);
 			}
-			copy(endCommands, outStream);
+			
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
 		} catch (FileNotFoundException fnfe) {
