@@ -92,10 +92,14 @@ public class AudioSerialMessage {
 		String finalMessage = textMessage + message;
 		try {
 			outStream = serialPort.getOutputStream();
+			
 			sendFile("./resources/beginCMD");
-			sendFile2("./resources/beginCMD");
+	
 			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
+	
+			sendFile2("./resources/beginCMD");
+			
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
 			Thread.sleep(1000 * delay);
 			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
