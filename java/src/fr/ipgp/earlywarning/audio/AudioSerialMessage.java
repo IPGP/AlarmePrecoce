@@ -28,6 +28,8 @@ public class AudioSerialMessage {
     private SerialPort serialPort;
 	private OutputStream outStream;
 	private String textMessage;
+	private String beginCommands;
+	private String endCommands;
 	private int delay;
 
 	private AudioSerialMessage() {
@@ -65,6 +67,8 @@ public class AudioSerialMessage {
 		comPort = EarlyWarning.configuration.getString("audioserial.serial.port");
 		delay = EarlyWarning.configuration.getInt("audioserial.delay");
 		textMessage = EarlyWarning.configuration.getString("audioserial.message");
+		beginCommands = EarlyWarning.configuration.getString("audioserial.begin_commands");
+		endCommands = EarlyWarning.configuration.getString("audioserial.end_commands");
 		comPortId=CommPortIdentifier.getPortIdentifier(comPort);
 	}
 	
@@ -92,7 +96,7 @@ public class AudioSerialMessage {
 		String finalMessage = textMessage + message;
 		try {
 			outStream = serialPort.getOutputStream();
-			copy("./resources/beginCMD", outStream);	
+			copy(beginCommands, outStream);	
 			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
@@ -104,7 +108,7 @@ public class AudioSerialMessage {
 			while (messagePlayback.isPlaying()) {
 				Thread.sleep(1000);
 			}
-			copy("./resources/endCMD", outStream);
+			copy(endCommands, outStream);
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
 		} catch (FileNotFoundException fnfe) {
@@ -133,9 +137,17 @@ public class AudioSerialMessage {
 	public boolean isPlaying() {
 		return messagePlayback.isPlaying();
 	}
-		
-	private void copy(String filePath, OutputStream out) throws FileNotFoundException, IOException {
-		File file = new File(filePath);
+	
+	/**
+	 * Copy the content of the file (passed as parameter) to the outputstream (passed as parameter).
+	 * It allows sending the content of a binary file to the serial port.
+	 * @param fileName the file name to be copied 
+	 * @param out the output stream to copy to
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private void copy(String fileName, OutputStream out) throws FileNotFoundException, IOException {
+		File file = new File(fileName);
 		InputStream is = null;
 		try {
 			is = new FileInputStream(file);
@@ -158,45 +170,45 @@ public class AudioSerialMessage {
 	}
 
 	
-	/**
-	 * Sends the content of a binary file to the the serial port
-	 */
-	private void sendFile(String filePath) throws FileNotFoundException, IOException {
-		File file = new File(filePath);
-		InputStream is = null;
-		BufferedOutputStream buffer = null;
-		try {
-			is = new BufferedInputStream(new FileInputStream(file));
-			ByteArrayOutputStream bytesArray = new ByteArrayOutputStream();
-			buffer = new BufferedOutputStream(bytesArray);
-			
-			int read = is.read();
-			int[] toWrite = new int[4096];
-			int compteur = 0;
-			long ouonestrendu=0;
-			
-			while(read > -1) {
-				toWrite[compteur] = read;
-				read = is.read();
-				compteur++;
-				if(compteur == 4096) {
-					compteur=0;
-					ouonestrendu++;
-					for(int x=0;x<4096;x++)
-						buffer.write(toWrite[x]);
-					outStream.write(bytesArray.toByteArray());
-					bytesArray.reset();
-				}
-			}
-		
-			for(int x=0;x<4096;x++)
-				buffer.write(toWrite[x]);
-			buffer.flush();
-			outStream.write(bytesArray.toByteArray());
-			outStream.flush();
-		} finally {
-			is.close();
-			buffer.close();
-		}
-	} 
+//	/**
+//	 * Sends the content of a binary file to the the serial port
+//	 */
+//	private void sendFile(String filePath) throws FileNotFoundException, IOException {
+//		File file = new File(filePath);
+//		InputStream is = null;
+//		BufferedOutputStream buffer = null;
+//		try {
+//			is = new BufferedInputStream(new FileInputStream(file));
+//			ByteArrayOutputStream bytesArray = new ByteArrayOutputStream();
+//			buffer = new BufferedOutputStream(bytesArray);
+//			
+//			int read = is.read();
+//			int[] toWrite = new int[4096];
+//			int compteur = 0;
+//			long ouonestrendu=0;
+//			
+//			while(read > -1) {
+//				toWrite[compteur] = read;
+//				read = is.read();
+//				compteur++;
+//				if(compteur == 4096) {
+//					compteur=0;
+//					ouonestrendu++;
+//					for(int x=0;x<4096;x++)
+//						buffer.write(toWrite[x]);
+//					outStream.write(bytesArray.toByteArray());
+//					bytesArray.reset();
+//				}
+//			}
+//		
+//			for(int x=0;x<4096;x++)
+//				buffer.write(toWrite[x]);
+//			buffer.flush();
+//			outStream.write(bytesArray.toByteArray());
+//			outStream.flush();
+//		} finally {
+//			is.close();
+//			buffer.close();
+//		}
+//	} 
 }
