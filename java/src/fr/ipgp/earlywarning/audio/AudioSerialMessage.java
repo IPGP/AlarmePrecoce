@@ -92,6 +92,8 @@ public class AudioSerialMessage {
 		String finalMessage = textMessage + message;
 		try {
 			outStream = serialPort.getOutputStream();
+			sendFile("./resources/beginCMD");
+			sendFile2("./resources/beginCMD");
 			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
 			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
@@ -103,8 +105,12 @@ public class AudioSerialMessage {
 			while (messagePlayback.isPlaying()) {
 				Thread.sleep(1000);
 			}
+			sendFile("./resources/endCMD");
+			sendFile2("./resources/endCMD");
 		} catch (InterruptedException ie) {
 			EarlyWarning.appLogger.error("Error while sleeping!");
+		} catch (FileNotFoundException fnfe) {
+			EarlyWarning.appLogger.error("Error while opening beginCMD or endCMD : " + fnfe.getMessage());
 		} catch (IOException ioe) {
 			EarlyWarning.appLogger.error("Error while sending data to the serial port");
 		} catch (UnsupportedAudioFileException uafe) {
@@ -126,4 +132,70 @@ public class AudioSerialMessage {
 	public boolean isPlaying() {
 		return messagePlayback.isPlaying();
 	}
+	
+	private void sendFile(String fileName) throws FileNotFoundException, IOException {
+		String str;
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new FileReader(fileName));
+			while ((str = in.readLine()) != null) {
+				for (int i = 0;i< str.length();i++){
+					outStream.write((int)str.charAt(i));
+				}
+			}
+		} finally {
+			in.close();
+		}
+	}
+	
+	private void sendFile2(String filePath) throws FileNotFoundException, IOException {
+		File file = new File(filePath);
+		if(file.exists()) {
+			System.out.println("Envoi du fichier "+filePath);
+			long fileSize = file.length();
+			System.out.println("Taille : "+ fileSize);
+			long nbPasses = fileSize / 4096;
+			System.out.println("Passages supposŽs : "+nbPasses);
+	
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			ByteArrayOutputStream bytesArray = new ByteArrayOutputStream();
+			BufferedOutputStream buffer = new BufferedOutputStream(bytesArray);
+	
+			int read = is.read();
+			int[] toWrite = new int[4096];
+			int compteur = 0;
+			long ouonestrendu=0;
+	
+			while(read > -1) {
+				toWrite[compteur] = read;
+				read = is.read();
+				compteur++;
+				if(compteur == 4096) {
+					compteur=0;
+					ouonestrendu++;
+					for(int x=0;x<4096;x++)
+						buffer.write(toWrite[x]);
+	
+					outStream.write(bytesArray.toByteArray());
+	
+					bytesArray.reset();
+					System.out.println("Avancement : "+(float) ouonestrendu/nbPasses * 100+"%");
+				}
+			}
+	
+			for(int x=0;x<4096;x++)
+				buffer.write(toWrite[x]);
+			buffer.flush();
+			outStream.write(bytesArray.toByteArray());
+			outStream.flush();
+	
+			System.out.println("Avancement: "+(float) ouonestrendu/nbPasses * 100+"%");
+	
+			is.close();
+			buffer.close();
+			System.out.println("Passages effectuŽs : "+ouonestrendu);
+		} else {
+			System.out.println("Le fichier "+filePath+" est introuvable");
+		}
+	} 
 }
