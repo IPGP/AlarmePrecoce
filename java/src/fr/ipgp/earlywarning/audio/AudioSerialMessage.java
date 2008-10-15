@@ -99,7 +99,7 @@ public class AudioSerialMessage {
 			copy(beginCommands, outStream);	
 			byte[] data = finalMessage.getBytes();
 			outStream.write(data);
-			EarlyWarning.appLogger.debug("Sending message to serial port : " + message);
+			EarlyWarning.appLogger.debug("Sending message to serial port : " + finalMessage);
 			Thread.sleep(1000 * delay);
 			EarlyWarning.appLogger.debug("Sleeping for "+delay+" seconds");
 			EarlyWarning.appLogger.debug("Playing audio message "+wavFile);

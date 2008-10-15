@@ -33,7 +33,7 @@ public class TriggerV2Sender {
 		//Format V2 : vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
 		Date date1 = new Date();
 		SimpleDateFormat  simpleFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		String messageString = "02 1 " + simpleFormat.format(date1) + " Test defaultCallList.voc true 11 defaultWarningMessage.wav";
+		String messageString = "02 1 " + simpleFormat.format(date1) + " TestApplication defaultCallList.voc true 11 defaultWarningMessage.wav";
 			
 		message = new byte[messageString.length()];
 		message = messageString.getBytes();
