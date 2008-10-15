@@ -69,7 +69,16 @@ public class EarlyWarningThread extends Thread {
 
         	try {
                 socket.receive(packet);
-                EarlyWarning.appLogger.info("Received a packet");
+        	} catch (IOException ioe) {
+        		EarlyWarning.appLogger.error("Input Output error check the Firewall : " + ioe.getMessage());
+        		try {
+					Thread.sleep(2000);
+				} catch (InterruptedException ie) {
+					EarlyWarning.appLogger.error("Error while sleeping!");
+				}
+        	}
+        	EarlyWarning.appLogger.info("Received a packet");
+        	try {
                 DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultCallList, defaultWarningMessage, defaultRepeat, defaultConfirmCode, defaultPriority);
                 datagramTriggerConverter.decode();
                 Trigger trigger = datagramTriggerConverter.getTrigger();
@@ -79,8 +88,8 @@ public class EarlyWarningThread extends Thread {
                 EarlyWarning.appLogger.info("A new trigger has been added to the queue");
                 EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
             } catch (IOException ioe) {
-                EarlyWarning.appLogger.error("Input Output error while receiving datagram : " + ioe.getMessage());
-                addErrorTrigger("Input Output error while receiving datagram : " + ioe.getMessage());
+                EarlyWarning.appLogger.error("Input Output error while decoding trigger : " + ioe.getMessage());
+                addErrorTrigger("Input Output error while decoding trigger : " + ioe.getMessage());
             } catch (UnknownTriggerFormatException utfe) {
             	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
             	//EarlyWarning.appLogger.debug("Unknown trigger format received");
