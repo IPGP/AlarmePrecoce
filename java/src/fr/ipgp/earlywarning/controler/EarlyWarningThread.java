@@ -98,7 +98,7 @@ public class EarlyWarningThread extends Thread {
             	EarlyWarning.appLogger.error("Invalid call list in the received trigger");
             	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
             } finally {
-            	System.out.println("An error has occured while processing the trigger");
+            	System.out.println("Waiting for triggers");
             }
             
             if (Thread.interrupted()) {
