@@ -66,50 +66,52 @@ public class EarlyWarningThread extends Thread {
     	EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
 
         while (moreTriggers) {
-
+        	boolean received = true;
         	try {
                 socket.receive(packet);
         	} catch (IOException ioe) {
         		EarlyWarning.appLogger.error("Input Output error check the Firewall : " + ioe.getMessage());
+        		received = false;
         		try {
 					Thread.sleep(2000);
 				} catch (InterruptedException ie) {
 					EarlyWarning.appLogger.error("Error while sleeping!");
 				}
         	}
-        	EarlyWarning.appLogger.info("Received a packet");
-        	try {
-                DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultCallList, defaultWarningMessage, defaultRepeat, defaultConfirmCode, defaultPriority);
-                datagramTriggerConverter.decode();
-                Trigger trigger = datagramTriggerConverter.getTrigger();
-                queueManagerThread.addTrigger(trigger);
-                
-                //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
-                EarlyWarning.appLogger.info("A new trigger has been added to the queue");
-                EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
-            } catch (IOException ioe) {
-                EarlyWarning.appLogger.error("Input Output error while decoding trigger : " + ioe.getMessage());
-                addErrorTrigger("Input Output error while decoding trigger : " + ioe.getMessage());
-            } catch (UnknownTriggerFormatException utfe) {
-            	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
-            	//EarlyWarning.appLogger.debug("Unknown trigger format received");
-            	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
-            } catch (InvalidTriggerFieldException itfe) {
-            	//EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
-            	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger");
-            	addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
-            } catch (MissingTriggerFieldException mtfe) {
-            	//EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
-            	EarlyWarning.appLogger.error("Missing field(s) in the received trigger");
-            	addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
-            } catch (InvalidFileNameException ifne) {
-            	//EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
-            	EarlyWarning.appLogger.error("Invalid call list in the received trigger");
-            	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
-            } finally {
-            	System.out.println("Waiting for triggers");
-            }
-            
+        	if (received) {
+	        	try {
+	        		EarlyWarning.appLogger.info("Received a packet");
+	                DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultCallList, defaultWarningMessage, defaultRepeat, defaultConfirmCode, defaultPriority);
+	                datagramTriggerConverter.decode();
+	                Trigger trigger = datagramTriggerConverter.getTrigger();
+	                queueManagerThread.addTrigger(trigger);
+	                
+	                //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
+	                EarlyWarning.appLogger.info("A new trigger has been added to the queue");
+	                EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
+	            } catch (IOException ioe) {
+	                EarlyWarning.appLogger.error("Input Output error while decoding trigger : " + ioe.getMessage());
+	                addErrorTrigger("Input Output error while decoding trigger : " + ioe.getMessage());
+	            } catch (UnknownTriggerFormatException utfe) {
+	            	//EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+	            	//EarlyWarning.appLogger.debug("Unknown trigger format received");
+	            	addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
+	            } catch (InvalidTriggerFieldException itfe) {
+	            	//EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
+	            	EarlyWarning.appLogger.error("Invalid field(s) in the received trigger");
+	            	addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
+	            } catch (MissingTriggerFieldException mtfe) {
+	            	//EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+	            	EarlyWarning.appLogger.error("Missing field(s) in the received trigger");
+	            	addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
+	            } catch (InvalidFileNameException ifne) {
+	            	//EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
+	            	EarlyWarning.appLogger.error("Invalid call list in the received trigger");
+	            	addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
+	            } finally {
+	            	System.out.println("Waiting for triggers");
+	            }
+        	}
             if (Thread.interrupted()) {
             	EarlyWarning.appLogger.warn("Thread stopping");
                 return;
