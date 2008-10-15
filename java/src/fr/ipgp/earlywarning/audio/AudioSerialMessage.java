@@ -93,7 +93,7 @@ public class AudioSerialMessage {
 		} catch (UnsupportedCommOperationException ucoe) {
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
-		String finalMessage = textMessage + message;
+		String finalMessage = textMessage + " " + message;
 		try {
 			outStream = serialPort.getOutputStream();
 			copy(beginCommands, outStream);	
