@@ -9,9 +9,10 @@ import java.io.*;
 import javax.comm.*;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
 import org.apache.commons.configuration.ConversionException;
 import fr.ipgp.earlywarning.EarlyWarning;
+import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.controler.QueueManagerThread;
 /**
  * This class manages the serial port and the audio card of the computer. The aim is to send an audio and ASCII message to an UHF radio system.<br/>
@@ -78,7 +79,7 @@ public class AudioSerialMessage {
 	 * Finally the serial port is closed.
 	 * @param message the ASCII message
 	 */
-	public void sendMessage(String message, String wavFile) {
+	public void sendMessage(Trigger trigger, String resourcesPath, FileWarningMessage defaultWarningMessage) {
 		try {
 			serialPort=(SerialPort)comPortId.open("Envoi",5000);
 			EarlyWarning.appLogger.debug("Opening serial port");
@@ -93,7 +94,19 @@ public class AudioSerialMessage {
 		} catch (UnsupportedCommOperationException ucoe) {
 			EarlyWarning.appLogger.error("Error while configuring the serial port "+comPort);
 		}
-		String finalMessage = textMessage + " " + message;
+		String finalMessage = textMessage + " " + trigger.getApplication();
+		
+		String wavFile;
+		switch (trigger.getMessage().getType()) {
+			case WAV :
+				FileWarningMessage fileWarningMessage = (FileWarningMessage) trigger.getMessage();
+				wavFile = resourcesPath + "/"+ fileWarningMessage.getFile();
+			break;
+			default :
+				wavFile = resourcesPath + "/"+ defaultWarningMessage.getFile();
+			break;
+		}
+		
 		try {
 			outStream = serialPort.getOutputStream();
 			copy(beginCommands, outStream);	
