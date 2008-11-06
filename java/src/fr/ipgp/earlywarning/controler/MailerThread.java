@@ -19,7 +19,7 @@ import fr.ipgp.earlywarning.utilities.Mailer;
 /**
  * Sends e-mails to a mailing list with the trigger information.<br/>
  * Implements the singleton pattern
- * @author patriceboissier
+ * @author Patrice Boissier
  */
 public class MailerThread extends Thread {
 	private static MailerThread uniqueInstance;
