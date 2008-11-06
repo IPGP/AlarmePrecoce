@@ -3,6 +3,7 @@
  */
 package fr.ipgp.earlywarning.utilities;
 
+import java.io.*;
 /**
  * This class represents a Voc file.<br/>
  * the voc file structure is the following (hex format)<br/>
@@ -29,5 +30,13 @@ package fr.ipgp.earlywarning.utilities;
  *
  */
 public class VocFile {
-
+	private File file;
+	
+	public void addEntry(String name, String phoneNumber) {
+		
+	}
+`
+	public void addEntry(String name, String phoneNumber, int atLine) {
+		
+	}
 }
