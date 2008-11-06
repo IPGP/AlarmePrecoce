@@ -7,8 +7,8 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.File;
 /**
- * @author patriceboissier
- *
+ * This class represent an audio message playback.
+ * @author Patrice Boissier
  */
 public class MessagePlayback {
 	private Clip messageClip;
@@ -29,7 +29,9 @@ public class MessagePlayback {
 		messageClip.open(stream);
 	}
 	
-	// play a clip through the speakers
+	/**
+	 * Play a clip through the speakers.
+	 */
 	public void playClip() {
 		if( messageClip != null ) {
 			// first, reset the clip to play from the beginning
@@ -40,6 +42,9 @@ public class MessagePlayback {
 		}
 	}
 	
+	/**
+	 * @return true if the message is currently being played
+	 */
 	public boolean isPlaying() {
 		return messageClip.isActive();
 	}

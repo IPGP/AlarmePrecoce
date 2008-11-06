@@ -17,7 +17,7 @@ import fr.ipgp.earlywarning.controler.QueueManagerThread;
 /**
  * This class manages the serial port and the audio card of the computer. The aim is to send an audio and ASCII message to an UHF radio system.<br/>
  * Implements the singleton pattern
- * @author patriceboissier
+ * @author Patrice Boissier
  */
 public class AudioSerialMessage {
 	private static AudioSerialMessage uniqueInstance;
@@ -74,8 +74,8 @@ public class AudioSerialMessage {
 	}
 	
 	/**
-	 * Opens and configures the serial port, sets the DTR to true and then sends the message ASCII text. 
-	 * It then waits for "delay" seconds and starts to play the audio message.
+	 * Opens and configures the serial port, sets the DTR to true and then sends the message ASCII text.<br/>
+	 * It then waits for "delay" seconds and starts to play the audio message.<br/>
 	 * Finally the serial port is closed.
 	 * @param message the ASCII message
 	 */
@@ -154,7 +154,7 @@ public class AudioSerialMessage {
 	}
 	
 	/**
-	 * Copy the content of the file (passed as parameter) to the outputstream (passed as parameter).
+	 * Copy the content of the file (passed as parameter) to the outputstream (passed as parameter).<br/>
 	 * It allows sending the content of a binary file to the serial port.
 	 * @param fileName the file name to be copied 
 	 * @param out the output stream to copy to
