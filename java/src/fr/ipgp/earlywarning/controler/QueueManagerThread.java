@@ -132,6 +132,11 @@ public class QueueManagerThread extends Thread {
     					}
     				}
     			}
+    			try {
+					Thread.sleep(30000);
+				} catch (InterruptedException ie) {
+					EarlyWarning.appLogger.error("Error while sleeping!");
+				}
     		} else {
 	    		try {
 					Thread.sleep(5000);
