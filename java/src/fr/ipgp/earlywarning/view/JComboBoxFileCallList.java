@@ -19,11 +19,11 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 	private JPanel panelTitle = null;
 	private JPanel panelCallList = null;
 	private JPanel panelSelectedCallList = null;
-	private JComboBox callListList = null;
+	//private JComboBox callListList = null;
 	private JLabel labelSelectedCallList = null;
 	private JLabel labelTitle = null;
-	private String [] files;
-	private JButton choseCallListButton = null;
+	//private String [] files;
+	//private JButton choseCallListButton = null;
 	private FlowLayout layout = new FlowLayout();
 	
 	public JComboBoxFileCallList(FileCallListControler controler) {
@@ -50,8 +50,8 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		labelTitle = new JLabel("Earlywarning System");
 		panelTitle.add(labelTitle);
 		
-//		panelCallList = new JPanel();
-//		panelCallList.setLayout(layout);
+		panelCallList = new JPanel();
+		panelCallList.setLayout(layout);
 //		files = new String[fileCallLists.getFileCallLists().size()];
 //		for (int i = 0; i < fileCallLists.getFileCallLists().size(); i++) {
 //			files[i] = fileCallLists.getFileCallLists().get(i).getFileName();
@@ -87,11 +87,11 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 	
 	public void fileReferenceCallListChanged(FileCallListChangedEvent event) {
 		labelSelectedCallList.setText("Liste d'appel par defaut : " + event.getNewFileReferenceCallList());
-		callListList.setSelectedItem(event.getNewFileReferenceCallList());
+		//callListList.setSelectedItem(event.getNewFileReferenceCallList());
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		getControler().notifyFileChanged((String)callListList.getSelectedItem());
+		//getControler().notifyFileChanged((String)callListList.getSelectedItem());
 	}
 
 }
