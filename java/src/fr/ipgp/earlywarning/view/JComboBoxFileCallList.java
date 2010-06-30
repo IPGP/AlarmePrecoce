@@ -50,19 +50,19 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 		labelTitle = new JLabel("Earlywarning System");
 		panelTitle.add(labelTitle);
 		
-		panelCallList = new JPanel();
-		panelCallList.setLayout(layout);
-		files = new String[fileCallLists.getFileCallLists().size()];
-		for (int i = 0; i < fileCallLists.getFileCallLists().size(); i++) {
-			files[i] = fileCallLists.getFileCallLists().get(i).getFileName();
-		};
-		callListList = new JComboBox(files);
-		callListList.setSelectedItem(fileCallList.getFileName());
-		panelCallList.add(callListList);
-		
-		choseCallListButton = new JButton("Choisir");
-		choseCallListButton.addActionListener(this);
-		panelCallList.add(choseCallListButton);
+//		panelCallList = new JPanel();
+//		panelCallList.setLayout(layout);
+//		files = new String[fileCallLists.getFileCallLists().size()];
+//		for (int i = 0; i < fileCallLists.getFileCallLists().size(); i++) {
+//			files[i] = fileCallLists.getFileCallLists().get(i).getFileName();
+//		};
+//		callListList = new JComboBox(files);
+//		callListList.setSelectedItem(fileCallList.getFileName());
+//		panelCallList.add(callListList);
+//		
+//		choseCallListButton = new JButton("Choisir");
+//		choseCallListButton.addActionListener(this);
+//		panelCallList.add(choseCallListButton);
 		
 		panelSelectedCallList = new JPanel();
 		panelSelectedCallList.setLayout(layout);
