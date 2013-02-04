@@ -35,13 +35,14 @@
   	</defaults>
   </triggers>
   <mail>
-    <use_mail>false</use_mail>
+    <use_mail>true</use_mail>
     <smtp>
-      <host>smtp.mail.yahoo.com</host>
-      <port>25</port>
-      <username>obs_karthala</username>
-      <password>k4rth4l4</password>
-      <from>obs_karthala@yahoo.fr</from>
+      <use_ssl>true</use_ssl>
+      <host>smtp.gmail.com</host>
+      <port>465</port>
+      <username>obsfournaise</username>
+      <password>0vpf1pgp</password>
+      <from>obsfournaise@gmail.com</from>
     </smtp>
     <mailinglist>
       <contact>

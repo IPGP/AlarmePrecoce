@@ -30,6 +30,7 @@ public class MailerThread extends Thread {
 	private String smtpHost;
 	private String smtpPort;
 	private String smtpFrom;
+	private boolean useSSL;
 	private static QueueManagerThread queueManagerThread;
 	
 	private MailerThread() {
@@ -82,6 +83,7 @@ public class MailerThread extends Thread {
     	smtpPassword = EarlyWarning.configuration.getString("mail.smtp.password");
     	smtpFrom = EarlyWarning.configuration.getString("mail.smtp.from");
     	smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
+    	useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
 		List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
 		List<InternetAddress> mails = new ArrayList<InternetAddress>();
 		for(Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext();) {
@@ -98,7 +100,7 @@ public class MailerThread extends Thread {
 		if (mails.size() == 0) {
 			return null;
 		}
-		mailer = Mailer.getInstance(smtpHost, smtpFrom, smtpUsername, smtpPassword, smtpPort);
+		mailer = Mailer.getInstance(smtpHost, smtpFrom, smtpUsername, smtpPassword, smtpPort, useSSL);
 		return mails;
     }
     
