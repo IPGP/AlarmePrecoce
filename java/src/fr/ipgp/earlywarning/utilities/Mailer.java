@@ -17,29 +17,41 @@ public class Mailer {
 	private String username;
 	private String password;
 	private String port;
+	private boolean useSSL;
 	private Properties properties;
 	
-	private Mailer(String host, String from, String username, String password, String port) {	
+	private Mailer(String host, String from, String username, String password, String port, boolean useSSL) {	
 		this.host = host;
 		this.from = from;
 		this.username = username;
 		this.password = password;
 		this.port = port;
+		this.useSSL = useSSL;
 		properties = System.getProperties();
-		properties.put("mail.smtp.host", this.host);
-		properties.put("mail.smtp.user", this.username);
-		properties.put("mail.smtp.port", this.port);
+		if (this.useSSL) {
+			properties.put("mail.smtp.host", this.host);
+			properties.put("mail.smtp.socketFactory.port", this.port);
+			properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+			properties.put("mail.smtp.port", this.port);
+			properties.put("mail.smtp.user", this.username);
+			properties.put("mail.smtp.auth", "true");			
+		} else {
+			properties.put("mail.smtp.host", this.host);
+			properties.put("mail.smtp.port", this.port);
+			properties.put("mail.smtp.user", this.username);
+			properties.put("mail.smtp.auth", "true");			
+		}
+		
 	}
 
-	public static synchronized Mailer getInstance(String host, String from, String username, String password, String port) {
+	public static synchronized Mailer getInstance(String host, String from, String username, String password, String port, boolean useSSL) {
     	if (uniqueInstance == null) {
-    		uniqueInstance = new Mailer(host, from, username, password, port);
+    		uniqueInstance = new Mailer(host, from, username, password, port, useSSL);
     	}
     	return uniqueInstance;
     }
 	
 	public void sendNotificationAuth(String to, String subject, String body) throws MessagingException {
-	    properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
@@ -57,7 +69,6 @@ public class Mailer {
 	}
 	
 	public void sendNotificationsAuth(List<InternetAddress> addresses, String subject, String body) throws MessagingException {
-		properties.put("mail.smtp.auth", "true");
 		Session session = Session.getDefaultInstance(properties, null);
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
