@@ -88,7 +88,7 @@ public class EarlyWarningThread extends Thread {
 	                
 	                //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
 	                EarlyWarning.appLogger.info("A new trigger has been added to the queue");
-	                EarlyWarning.appLogger.debug("QueueManager : " + queueManagerThread.toString());
+	                EarlyWarning.appLogger.info("QueueManager : " + queueManagerThread.toString());
 	            } catch (IOException ioe) {
 	                EarlyWarning.appLogger.error("Input Output error while decoding trigger : " + ioe.getMessage());
 	                addErrorTrigger("Input Output error while decoding trigger : " + ioe.getMessage());
