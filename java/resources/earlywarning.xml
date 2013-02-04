@@ -20,14 +20,14 @@
     <driver>org.postgresql.Driver</driver>
   </dbms>
   <heartbeat>
-    <use_heartbeat>false</use_heartbeat>
+    <use_heartbeat>true</use_heartbeat>
     <num_appli>20</num_appli>
     <num_type_alive>24</num_type_alive>
     <num_type_start>18</num_type_start>
     <hearbeat_delay>6</hearbeat_delay>
   </heartbeat>
   <triggers>
-  	<create_trigger_on_errors>false</create_trigger_on_errors>
+  	<create_trigger_on_errors>true</create_trigger_on_errors>
   	<defaults>
   	  <priority>2</priority>
   	  <confirm_code>11</confirm_code>
@@ -51,13 +51,10 @@
       <contact>
         <email>patrice_boissier@yahoo.fr</email>
       </contact>
-      <contact>
-        <email>tibuche@yahoo.fr</email>
-      </contact>
     </mailinglist>
   </mail>
   <audioserial>
-    <use_audioserial>true</use_audioserial>
+    <use_audioserial>false</use_audioserial>
     <serial>
       <port>COM1</port>
       <speed>9600</speed>
