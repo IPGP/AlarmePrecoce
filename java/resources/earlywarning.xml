@@ -46,10 +46,28 @@
     </smtp>
     <mailinglist>
       <contact>
-        <email>boissier@ipgp.jussieu.fr</email>
+        <email>boissier@ipgp.fr</email>
       </contact>
       <contact>
-        <email>patrice_boissier@yahoo.fr</email>
+        <email>dimuro@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>ferraz@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>staud@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>fontaine@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>caterine@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>lauret@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>brunet@ipgp.fr</email>
       </contact>
     </mailinglist>
   </mail>
