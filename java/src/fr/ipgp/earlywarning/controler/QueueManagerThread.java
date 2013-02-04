@@ -118,6 +118,7 @@ public class QueueManagerThread extends Thread {
     			if (useMail) {
     				try {
     					mailerThread.sendNotification("[EarlyWarning] Alert from " + trig.getApplication(), trig.mailTrigger());
+    					EarlyWarning.appLogger.info("Alert from " + trig.getApplication());
     	        	} catch (MessagingException me) {
     	        		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
             		}
