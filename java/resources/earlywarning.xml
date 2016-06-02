@@ -97,4 +97,13 @@
   	  <retry>10</retry>
   	</voicent>
   </gateway>
+  <sms>
+    <use_sms>true</use_sms>
+    <clickatell>
+      <username>boissier</username>
+      <password>monq1976</password>
+      <api_id>3364793</api_id>
+    </clickatell>
+    <duty_phone>262692703856</duty_phone>
+  </sms>
 </earlywarning>

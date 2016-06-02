@@ -25,8 +25,10 @@ public class QueueManagerThread extends Thread {
     private Gateway gateway;
     private String resourcesPath;
     private MailerThread mailerThread;
+    private SMSThread smsThread;
     private AudioSerialMessage audioSerialMessage;
 	private boolean useMail;
+	private boolean useSMS;
 	private boolean useSound;
 	private static FileWarningMessage defaultWarningMessage;
 	private int retry;
@@ -92,6 +94,13 @@ public class QueueManagerThread extends Thread {
 	}
 	
 	/**
+	 * @param useSMS the useSMS to set
+	 */
+	protected void setUseSMS(boolean useSMS) {
+		this.useSMS = useSMS;
+	}
+
+	/**
 	 * @param useSound the useSound to set
 	 */
 	public void setUseSound(boolean useSound) {
@@ -105,6 +114,8 @@ public class QueueManagerThread extends Thread {
     	
     	configureMailerThread();
     	
+    	configureSMSThread();
+
     	configureAudioSerialMessage();
     	
     	while (moreTriggers) {
@@ -122,6 +133,13 @@ public class QueueManagerThread extends Thread {
     	        	} catch (MessagingException me) {
     	        		EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
             		}
+    			}
+    			if (useSMS) {
+    				try {
+    					smsThread.sendSMS(trig.mailTrigger());
+    				} catch (Exception e) {
+    					EarlyWarning.appLogger.error("Error while sending notification SMS : " + e.getMessage());
+    				}
     			}
     			if (useSound) {
     				audioSerialMessage.sendMessage(trig, resourcesPath, defaultWarningMessage);
@@ -163,6 +181,23 @@ public class QueueManagerThread extends Thread {
     		mailerThread.start();
         }
     }
+
+    private void configureSMSThread() {
+    	try {
+   		 	useSMS = EarlyWarning.configuration.getBoolean("sms.use_sms");
+    	} catch (ConversionException ce) {
+        	EarlyWarning.appLogger.fatal("sms.use_sms has a wrong value in configuration file : check sms section of earlywarning.xml configuration file. SMS support disabled.");
+        	useSMS = false;
+        } catch (NoSuchElementException nsee) {
+        	EarlyWarning.appLogger.fatal("sms.use_sms is missing in configuration file : check sms section of earlywarning.xml configuration file. SMS support disabled.");
+        	useSMS = false;
+        }
+    	if (useSMS) {
+    		smsThread = SMSThread.getInstance(this);
+    		smsThread.start();
+        }
+    }
+
     
     private void configureAudioSerialMessage() {
     	try {

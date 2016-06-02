@@ -12,7 +12,7 @@ public class AlarmeTel {
     listeAppel.delete();
   }
 
-  FileChannel in = null; // canal d'entr�e
+  FileChannel in = null; // canal d'entree
   FileChannel out = null; // canal de sortie
  
   try {
