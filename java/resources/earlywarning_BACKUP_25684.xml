@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<earlywarning>
+  <network>
+    <port>4445</port>
+  </network>
+  <dbms>
+    <!-- Database support is only for Mysql and Postgresql -->
+    <host>bory</host>
+    <!-- MySQL default port : 3306 -->
+    <!-- PostgreSQL default port : 5432 -->
+    <port>5432</port>
+    <database>fovpf</database>
+    <user>fonctionnement</user>
+    <password>olvssclr</password>
+    <!-- MySQL editor : mysql -->
+    <!-- PostgreSQL editor : postgresql -->
+    <editor>postgresql</editor>
+    <!-- MySQL driver : com.mysql.jdbc.Driver -->
+    <!-- PostgreSQL driver : org.postgresql.Driver -->
+    <driver>org.postgresql.Driver</driver>
+  </dbms>
+  <heartbeat>
+    <use_heartbeat>true</use_heartbeat>
+    <num_appli>20</num_appli>
+    <num_type_alive>24</num_type_alive>
+    <num_type_start>18</num_type_start>
+    <hearbeat_delay>6</hearbeat_delay>
+  </heartbeat>
+  <triggers>
+  	<create_trigger_on_errors>true</create_trigger_on_errors>
+  	<defaults>
+  	  <priority>2</priority>
+  	  <confirm_code>11</confirm_code>
+  	  <repeat>true</repeat>
+  	</defaults>
+  </triggers>
+  <mail>
+    <use_mail>true</use_mail>
+    <smtp>
+      <use_ssl>true</use_ssl>
+      <host>smtp.gmail.com</host>
+      <port>465</port>
+      <username>obsfournaise</username>
+      <password>0vpf1pgp</password>
+      <from>obsfournaise@gmail.com</from>
+    </smtp>
+    <mailinglist>
+      <contact>
+        <email>boissier@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>dimuro@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>ferraz@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>staud@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>fontaine@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>caterine@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>lauret@ipgp.fr</email>
+      </contact>
+      <contact>
+        <email>brunet@ipgp.fr</email>
+      </contact>
+    </mailinglist>
+  </mail>
+  <audioserial>
+    <use_audioserial>false</use_audioserial>
+    <serial>
+      <port>COM1</port>
+      <speed>9600</speed>
+    </serial>
+    <delay>10</delay>
+    <message>Message d'alerte de l'Observatoire Volcanologique du Karthala. Une alerte a ete envoyee par </message>
+    <begin_commands>./resources/beginCMD</begin_commands>
+    <end_commands>./resources/endCMD</end_commands>
+  </audioserial>
+  <gateway>
+    <text_to_speech>false</text_to_speech>
+    <defaults>
+	  <call_list>DefaultCallList.voc</call_list>
+  	  <warning_message>defaultWarningMessage.wav</warning_message>
+  	  <error_message>defaultErrorMessage.wav</error_message>
+  	</defaults>
+  	<voicent>
+  	  <host>localhost</host>
+  	  <port>8155</port>
+  	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
+<<<<<<< HEAD
+  	  <resources_path>./resources/vocs</resources_path>
+=======
+  	  <resources_path>./resources/vocs/</resources_path>
+>>>>>>> feature/InterfaceWeb
+  	  <retry>10</retry>
+  	</voicent>
+  </gateway>
+  <sms>
+    <use_sms>true</use_sms>
+    <clickatell>
+      <username>boissier</username>
+      <password>monq1976</password>
+      <api_id>3364793</api_id>
+    </clickatell>
+    <duty_phone>262692703856</duty_phone>
+  </sms>
+</earlywarning>

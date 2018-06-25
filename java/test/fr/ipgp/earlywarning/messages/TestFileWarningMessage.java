@@ -26,7 +26,7 @@ public class TestFileWarningMessage {
 	public void testCreateFileWarningMessage() {
 		FileWarningMessage fileWarningMessage = new FileWarningMessage(testFile);
 		Assert.assertEquals(testFile,fileWarningMessage.getFile());
-		Assert.assertEquals(testFile,fileWarningMessage.toString());
+		Assert.assertEquals(testFile.toString(),fileWarningMessage.toString());
 	}
 	
 	public static junit.framework.Test suite() {

@@ -1,71 +1,68 @@
 /**
- *
+ * 
  */
 package fr.ipgp.earlywarning.messages;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
+import java.io.*;
 /**
  * @author patriceboissier
+ *
  */
 public class TextFileWarningMessage implements WarningMessage {
-    private final WarningMessageType type = WarningMessageType.TXT;
-    private String file;
-    private String fileContent;
+	private String file;
+	private String fileContent;
+	private final WarningMessageType type = WarningMessageType.TXT;
+	
+	public TextFileWarningMessage(String file) {
+		this.file = file;
+		this.fileContent = getContent();
+	}
 
-    public TextFileWarningMessage(String file) {
-        this.file = file;
-        this.fileContent = getContent();
-    }
+	/**
+	 * @return a String representing the object
+	 */
+	public String toString() {
+		String result = file.toString();
+		return result;
+	}
+	
+	/**
+	 * @return the file to get
+	 */
+	public String getFile() {
+		return file;
+	}
+	
+	/**
+	 * @return the fileContent to get
+	 */
+	public String getFileContent() {
+		return fileContent;
+	}
 
-    /**
-     * @return a String representing the object
-     */
-    public String toString() {
-        String result = file;
-        return result;
-    }
-
-    /**
-     * @return the file to get
-     */
-    public String getFile() {
-        return file;
-    }
-
-    /**
-     * @return the fileContent to get
-     */
-    public String getFileContent() {
-        return fileContent;
-    }
-
-    /**
-     * @return the type
-     */
-    public WarningMessageType getType() {
-        return type;
-    }
-
-    private String getContent() {
-        StringBuilder contents = new StringBuilder();
-        try {
-            BufferedReader input = new BufferedReader(new FileReader(new File(file)));
-            try {
-                String line = null;
-                while ((line = input.readLine()) != null) {
-                    contents.append(line);
-                    contents.append(System.getProperty("line.separator"));
-                }
-            } finally {
-                input.close();
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return contents.toString();
-    }
+	/**
+	 * @return the type
+	 */
+	public WarningMessageType getType() {
+		return type;
+	}
+	
+	private String getContent() {
+		StringBuilder contents = new StringBuilder();
+		try {
+			BufferedReader input =  new BufferedReader(new FileReader(new File(file)));
+			try {
+		        String line = null;
+		        while (( line = input.readLine()) != null){
+		        	contents.append(line);
+		        	contents.append(System.getProperty("line.separator"));
+		        }
+			} finally {
+				input.close();
+			}
+		} catch (IOException ex){
+			ex.printStackTrace();
+		}	    
+		return contents.toString();
+	}
 }

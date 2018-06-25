@@ -20,13 +20,12 @@
  *
  * ----------------------------------------------------------------------
  */
-
+ 
 package com.voicent.webalert;
 
 //import java.io.File;
-
-import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -35,29 +34,28 @@ import java.util.StringTokenizer;
 /**
  * fixed format: [ name, phone number, [other values]* CRLF ]*
  */
-
-public class BroadcastListFile implements BroadcastList {
-    private int total_ = -1;
-    private ArrayList curRecord_ = new ArrayList();
-    private BufferedReader br_ = null;
-    private String filename_ = null;
-
-    public BroadcastListFile(String filename) {
+ 
+public class BroadcastListFile implements BroadcastList
+{
+    public BroadcastListFile(String filename)
+    {
         try {
             filename_ = filename;
             br_ = new BufferedReader(new FileReader(filename));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return;
         }
-
+        
         getTotal();
         reset();
     }
-
-    public boolean next() {
+    
+    public boolean next()
+    {
         curRecord_.clear();
-
+        
         try {
             String line = null;
             while (true) {
@@ -68,7 +66,7 @@ public class BroadcastListFile implements BroadcastList {
                     continue;
                 break;
             }
-
+                
             StringTokenizer tkz = new StringTokenizer(line, ",");
             while (tkz.hasMoreTokens()) {
                 String tk = tkz.nextToken();
@@ -76,24 +74,27 @@ public class BroadcastListFile implements BroadcastList {
                 curRecord_.add(tk);
             }
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-    public String getValue(String name) {
+    
+    public String getValue(String name)
+    {
         if (BroadcastList.NAME.equals(name))
             return (String) curRecord_.get(0);
-
+            
         if (BroadcastList.PHONE.equals(name))
             return (String) curRecord_.get(1);
-
+            
         // implement your name value pair here
         return null;
     }
-
-    public int getTotal() {
+    
+    public int getTotal()
+    {
         if (total_ == -1) {
             try {
                 total_ = 0;
@@ -103,21 +104,30 @@ public class BroadcastListFile implements BroadcastList {
                         continue;
                     total_++;
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
                 total_ = -1;
             }
         }
-
+        
         return total_;
     }
-
-    public void reset() {
+    
+    public void reset()
+    {
         try {
             br_.close();
             br_ = new BufferedReader(new FileReader(filename_));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    
+    private int total_ = -1;
+    private ArrayList curRecord_ = new ArrayList();
+    private BufferedReader br_ = null;
+    private String filename_ = null;
 }

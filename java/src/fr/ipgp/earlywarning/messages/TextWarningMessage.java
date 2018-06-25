@@ -6,35 +6,34 @@ package fr.ipgp.earlywarning.messages;
 
 /**
  * This class represents the text warning message to be delivered by phone call
- *
  * @author Patrice Boissier
  */
 public class TextWarningMessage implements WarningMessage {
-    private final WarningMessageType type = WarningMessageType.TEXT;
-    private String text;
+	private String text;
+	private final WarningMessageType type = WarningMessageType.TEXT;
+	
+	public TextWarningMessage(String text) {
+		this.text = text;
+	}
+	
+	/**
+	 * @return a String representing the object
+	 */
+	public String toString() {
+		return text;
+	}
+	
+	/**
+	 * @return the text message
+	 */
+	public String getText() {
+		return text;
+	}
 
-    public TextWarningMessage(String text) {
-        this.text = text;
-    }
-
-    /**
-     * @return a String representing the object
-     */
-    public String toString() {
-        return text;
-    }
-
-    /**
-     * @return the text message
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * @return the type
-     */
-    public WarningMessageType getType() {
-        return type;
-    }
+	/**
+	 * @return the type
+	 */
+	public WarningMessageType getType() {
+		return type;
+	}
 }

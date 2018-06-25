@@ -4,29 +4,20 @@
  */
 package fr.ipgp.earlywarning.gateway;
 
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
 import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.messages.FileWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
-
 /**
  * The phone gateway interface
- *
  * @author Patrice Boissier
  */
 public interface Gateway {
-    String callText(String phoneNumber, String text, boolean selfDelete);
-
-    String callAudio(String phoneNumber, String audioFile, boolean selfDelete);
-
-    String callStatus(String requestID);
-
-    String callRemove(String requestID);
-
-    String callTillConfirm(String logFile, String messageFile, String confirmCode, String[] phoneNumbers);
-
-    String callTillConfirm(String logFile, String messageFile, String confirmCode, FileCallList callList);
-
-    String callTillConfirm(String callList, String messageFile, String confirmCode);
-
-    String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage);
+	public String callText(String phoneNumber, String text, boolean selfDelete);
+	public String callAudio(String phoneNumber, String audioFile, boolean selfDelete);
+	public String callStatus(String requestID);
+	public String callRemove(String requestID);
+	public String callTillConfirm(String logFile, String messageFile, String confirmCode, String [] phoneNumbers);
+	public String callTillConfirm(String logFile, String messageFile, String confirmCode, FileCallList callList);
+	public String callTillConfirm(String callList, String messageFile, String confirmCode);
+	public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage);
 }
