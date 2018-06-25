@@ -6,9 +6,8 @@ package fr.ipgp.earlywarning.triggers;
 
 /**
  * Trigger converter interface.
- *
  * @author Patrice Boissier
  */
 public interface TriggerConverter {
-    Trigger getTrigger();
+	 public Trigger getTrigger();
 }
