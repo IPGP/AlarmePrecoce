@@ -95,5 +95,11 @@
             <artifactId>postgresql</artifactId>
             <version>8.3-603.jdbc3</version>
         </dependency>
+        <!-- Fix Exception in thread "MailerThread" java.lang.NoClassDefFoundError: com/sun/mail/util/PropUtil -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.0</version>
+        </dependency>
     </dependencies>
 </project>

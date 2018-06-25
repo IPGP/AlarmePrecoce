@@ -15,22 +15,22 @@ import java.util.Map.Entry;
  * library if you wish.
  *
  * @author Dominic Schaff <dominic.schaff@gmail.com>
- * @date Dec 2, 2014
+ * Dec 2, 2014
  */
 public class ClickatellHttp {
 
     /**
-     * @var The URL to use for the base of the HTTP API.
+     * The URL to use for the base of the HTTP API.
      */
     private static final String CLICKATELL_HTTP_BASE_URL = "https://api.clickatell.com/http/";
 
     /**
-     * @var The URL to use for the base of the HTTP/UTILS API.
+     * The URL to use for the base of the HTTP/UTILS API.
      */
     private static final String CLICKATELL_UTILS_BASE_URL = "https://api.clickatell.com/utils/";
 
     /**
-     * @var The three private variables to use for authentication.
+     * The three private variables to use for authentication.
      */
     private String userName, apiId, password;
 
@@ -47,7 +47,7 @@ public class ClickatellHttp {
      * This tests whether your account details works.
      *
      * @return True if details were accepted, and false otherwise.
-     * @throws UnknownHostException
+     * @throws UnknownHostException if the host can't be reached
      */
     public boolean testAuth() throws UnknownHostException {
         try {
@@ -151,19 +151,19 @@ public class ClickatellHttp {
         }
         ArrayList<Message> messages = new ArrayList<Message>();
         // Build Parameters:
-        String urlParameters = "user="
+        StringBuilder urlParameters = new StringBuilder("user="
                 + URLEncoder.encode(this.userName, "UTF-8") + "&api_id="
                 + URLEncoder.encode(this.apiId, "UTF-8") + "&password="
                 + URLEncoder.encode(this.password, "UTF-8") + "&text="
-                + URLEncoder.encode(messageContent, "UTF-8") + "&to=";
-        urlParameters += numbers[0];
+                + URLEncoder.encode(messageContent, "UTF-8") + "&to=");
+        urlParameters.append(numbers[0]);
         for (int x = 1; x < numbers.length; x++) {
-            urlParameters += "," + numbers[x];
+            urlParameters.append(",").append(numbers[x]);
         }
 
         // Send Request:
         String result = this.excutePost(CLICKATELL_HTTP_BASE_URL
-                + "sendmsg.php", urlParameters);
+                + "sendmsg.php", urlParameters.toString());
         // Check whether an auth failed happened:
         if (result.contains("Authentication failed")) {
             throw new Exception("Authentication Failed");
@@ -394,10 +394,9 @@ public class ClickatellHttp {
      * @param targetURL     The URL that should get hit.
      * @param urlParameters The data you want to send via the POST.
      * @return The content of the request.
-     * @throws UnknownHostException
+     * @throws UnknownHostException if the host can't be reached
      */
-    private String excutePost(String targetURL, String urlParameters)
-            throws UnknownHostException {
+    private String excutePost(String targetURL, String urlParameters) throws UnknownHostException {
         URL url;
         HttpURLConnection connection = null;
         try {
@@ -427,7 +426,7 @@ public class ClickatellHttp {
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((line = rd.readLine()) != null) {
                 response.append(line);
                 response.append('\n');
