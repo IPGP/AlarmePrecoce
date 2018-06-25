@@ -14,8 +14,8 @@ import fr.ipgp.earlywarning.view.JComboBoxFileCallList;
  * @author Patrice Boissier
  */
 public class FileCallListControler {
-    public FileCallListView listView = null;
-    private FileCallList fileCallList = null;
+    public FileCallListView listView;
+    private FileCallList fileCallList;
 
     public FileCallListControler(FileCallList fileCallList, FileCallLists fileCallLists) {
         this.fileCallList = fileCallList;

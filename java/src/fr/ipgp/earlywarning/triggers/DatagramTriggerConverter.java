@@ -22,7 +22,7 @@ import java.net.InetAddress;
  * @author Patrice Boissier
  */
 public class DatagramTriggerConverter implements TriggerConverter {
-    protected DatagramPacket packet = null;
+    protected DatagramPacket packet;
     protected InetAddress senderAddress;
     protected int senderPort;
     protected Trigger trigger;
@@ -123,15 +123,15 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @return true if the decoding was successful else false
      */
     private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
-        String warningMessage = new String();
+        StringBuilder warningMessage = new StringBuilder();
         boolean first = true;
         if (packetContentElements.length > 8) {
             for (int j = 8; j < packetContentElements.length; j++) {
                 if (first) {
-                    warningMessage = packetContentElements[j];
+                    warningMessage = new StringBuilder(packetContentElements[j]);
                     first = false;
                 } else
-                    warningMessage = warningMessage + " " + packetContentElements[j];
+                    warningMessage.append(" ").append(packetContentElements[j]);
             }
         } else
             throw new MissingTriggerFieldException("Not enough fields for a V2 trigger : " + this.packetContent);
@@ -159,11 +159,11 @@ public class DatagramTriggerConverter implements TriggerConverter {
                     throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
             }
         }
-        if (warningMessage.matches("\\w+\\.wav"))
-            trigger.setMessage(new FileWarningMessage(warningMessage));
+        if (warningMessage.toString().matches("\\w+\\.wav"))
+            trigger.setMessage(new FileWarningMessage(warningMessage.toString()));
         else {
-            if (warningMessage.matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
-                trigger.setMessage(new TextWarningMessage(warningMessage));
+            if (warningMessage.toString().matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
+                trigger.setMessage(new TextWarningMessage(warningMessage.toString()));
             else
                 throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessage);
         }

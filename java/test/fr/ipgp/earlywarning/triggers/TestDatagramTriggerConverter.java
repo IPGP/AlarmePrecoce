@@ -43,20 +43,11 @@ public class TestDatagramTriggerConverter {
 			packet.setLength(message.length());
 			DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11",1);
 			Trigger trigger = datagram2Trigger.getTrigger();
-			trigger.toString();
 			datagram2Trigger.decode();
-		} catch (UnknownTriggerFormatException utfe) {
+		} catch (UnknownTriggerFormatException | InvalidFileNameException | IOException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
 			System.out.println(utfe.getMessage());
-		} catch (InvalidTriggerFieldException itfe) {
-			System.out.println(itfe.getMessage());
-		} catch (MissingTriggerFieldException mtfe) {
-			System.out.println(mtfe.getMessage());
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		} catch (InvalidFileNameException ifne) {
-			System.out.println(ifne.getMessage());
 		}
-	}
+    }
 	
 	@Test
 	public void testCreateV1Trigger() {
@@ -79,18 +70,10 @@ public class TestDatagramTriggerConverter {
 			Assert.assertEquals("13/03/2008 13:22:04",trig.getDate());
 			Assert.assertEquals("11",trig.getConfirmCode());
 			
-		} catch (UnknownTriggerFormatException utfe) {
+		} catch (UnknownTriggerFormatException | InvalidFileNameException | IOException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
 			System.out.println(utfe.getMessage());
-		} catch (InvalidTriggerFieldException itfe) {
-			System.out.println(itfe.getMessage());
-		} catch (MissingTriggerFieldException mtfe) {
-			System.out.println(mtfe.getMessage());
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		} catch (InvalidFileNameException ifne) {
-			System.out.println(ifne.getMessage());
 		}
-	}
+    }
 	
 	@Test
 	public void testDecodeValidV1Trigger() {

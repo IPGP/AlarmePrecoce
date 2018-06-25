@@ -43,7 +43,7 @@ public class QueueManagerThread extends Thread {
 
     private QueueManagerThread(String name) {
         super(name);
-        queue = new PriorityBlockingQueue<Trigger>();
+        queue = new PriorityBlockingQueue<>();
     }
 
     public static synchronized QueueManagerThread getInstance(FileWarningMessage warningMessage) {

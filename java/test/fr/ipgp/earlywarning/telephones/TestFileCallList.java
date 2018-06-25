@@ -20,9 +20,9 @@ public class TestFileCallList {
 	
 	@Before
 	public void setUp() {
-		fileReference1 = new String("callList.voc");
-		fileReference2 = new String("callList.txt");
-		fileReference3 = new String("callList.toto");
+		fileReference1 = "callList.voc";
+		fileReference2 = "callList.txt";
+		fileReference3 = "callList.toto";
 	}
 	
 	@After
@@ -45,24 +45,20 @@ public class TestFileCallList {
 	        Assert.assertEquals("txt",frcl2.getType());
 	        Assert.assertEquals("/home/boissier",frcl2.getFile().getParent());
 	        Assert.assertEquals(file2,frcl2.getFile());
-		} catch (InvalidFileNameException ifne) {
+		} catch (InvalidFileNameException | FileNotFoundException ifne) {
 			System.out.println(ifne.getMessage());
-		} catch (FileNotFoundException fnfe) {
-			System.out.println(fnfe.getMessage());
 		}
-	}
+    }
 	
 	@Test
 	public void testCreateInvalidCallList() {
 		try {
 			File file3 = new File("/home/boissier/toto.sdf");
 			FileCallList frcl3 = new FileCallList(file3);
-		} catch (InvalidFileNameException ifne) {
+		} catch (InvalidFileNameException | FileNotFoundException ifne) {
 			System.out.println(ifne.getMessage());
-		} catch (FileNotFoundException fnfe) {
-			System.out.println(fnfe.getMessage());
-		}	
-	}
+		}
+    }
 	
 	public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestFileCallList.class);

@@ -25,8 +25,7 @@ public class TextFileWarningMessage implements WarningMessage {
      * @return a String representing the object
      */
     public String toString() {
-        String result = file;
-        return result;
+        return file;
     }
 
     /**
@@ -55,7 +54,7 @@ public class TextFileWarningMessage implements WarningMessage {
         try {
             BufferedReader input = new BufferedReader(new FileReader(new File(file)));
             try {
-                String line = null;
+                String line;
                 while ((line = input.readLine()) != null) {
                     contents.append(line);
                     contents.append(System.getProperty("line.separator"));

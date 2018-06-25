@@ -14,7 +14,7 @@ public class TestFileWarningMessage {
 	
 	@Before
 	public void setUp() {
-		testFile = new String("testFile");
+		testFile = "testFile";
 	}
 	
 	@After

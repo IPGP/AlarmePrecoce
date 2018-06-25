@@ -14,7 +14,7 @@ public class TestTextWarningMessage {
 	
 	@Before
 	public void setUp() {
-		testText = new String("test text");
+		testText = "test text";
 	}
 	
 	@After

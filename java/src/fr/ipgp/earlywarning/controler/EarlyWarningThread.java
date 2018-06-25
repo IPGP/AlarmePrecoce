@@ -145,7 +145,7 @@ public class EarlyWarningThread extends Thread {
                 message = new TextWarningMessage(errorMessage);
             else
                 message = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.error_message"));
-            String application = new String("EarlyWarning");
+            String application = "EarlyWarning";
             String type = new String("v2");
             boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
             Date date1 = new Date();

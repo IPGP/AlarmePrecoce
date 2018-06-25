@@ -7,7 +7,7 @@ package fr.ipgp.earlywarning.triggers;
 
 import java.net.*;
 import java.util.*;
-import java.io.*;
+
 import org.junit.*;
 import fr.ipgp.earlywarning.messages.*;
 import fr.ipgp.earlywarning.telephones.*;
@@ -37,9 +37,9 @@ public class TestTrigger {
 		callList = new TextCallList("0692703856");
 		message = new TextWarningMessage("Alerte : tout brule!!");
 		inetAddress = InetAddress.getByName("localhost");
-		application = new String("Sismo");
+		application = "Sismo";
 		type = new String("v1");
-		properties = new HashMap<String,String>();
+		properties = new HashMap<>();
 		repeat = true;
 		properties.put("key1", "value1");
 		properties.put("key2", "value2");
@@ -78,8 +78,8 @@ public class TestTrigger {
 		Assert.assertEquals(date,trig.getDate());
 		Assert.assertEquals(confirmCode,trig.getConfirmCode());
         Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
-        Long idLong = new Long(id);
-        Integer priorityInteger = new Integer(priority);
+        Long idLong = id;
+        Integer priorityInteger = priority;
         Assert.assertEquals(idLong.hashCode()+priorityInteger.hashCode(),trig.hashCode());
 	}
 		

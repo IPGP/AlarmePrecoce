@@ -11,7 +11,10 @@ import fr.ipgp.earlywarning.telephones.TextCallList;
 import fr.ipgp.earlywarning.triggers.Trigger;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -228,14 +231,14 @@ public class VoicentGateway implements Gateway {
     public String callTillConfirm(String vocFile, String waveFile, String confirmCode, String[] phoneNumbers) {
         try {
 
-            String phoneNumberList = "";
+            StringBuilder phoneNumberList = new StringBuilder();
             boolean firstPhoneNumber = true;
             for (String phoneNumber : phoneNumbers) {
                 if (firstPhoneNumber) {
-                    phoneNumberList += phoneNumber;
+                    phoneNumberList.append(phoneNumber);
                     firstPhoneNumber = false;
                 } else {
-                    phoneNumberList += " " + phoneNumber;
+                    phoneNumberList.append(" ").append(phoneNumber);
                 }
             }
 
@@ -249,8 +252,7 @@ public class VoicentGateway implements Gateway {
 
             postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 
-            String requestCallTillConfirm = postToGateway(urlString, postString);
-            return requestCallTillConfirm;
+            return postToGateway(urlString, postString);
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -409,7 +411,9 @@ public class VoicentGateway implements Gateway {
     private String createLogVocFile() throws IOException {
         File logDir = new File(resources + "/log");
         if (!logDir.exists())
-            logDir.mkdir();
+            if (!logDir.mkdir())
+                throw new IOException("Can't create directory " + logDir.getAbsolutePath());
+
         SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
         Date date = new Date();
         String logVoc = simpleFormat.format(date) + ".voc";
@@ -425,7 +429,9 @@ public class VoicentGateway implements Gateway {
     private String createLogVocFile(String voc) throws IOException {
         File logDir = new File(resources + "/log");
         if (!logDir.exists())
-            logDir.mkdir();
+            if (!logDir.mkdir())
+                throw new IOException("Can't create directory " + logDir.getAbsolutePath());
+
         SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyyMMdd-HH-mm-ss");
         Date date = new Date();
         String logVoc = simpleFormat.format(date) + ".voc";
@@ -458,15 +464,13 @@ public class VoicentGateway implements Gateway {
 
             InputStream in = httpConnection.getInputStream();
 
-            StringBuffer requestCallString = new StringBuffer();
+            StringBuilder requestCallString = new StringBuilder();
             byte[] b = new byte[4096];
             int len;
             while ((len = in.read(b)) != -1)
                 requestCallString.append(new String(b, 0, len));
             return requestCallString.toString();
         } catch (MalformedURLException mue) {
-            return null;
-        } catch (ProtocolException mue) {
             return null;
         } catch (IOException ioe) {
             return null;
@@ -501,9 +505,9 @@ public class VoicentGateway implements Gateway {
     private String getCallStatus(String receivedString) {
         if (receivedString.equals("[]"))
             return "Call in progress";
-        if (receivedString.indexOf("ERROR: no such call record:") != -1)
+        if (receivedString.contains("ERROR: no such call record:"))
             return "No such call record";
-        String[] receivedStringSplitted = null;
+        String[] receivedStringSplitted;
         receivedStringSplitted = receivedString.split("\\^");
         if (receivedStringSplitted.length < 11)
             return null;

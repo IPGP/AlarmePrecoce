@@ -32,7 +32,9 @@ public class ClickatellHttp {
     /**
      * The three private variables to use for authentication.
      */
-    private String userName, apiId, password;
+    private final String userName;
+    private final String apiId;
+    private final String password;
 
     /**
      * Create a HTTP object, and set the auth, but not test the auth.
@@ -149,7 +151,7 @@ public class ClickatellHttp {
         if (numbers.length < 2 || numbers.length > 300) {
             throw new Exception("Illegal arguments passed");
         }
-        ArrayList<Message> messages = new ArrayList<Message>();
+        ArrayList<Message> messages = new ArrayList<>();
         // Build Parameters:
         StringBuilder urlParameters = new StringBuilder("user="
                 + URLEncoder.encode(this.userName, "UTF-8") + "&api_id="
@@ -336,26 +338,25 @@ public class ClickatellHttp {
     public Message[] sendAdvancedMessage(String[] numbers,
                                          String messageContent, HashMap<String, String> features)
             throws Exception {
-        ArrayList<Message> messages = new ArrayList<Message>();
-        String urlParameters;
+        ArrayList<Message> messages = new ArrayList<>();
+        StringBuilder urlParameters;
         // Build Parameters:
-        urlParameters = "user=" + URLEncoder.encode(this.userName, "UTF-8")
+        urlParameters = new StringBuilder("user=" + URLEncoder.encode(this.userName, "UTF-8")
                 + "&api_id=" + URLEncoder.encode(this.apiId, "UTF-8")
                 + "&password=" + URLEncoder.encode(this.password, "UTF-8")
-                + "&text=" + URLEncoder.encode(messageContent, "UTF-8");
-        String number = numbers[0];
+                + "&text=" + URLEncoder.encode(messageContent, "UTF-8"));
+        StringBuilder number = new StringBuilder(numbers[0]);
         for (int x = 1; x < numbers.length; x++) {
-            number += "," + numbers[x];
+            number.append(",").append(numbers[x]);
         }
-        urlParameters += "&to=" + number;
+        urlParameters.append("&to=").append(number);
         for (Entry<String, String> entry : features.entrySet()) {
-            urlParameters += "&" + entry.getKey() + "="
-                    + URLEncoder.encode(entry.getValue(), "UTF-8");
+            urlParameters.append("&").append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
 
         // Send Request:
         String result = this.excutePost(CLICKATELL_HTTP_BASE_URL
-                + "sendmsg.php", urlParameters);
+                + "sendmsg.php", urlParameters.toString());
         // Check whether an auth failed happened:
         if (result.contains("Authentication failed")) {
             throw new Exception("Authentication Failed");

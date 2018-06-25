@@ -76,6 +76,7 @@ public class CommonUtilities {
      * @param format     the format used
      * @return true if the date is valid, else returns false
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isDate(String dateString, String format) {
         DateFormat formatter = new SimpleDateFormat(format);
         formatter.setLenient(false);

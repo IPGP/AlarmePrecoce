@@ -1,5 +1,7 @@
 package com.voicent.webalert;
 
+import fr.ipgp.earlywarning.EarlyWarning;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,9 +13,9 @@ public class AlarmeTel {
     public static void main(String args[]) {
 
         File listeAppel = new File("c:/temp/testctf.voc");
-        if (listeAppel.exists()) {
-            listeAppel.delete();
-        }
+        if (listeAppel.exists())
+            if (!listeAppel.delete())
+                EarlyWarning.appLogger.warn("Can't delete file " + listeAppel.getAbsolutePath());
 
         FileChannel in = null; // canal d'entree
         FileChannel out = null; // canal de sortie

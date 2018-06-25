@@ -12,7 +12,7 @@ import fr.ipgp.earlywarning.telephones.FileCallListListener;
  * @author Patrice Boissier
  */
 public abstract class FileCallListView implements FileCallListListener {
-    private FileCallListControler controler = null;
+    private FileCallListControler controler;
 
     public FileCallListView(FileCallListControler controler) {
         super();

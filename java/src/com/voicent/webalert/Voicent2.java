@@ -233,7 +233,7 @@ public class Voicent2 {
 
             InputStream in = conn.getInputStream();
 
-            StringBuffer rcstr = new StringBuffer();
+            StringBuilder rcstr = new StringBuilder();
             byte[] b = new byte[4096];
             int len;
             while ((len = in.read(b)) != -1)
@@ -259,13 +259,13 @@ public class Voicent2 {
     }
 
     private String getCallStatus(String rcstr) {
-        if (rcstr.indexOf("^made^") != -1)
+        if (rcstr.contains("^made^"))
             return "Call Made";
 
-        if (rcstr.indexOf("^failed^") != -1)
+        if (rcstr.contains("^failed^"))
             return "Call Failed";
 
-        if (rcstr.indexOf("^retry^") != -1)
+        if (rcstr.contains("^retry^"))
             return "Call Will Retry";
 
         return "";

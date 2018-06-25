@@ -16,7 +16,7 @@ import java.util.List;
  * @author Patrice Boissier
  */
 public class FileCallLists implements CallLists {
-    private List<FileCallList> fileCallLists = new ArrayList<FileCallList>();
+    private List<FileCallList> fileCallLists = new ArrayList<>();
 
     public FileCallLists(File directory) throws InvalidFileNameException, FileNotFoundException {
         File[] files = directory.listFiles(
@@ -28,9 +28,9 @@ public class FileCallLists implements CallLists {
         if (files == null) {
             throw new FileNotFoundException("No call lists or " + directory.getName() + " not a directory.");
         } else {
-            for (int i = 0; i < files.length; i++) {
+            for (File file : files) {
                 try {
-                    fileCallLists.add(new FileCallList(files[i]));
+                    fileCallLists.add(new FileCallList(file));
                 } catch (FileNotFoundException fnfe) {
 
                 }

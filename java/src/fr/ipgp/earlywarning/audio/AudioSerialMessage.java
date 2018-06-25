@@ -43,15 +43,12 @@ public class AudioSerialMessage {
         } catch (ConversionException ce) {
             EarlyWarning.appLogger.error("Audio Serial speed or port has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         } catch (NoSuchElementException nsee) {
             EarlyWarning.appLogger.error("Audio Serial speed or port is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         } catch (NoSuchPortException nspe) {
             EarlyWarning.appLogger.error("No such port " + comPort + ". Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         }
     }
 

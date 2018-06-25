@@ -56,25 +56,25 @@
 </head>
 
 <body>
-<H1><font face="Impact" size="5"><span style="background-color: #FFFF00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Emergency Telephone Broadcast&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></font>
+<H1><span style="font-family: Impact; font-size: large; "><span style="background-color: #FFFF00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Emergency Telephone Broadcast&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
 </H1>
-<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#008080" width="54%"
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-color: #008080;" width="54%"
        id="AutoNumber1">
     <tr>
         <td width="100%">
-            <table border="0" cellpadding="0" cellspacing="8" style="border-collapse: collapse" bordercolor="#111111"
+            <table border="0" cellpadding="0" cellspacing="8" style="border-collapse: collapse; border-color: #111111"
                    width="100%" id="AutoNumber2" height="153">
                 <tr>
-                    <td width="100%" bgcolor="#97C2C4" height="22"><font color="#FFFFFF">
-                        Broadcast Status</font></td>
+                    <td width="100%" bgcolor="#97C2C4" height="22"><span style="color: #FFFFFF; ">
+                        Broadcast Status</span></td>
                 </tr>
                 <tr>
                     <td width="100%" height="115">
-                        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"
-                               bordercolor="#111111" width="100%" id="AutoNumber3">
+                        <table border="0" cellpadding="0" cellspacing="0"
+                               style="border-collapse: collapse; border-color: #111111;" width="100%" id="AutoNumber3">
                             <tr>
                                 <td width="33%" align="right">
-                                    <font face="Impact" size="2">Calls Made</font></td>
+                                    <span style="font-family: Impact; font-size: x-small; ">Calls Made</span></td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -84,7 +84,7 @@
                             </tr>
                             <tr>
                                 <td width="33%" align="right">
-                                    <font face="Impact" size="2">Calls Failed</font></td>
+                                    <span style="font-family: Impact; font-size: x-small; ">Calls Failed</span></td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -94,7 +94,8 @@
                             </tr>
                             <tr>
                                 <td width="33%" align="right">
-                                    <font face="Impact" size="2">Calls In Progress</font></td>
+                                    <span style="font-family: Impact; font-size: x-small; ">Calls In Progress</span>
+                                </td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -104,7 +105,7 @@
                             </tr>
                             <tr>
                                 <td width="33%" align="right">
-                                    <font face="Impact" size="2">Calls To be Made</font></td>
+                                    <span style="font-family: Impact; font-size: x-small; ">Calls To be Made</span></td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -119,11 +120,11 @@
         </td>
     </tr>
 </table>
-<p>
-        <% if (manager.getCallsToBeMade() > 0) { %>
-    <form method="POST" action="stop-broadcast.jsp">
-<p>
-    <input type="submit" value="Stop Broadcast" name="stop"/></p>
+<% if (manager.getCallsToBeMade() > 0) { %>
+<form method="POST" action="stop-broadcast.jsp">
+    <p>
+        <input type="submit" value="Stop Broadcast" name="stop"/>
+    </p>
 </form>
 <% } %>
 </body>

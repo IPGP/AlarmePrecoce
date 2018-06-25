@@ -7,14 +7,12 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.Mailer;
 import org.apache.commons.configuration.ConversionException;
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -73,7 +71,6 @@ public class MailerThread extends Thread {
         if (emails.size() == 0) {
             EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
-            return;
         }
     }
 
@@ -88,9 +85,8 @@ public class MailerThread extends Thread {
         smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
         List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
-        List<InternetAddress> mails = new ArrayList<InternetAddress>();
-        for (Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext(); ) {
-            HierarchicalConfiguration sub = it.next();
+        List<InternetAddress> mails = new ArrayList<>();
+        for (XMLConfiguration sub : fields) {
             String mail = sub.getString("email");
             try {
                 InternetAddress internetAddress = new InternetAddress(mail);

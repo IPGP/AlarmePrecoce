@@ -13,7 +13,7 @@ public class TestTextCallList {
 	
 	@Before
 	public void setUp() {
-		testText = new String("test text");
+		testText = "test text";
 	}
 	
 	@After

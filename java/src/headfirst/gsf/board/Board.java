@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private int width, height;
-    private List tiles;
+    private final int width;
+    private int height;
+    private List<ArrayList<Tile>> tiles;
 
     public Board(int width, int height) {
         this.width = width;
@@ -16,12 +17,12 @@ public class Board {
     }
 
     private void initialize() {
-        tiles = new ArrayList(width);
+        tiles = new ArrayList<>(width);
 
         for (int i = 0; i < width; i++) {
-            tiles.add(i, new ArrayList(height));
+            tiles.add(i, new ArrayList<>(height));
             for (int j = 0; j < height; j++) {
-                ((ArrayList) tiles.get(i)).add(j, new Tile());
+                tiles.get(i).add(j, new Tile());
             }
         }
     }

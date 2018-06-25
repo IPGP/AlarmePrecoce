@@ -21,11 +21,11 @@ import java.util.NoSuchElementException;
  */
 public class DataBaseHeartBeatThread extends Thread {
     private static DataBaseHeartBeatThread uniqueInstance;
+    protected final int aliveMessage;
+    protected final int startMessage;
+    protected final int delay;
+    protected final boolean moreHeartBeats = true;
     protected DataBaseHeartBeat dataBaseHeartBeat;
-    protected int aliveMessage;
-    protected int startMessage;
-    protected int delay;
-    protected boolean moreHeartBeats = true;
 
     private DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
         this("DataBaseHeartBeatThread");
@@ -58,11 +58,7 @@ public class DataBaseHeartBeatThread extends Thread {
             EarlyWarning.appLogger.error("An element value has wrong type : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.error("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
-            EarlyWarning.appLogger.debug("Thread is stopping");
-            return;
-        } catch (NullPointerException npe) {
+        } catch (NoSuchElementException | NullPointerException nsee) {
             EarlyWarning.appLogger.error("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;

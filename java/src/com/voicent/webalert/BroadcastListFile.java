@@ -37,8 +37,8 @@ import java.util.StringTokenizer;
  */
 
 public class BroadcastListFile implements BroadcastList {
+    private final ArrayList<String> curRecord_ = new ArrayList<>();
     private int total_ = -1;
-    private ArrayList curRecord_ = new ArrayList();
     private BufferedReader br_ = null;
     private String filename_ = null;
 
@@ -59,7 +59,7 @@ public class BroadcastListFile implements BroadcastList {
         curRecord_.clear();
 
         try {
-            String line = null;
+            String line;
             while (true) {
                 line = br_.readLine();
                 if (line == null)
@@ -72,7 +72,7 @@ public class BroadcastListFile implements BroadcastList {
             StringTokenizer tkz = new StringTokenizer(line, ",");
             while (tkz.hasMoreTokens()) {
                 String tk = tkz.nextToken();
-                tk.trim();
+                tk = tk.trim();
                 curRecord_.add(tk);
             }
             return true;
@@ -84,10 +84,10 @@ public class BroadcastListFile implements BroadcastList {
 
     public String getValue(String name) {
         if (BroadcastList.NAME.equals(name))
-            return (String) curRecord_.get(0);
+            return curRecord_.get(0);
 
         if (BroadcastList.PHONE.equals(name))
-            return (String) curRecord_.get(1);
+            return curRecord_.get(1);
 
         // implement your name value pair here
         return null;
