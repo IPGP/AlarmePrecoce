@@ -31,7 +31,7 @@ public class TestTrigger {
 	private Map<String,String> properties;
 	
 	@Before
-	public void setUp() throws UnknownHostException {
+	public void setUp() throws UnknownHostException, SocketException {
 		id = 1635132135;
 		priority = 1;
 		callList = new TextCallList("0692703856");
@@ -53,7 +53,7 @@ public class TestTrigger {
 	}
 	
 	@Test
-	public void testCreateTrigger() {
+	public void testCreateTrigger() throws IOException {
 		Trigger trig = new Trigger(id,1);
 		trig.setApplication(application);
 		trig.setCallList(callList);
@@ -84,7 +84,7 @@ public class TestTrigger {
 	}
 		
 	@Test
-	public void testTriggerComparison() {
+	public void testTriggerComparison() throws IOException {
         Trigger trigger1 = new Trigger(CommonUtilities.getUniqueId(),4);
         Trigger trigger2 = new Trigger(CommonUtilities.getUniqueId(),1);
         Trigger trigger3 = new Trigger(CommonUtilities.getUniqueId(),2);

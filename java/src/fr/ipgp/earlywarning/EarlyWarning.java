@@ -10,6 +10,7 @@ import fr.ipgp.earlywarning.controler.FileCallListControler;
 import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.telephones.FileCallLists;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
+import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
@@ -98,6 +99,24 @@ public class EarlyWarning {
             appLogger.warn("Unable to create lock file to ensure unicity of the application");
         } catch (IOException ioe) {
             appLogger.warn("Unable to set lock file to ensure unicity of the application");
+        }
+    }
+
+    private static void startContactsServer() {
+        OrderUpdateServer server = null;
+        try {
+            server = new OrderUpdateServer("resources/www/", "resources/contacts.json");
+        } catch (IOException e) {
+            appLogger.fatal("Fatal error : contacts JSON file is not readable or writable.");
+            System.exit(1);
+        }
+
+        try {
+            server.startServer();
+        } catch (IOException e) {
+            appLogger.fatal("Fatal error : cannot start server on port " + server.getPort());
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
