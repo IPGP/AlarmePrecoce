@@ -85,7 +85,7 @@
   <gateway>
     <text_to_speech>false</text_to_speech>
     <defaults>
-	  <call_list>defaultCallList.voc</call_list>
+	  <call_list>DefaultCallList.voc</call_list>
   	  <warning_message>defaultWarningMessage.wav</warning_message>
   	  <error_message>defaultErrorMessage.wav</error_message>
   	</defaults>
@@ -93,7 +93,7 @@
   	  <host>localhost</host>
   	  <port>8155</port>
   	  <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
-  	  <resources_path>C:/Program Files/Voicent/resources</resources_path>
+  	  <resources_path>./resources/vocs</resources_path>
   	  <retry>10</retry>
   	</voicent>
   </gateway>
