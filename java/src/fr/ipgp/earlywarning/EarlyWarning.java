@@ -54,6 +54,8 @@ public class EarlyWarning {
 
         startDataBaseHeartBeatThread();
 
+        startContactsServer();
+
         createGui();
 
     }
