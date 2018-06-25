@@ -5,20 +5,22 @@
 package fr.ipgp.earlywarning.telephones;
 
 import java.util.EventObject;
+
 /**
  * File call list event, part of the observer pattern.
+ *
  * @author Patrice Boissier
  */
 public class FileCallListChangedEvent extends EventObject {
-	private static final long serialVersionUID = 6337562405653453454L;
-	private String newFileReferenceCallList;
-	
-	public FileCallListChangedEvent (Object source, String newFileReferenceCallList) {
-		super(source);
-		this.newFileReferenceCallList = newFileReferenceCallList;
-	}
-	
-	public String getNewFileReferenceCallList() {
-		return newFileReferenceCallList;
-	}
+    private static final long serialVersionUID = 6337562405653453454L;
+    private String newFileReferenceCallList;
+
+    public FileCallListChangedEvent(Object source, String newFileReferenceCallList) {
+        super(source);
+        this.newFileReferenceCallList = newFileReferenceCallList;
+    }
+
+    public String getNewFileReferenceCallList() {
+        return newFileReferenceCallList;
+    }
 }
