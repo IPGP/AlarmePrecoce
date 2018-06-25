@@ -6,24 +6,25 @@ package fr.ipgp.earlywarning.telephones;
 
 /**
  * Call list interface.
+ *
  * @author Patrice Boissier
  */
 public interface CallList {
-    public static final String NAME = "name";
-    public static final String PHONE = "phone";
-    
-	/**
-	 * @return a String representing the object
-	 */
-	public String toString();
-	
-	/**
-	 * @return a String representing the CallList type
-	 */
-	public CallListType getType();
-	
-	/**
-	 * @return a String representing the CallList name
-	 */
-	public String getName();
+    String NAME = "name";
+    String PHONE = "phone";
+
+    /**
+     * @return a String representing the object
+     */
+    String toString();
+
+    /**
+     * @return a String representing the CallList type
+     */
+    CallListType getType();
+
+    /**
+     * @return a String representing the CallList name
+     */
+    String getName();
 }

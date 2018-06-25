@@ -20,109 +20,100 @@
  *
  * ----------------------------------------------------------------------
  */
- 
+
 package com.voicent.webalert;
 
 
-public class BroadcastManager
-{
+public class BroadcastManager {
+    private static BroadcastManager inst_ = null;
+    private BroadcastListFile list_ = null;
+    private BroadcastThread bt_ = null;
+
     /**
-    * Constructor with default localhost:8155
-    */
-    BroadcastManager()
-    {    
+     * Constructor with default localhost:8155
+     */
+    BroadcastManager() {
         bt_ = new BroadcastThread();
     }
 
     /**
-    * Get the singleton instance
-    */
-    public static BroadcastManager getInstance()
-    {
+     * Get the singleton instance
+     */
+    public static BroadcastManager getInstance() {
         if (inst_ == null)
             inst_ = new BroadcastManager();
 
-        return inst_; 
-    }
-    
-    /**
-     * Set the current call list
-     * @param filename CSV file name of the call list
-     */
-    public void setCallList(String filename)
-    {
-        list_ = new BroadcastListFile(filename);
-    }
-      
-    /**
-    * Start a background thread to manage calls
-    * @param notes alert message
-    */
-    public boolean startBroadcast(String notes)
-    {   
-        return bt_.startBroadcast(list_, notes);
-    }
-      
-    /**
-    * Stop broadcast
-    */
-    public boolean stopBroadcast()
-    {   
-        return bt_.stopBroadcast();
-    }
-
-    /**
-    * get current total calls made
-    */
-    public int getCallsMade()
-    {
-        return bt_.getCallsMade();
-    }
-      
-    /**
-    * get current total calls failed
-    */
-    public int getCallsFailed()
-    {
-    return bt_.getCallsFailed();
-    }
-      
-    /**
-    * get current total calls in progress
-    */
-    public int getCallsInprogress()
-    {
-        return bt_.getCallsInProgress();
-    }
-      
-    /**
-    * get current total calls to be made
-    */
-    public int getCallsToBeMade()
-    {
-        return bt_.getCallsToBeMade();
+        return inst_;
     }
 
     /* test usage */
     public static void main(String args[])
-        throws InterruptedException
-    {
+            throws InterruptedException {
         BroadcastManager manager = BroadcastManager.getInstance();
         manager.startBroadcast("SOS SOS");
-        
+
         do {
-            Thread.currentThread().sleep(20000);
-            
+            Thread.sleep(20000);
+
             System.out.println("Calls Made       : " + Integer.toString(manager.getCallsMade()));
             System.out.println("Calls Failed     : " + Integer.toString(manager.getCallsFailed()));
             System.out.println("Calls Inprogress : " + Integer.toString(manager.getCallsInprogress()));
             System.out.println("Calls To be Made : " + Integer.toString(manager.getCallsToBeMade()));
-            
+
         }
         while (manager.getCallsInprogress() > 0);
     }
 
-    private static BroadcastManager inst_ = null;
-    private BroadcastListFile list_ = null;
-    private BroadcastThread bt_ = null;
+    /**
+     * Set the current call list
+     *
+     * @param filename CSV file name of the call list
+     */
+    public void setCallList(String filename) {
+        list_ = new BroadcastListFile(filename);
+    }
+
+    /**
+     * Start a background thread to manage calls
+     *
+     * @param notes alert message
+     */
+    public boolean startBroadcast(String notes) {
+        return bt_.startBroadcast(list_, notes);
+    }
+
+    /**
+     * Stop broadcast
+     */
+    public boolean stopBroadcast() {
+        return bt_.stopBroadcast();
+    }
+
+    /**
+     * get current total calls made
+     */
+    public int getCallsMade() {
+        return bt_.getCallsMade();
+    }
+
+    /**
+     * get current total calls failed
+     */
+    public int getCallsFailed() {
+        return bt_.getCallsFailed();
+    }
+
+    /**
+     * get current total calls in progress
+     */
+    public int getCallsInprogress() {
+        return bt_.getCallsInProgress();
+    }
+
+    /**
+     * get current total calls to be made
+     */
+    public int getCallsToBeMade() {
+        return bt_.getCallsToBeMade();
+    }
 }
