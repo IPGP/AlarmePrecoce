@@ -13,6 +13,7 @@
 	<path id="class.path">		
 		<fileset dir="." >
 			<include name="${lib-dir}/**/*.jar"/>
+			<include name="/home/kowalski/.m2/repository/**/**/**/*.jar" />
 		</fileset>
 	</path>
 

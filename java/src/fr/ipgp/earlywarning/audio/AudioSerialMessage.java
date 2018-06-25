@@ -6,10 +6,11 @@ package fr.ipgp.earlywarning.audio;
 
 import java.util.NoSuchElementException;
 import java.io.*;
-import javax.comm.*;
+
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.commons.configuration.ConversionException;
+import javax.comm.*;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.messages.FileWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
