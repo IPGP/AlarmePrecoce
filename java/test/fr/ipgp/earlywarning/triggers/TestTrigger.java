@@ -1,8 +1,8 @@
 package fr.ipgp.earlywarning.triggers;
 
-/**
- * Created Mar 12, 2008 10:06:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 12, 2008 10:06:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
 import java.net.*;
@@ -96,9 +96,9 @@ public class TestTrigger {
         Assert.assertEquals(trigger1.compareTo(trigger1),0);
         Assert.assertEquals(trigger2.compareTo(trigger4),-1);
         Assert.assertEquals(trigger5.compareTo(trigger3),1);
-        Assert.assertFalse(trigger1.equals(trigger2));
-        Assert.assertFalse(trigger2.equals(trigger4));
-        Assert.assertTrue(trigger1.equals(trigger1));
+		Assert.assertEquals(trigger1.equals(trigger2), false);
+		Assert.assertEquals(trigger2.equals(trigger4), false);
+		Assert.assertEquals(trigger1, trigger1);
 	}
 	
 	public static junit.framework.Test suite() {

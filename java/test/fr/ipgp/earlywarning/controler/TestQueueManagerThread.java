@@ -1,7 +1,7 @@
 package fr.ipgp.earlywarning.controler;
-/**
- * Created Mar 13, 2008 10:03:49 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 13, 2008 10:03:49 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 import org.junit.*;
 import fr.ipgp.earlywarning.triggers.*;
@@ -43,7 +43,7 @@ public class TestQueueManagerThread {
     	Assert.assertEquals(trig1, queueManagerThread.getQueue().poll());
     	Assert.assertEquals(trig2, queueManagerThread.getQueue().poll());
     	queueManagerThread.setMoreTriggers(false);
-    	Assert.assertEquals(false, queueManagerThread.isMoreTriggers());
+		Assert.assertFalse(queueManagerThread.isMoreTriggers());
 	}
 	
 	@Test

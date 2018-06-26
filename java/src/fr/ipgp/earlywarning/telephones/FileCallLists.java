@@ -1,6 +1,6 @@
-/**
- * Created May 01, 2008 10:22:50 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created May 01, 2008 10:22:50 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.telephones;
 
@@ -31,7 +31,7 @@ public class FileCallLists implements CallLists {
             for (File file : files) {
                 try {
                     fileCallLists.add(new FileCallList(file));
-                } catch (FileNotFoundException fnfe) {
+                } catch (FileNotFoundException ignored) {
 
                 }
             }

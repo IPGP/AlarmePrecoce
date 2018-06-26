@@ -1,5 +1,5 @@
-/**
- * 
+/*
+
  */
 package fr.ipgp.earlywarning.gateway;
 

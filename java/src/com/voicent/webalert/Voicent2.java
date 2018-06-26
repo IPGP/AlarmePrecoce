@@ -161,7 +161,7 @@ public class Voicent2 {
 
             // Send Call remove post
             postToGateway(urlstr, poststr);
-        } catch (UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException ignored) {
 
         }
     }

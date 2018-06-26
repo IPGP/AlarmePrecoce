@@ -64,7 +64,7 @@ public class ClickatellHttp {
                     + "auth.php", urlParameters);
             // Check whether an auth failed happened:
             return result.startsWith("OK: ");
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
         }
         return false;
     }

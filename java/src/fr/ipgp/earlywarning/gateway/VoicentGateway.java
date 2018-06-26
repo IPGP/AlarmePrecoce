@@ -1,6 +1,6 @@
-/**
- * Created Mar 25, 2008 09:29:15 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created Mar 25, 2008 09:29:15 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.gateway;
 
@@ -339,8 +339,7 @@ public class VoicentGateway implements Gateway {
 
             postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 
-            String requestCallTillConfirm = postToGateway(urlString, postString);
-            return requestCallTillConfirm;
+            return postToGateway(urlString, postString);
         } catch (UnsupportedEncodingException uee) {
             return null;
         }

@@ -125,7 +125,7 @@ public class BroadcastThread extends Thread {
             if (!hasFinishedCall) {
                 try {
                     sleep(10000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }

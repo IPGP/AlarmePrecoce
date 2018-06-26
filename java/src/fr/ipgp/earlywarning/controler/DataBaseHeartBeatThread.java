@@ -1,6 +1,6 @@
-/**
- * Created Fri 07, 2008 11:40:40 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Fri 07, 2008 11:40:40 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
  *
  * @author Patrice Boissier
  */
+@SuppressWarnings("LoopConditionNotUpdatedInsideLoop")
 public class DataBaseHeartBeatThread extends Thread {
     private static DataBaseHeartBeatThread uniqueInstance;
     protected final int aliveMessage;
@@ -27,7 +28,7 @@ public class DataBaseHeartBeatThread extends Thread {
     protected final boolean moreHeartBeats = true;
     protected DataBaseHeartBeat dataBaseHeartBeat;
 
-    private DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
+    private DataBaseHeartBeatThread() throws ConversionException, NoSuchElementException {
         this("DataBaseHeartBeatThread");
     }
 
@@ -76,6 +77,7 @@ public class DataBaseHeartBeatThread extends Thread {
         }
 
         // HeartBeat notification
+        //noinspection InfiniteLoopStatement,LoopConditionNotUpdatedInsideLoop
         while (moreHeartBeats) {
             try {
                 int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, CommonUtilities.dateToISO());

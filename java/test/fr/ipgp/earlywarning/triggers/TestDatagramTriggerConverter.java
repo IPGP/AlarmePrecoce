@@ -1,7 +1,7 @@
 package fr.ipgp.earlywarning.triggers;
-/**
- * Created Mar 13, 2008 11:09:14 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 13, 2008 11:09:14 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
 import org.junit.*;
@@ -66,7 +66,7 @@ public class TestDatagramTriggerConverter {
 			Assert.assertEquals(warningMessage,trig.getMessage());
 			Assert.assertEquals(1,trig.getPriority());
 			Assert.assertEquals("01",trig.getType());
-			Assert.assertEquals(true,trig.getRepeat());
+			Assert.assertTrue(trig.getRepeat());
 			Assert.assertEquals("13/03/2008 13:22:04",trig.getDate());
 			Assert.assertEquals("11",trig.getConfirmCode());
 			

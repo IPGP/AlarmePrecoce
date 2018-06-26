@@ -1,6 +1,6 @@
-/**
- * Created Mar , 2008 11:01:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created Mar , 2008 11:01:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.telephones;
 
@@ -39,7 +39,7 @@ public class TestFileCallList {
 			FileCallList frcl2 = new FileCallList(file2);
 	        Assert.assertEquals(fileReference1,frcl1.getFileName());
 	        Assert.assertEquals("voc",frcl1.getType());
-	        Assert.assertEquals(null,frcl1.getFile().getParent());
+			Assert.assertNull(frcl1.getFile().getParent());
 	        Assert.assertEquals(file1,frcl1.getFile());
 	        Assert.assertEquals(fileReference2,frcl2.getFileName());
 	        Assert.assertEquals("txt",frcl2.getType());

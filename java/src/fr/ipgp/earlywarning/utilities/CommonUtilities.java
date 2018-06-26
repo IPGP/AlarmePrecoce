@@ -1,6 +1,6 @@
-/**
- * Created Tue 06, 2008 10:32:15 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Tue 06, 2008 10:32:15 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.utilities;
 

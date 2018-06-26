@@ -1,5 +1,5 @@
-/**
- * 
+/*
+
  */
 package fr.ipgp.earlywarning.audio;
 
@@ -35,7 +35,7 @@ public class TestAudio {
 			System.out.println("Line anavailable exception : " + lue.getMessage());
 		} catch (IOException ioe) {
 			System.out.println("I/O exception : " + ioe.getMessage());
-		} catch (InterruptedException ie) {
+		} catch (InterruptedException ignored) {
 			
 		}
 	}
