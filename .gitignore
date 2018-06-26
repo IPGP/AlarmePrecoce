@@ -93,3 +93,7 @@ hs_err_pid*
 # End of https://www.gitignore.io/api/java,intelli
 
 java/defaultCallList.voc
+target
+java/bin
+java/bin-test
+java/bin-eclipse
