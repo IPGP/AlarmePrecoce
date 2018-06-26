@@ -14,7 +14,7 @@ import fr.ipgp.earlywarning.audio.MessagePlayback;
 public class TestAudio {
 
 	/**
-	 * @param args
+	 * @param args command line arguments
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

@@ -469,8 +469,6 @@ public class VoicentGateway implements Gateway {
             while ((len = in.read(b)) != -1)
                 requestCallString.append(new String(b, 0, len));
             return requestCallString.toString();
-        } catch (MalformedURLException mue) {
-            return null;
         } catch (IOException ioe) {
             return null;
         }
@@ -530,9 +528,7 @@ public class VoicentGateway implements Gateway {
     }
 
     private void copyFile(File srcFile, File dstFile) throws IOException {
-        InputStream in = new FileInputStream(srcFile);
-        OutputStream out = new FileOutputStream(dstFile);
-        try {
+        try (InputStream in = new FileInputStream(srcFile); OutputStream out = new FileOutputStream(dstFile)) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {
@@ -544,9 +540,6 @@ public class VoicentGateway implements Gateway {
             System.out.println(ex.getMessage() + " in the specified directory.");
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } finally {
-            if (in != null) in.close();
-            if (out != null) out.close();
         }
     }
 }

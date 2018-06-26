@@ -148,7 +148,6 @@ public class Voicent2 {
      * Remove all request from the gateway
      *
      * @param reqID Call request ID on the gateway
-     * @return call status
      */
     public void callRemove(String reqID) {
         try {
@@ -214,7 +213,7 @@ public class Voicent2 {
 
             // Send like a Call Request
             postToGateway(urlstr, poststr);
-        } catch (UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException ignored) {
         }
     }
 

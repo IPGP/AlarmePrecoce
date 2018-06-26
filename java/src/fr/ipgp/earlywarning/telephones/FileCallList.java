@@ -137,7 +137,7 @@ public class FileCallList implements CallList {
                     type = CallListType.VOC;
                 }
             }
-        } catch (InvalidFileNameException ifne) {
+        } catch (InvalidFileNameException ignored) {
 
         }
         fireFileChanged();

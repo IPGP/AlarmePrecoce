@@ -67,12 +67,9 @@ public class Mailer {
         message.setSubject(subject);
         message.setText(body);
 
-        Transport transport = session.getTransport("smtp");
-        try {
+        try (Transport transport = session.getTransport("smtp")) {
             transport.connect(username, password);
             transport.sendMessage(message, message.getAllRecipients());
-        } finally {
-            transport.close();
         }
     }
 

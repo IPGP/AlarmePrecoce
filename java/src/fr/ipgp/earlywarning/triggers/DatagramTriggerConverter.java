@@ -90,7 +90,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * Sismo dd/MM/yyyy HH:mm:ss Declenchement
      *
      * @param packetContentElements the elements of the received message
-     * @throws InvalidTriggerFieldException
+     * @throws InvalidTriggerFieldException if a datagram field is invalid
      */
     private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
         if (!CommonUtilities.isDate(packetContentElements[1] + " " + packetContentElements[2], "dd/MM/yyyy HH:mm:ss"))
@@ -120,7 +120,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * message : warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
      *
      * @param packetContentElements the elements of the received message
-     * @return true if the decoding was successful else false
      */
     private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
         StringBuilder warningMessage = new StringBuilder();

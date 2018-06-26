@@ -190,7 +190,6 @@ public class Voicent {
      * Remove all request from the gateway
      *
      * @param reqID Call request ID on the gateway
-     * @return call status
      */
     public void callRemove(String reqID) {
         try {
