@@ -32,11 +32,11 @@ public class DataBaseHeartBeat {
     public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException, ConversionException, NoSuchElementException, NullPointerException {
         host = configuration.getString("dbms.host");
         port = configuration.getInt("dbms.port");
-        database = new String(configuration.getString("dbms.database"));
-        user = new String(configuration.getString("dbms.user"));
-        driver = new String(configuration.getString("dbms.driver"));
-        editor = new String(configuration.getString("dbms.editor"));
-        password = new String(configuration.getString("dbms.password"));
+        database = configuration.getString("dbms.database");
+        user = configuration.getString("dbms.user");
+        driver = configuration.getString("dbms.driver");
+        editor = configuration.getString("dbms.editor");
+        password = configuration.getString("dbms.password");
         applicationNumber = configuration.getInt("heartbeat.num_appli");
         loadDriver();
     }

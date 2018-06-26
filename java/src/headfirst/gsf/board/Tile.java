@@ -21,7 +21,6 @@ public class Tile {
     }
 
     protected void removeUnits() {
-
     }
 
     protected List getUnits() {

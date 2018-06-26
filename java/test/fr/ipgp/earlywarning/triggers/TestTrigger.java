@@ -38,7 +38,7 @@ public class TestTrigger {
 		message = new TextWarningMessage("Alerte : tout brule!!");
 		inetAddress = InetAddress.getByName("localhost");
 		application = "Sismo";
-		type = new String("v1");
+		type = "v1";
 		properties = new HashMap<>();
 		repeat = true;
 		properties.put("key1", "value1");
