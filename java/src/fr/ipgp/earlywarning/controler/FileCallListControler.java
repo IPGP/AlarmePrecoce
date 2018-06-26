@@ -39,6 +39,7 @@ public class FileCallListControler {
 
     /**
      * Action to be made when file is changed
+     *
      * @param file the file that has changed
      */
     public void notifyFileChanged(String file) {

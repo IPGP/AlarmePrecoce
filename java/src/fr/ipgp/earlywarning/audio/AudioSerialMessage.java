@@ -159,7 +159,7 @@ public class AudioSerialMessage {
      * @param fileName the file name to be copied
      * @param out      the output stream to copy to
      * @throws FileNotFoundException if the file to copy does not exist
-     * @throws IOException if the destination file can not be written
+     * @throws IOException           if the destination file can not be written
      */
     private void copy(String fileName, OutputStream out) throws FileNotFoundException, IOException {
         File file = new File(fileName);

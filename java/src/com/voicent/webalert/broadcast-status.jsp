@@ -62,7 +62,8 @@
        id="AutoNumber1">
     <tr>
         <td width="100%">
-            <table border="0" cellpadding="0" cellspacing="8" style="height: 153px; border-collapse: collapse; border-color: #111111"
+            <table border="0" cellpadding="0" cellspacing="8"
+                   style="height: 153px; border-collapse: collapse; border-color: #111111"
                    width="100%" id="AutoNumber2">
                 <tr>
                     <td width="100%" bgcolor="#97C2C4" height="22"><span style="color: #FFFFFF; ">
@@ -74,7 +75,8 @@
                                style="border-collapse: collapse; border-color: #111111;" width="100%" id="AutoNumber3">
                             <tr>
                                 <td width="33%" align="right">
-                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls Made</span></td>
+                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls Made</span>
+                                </td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -84,7 +86,8 @@
                             </tr>
                             <tr>
                                 <td width="33%" align="right">
-                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls Failed</span></td>
+                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls Failed</span>
+                                </td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>
@@ -105,7 +108,8 @@
                             </tr>
                             <tr>
                                 <td width="33%" align="right">
-                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls To be Made</span></td>
+                                    <span style="font-family: Impact, sans-serif; font-size: x-small; ">Calls To be Made</span>
+                                </td>
                                 <td width="4%" align="left">
                                     &nbsp;
                                 </td>

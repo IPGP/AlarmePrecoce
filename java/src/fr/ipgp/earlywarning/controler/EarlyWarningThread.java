@@ -132,6 +132,7 @@ public class EarlyWarningThread extends Thread {
 
     /**
      * Create a custom error trigger based on the error message.
+     *
      * @param errorMessage the potentiel error message to show
      */
     private Trigger createErrorTrigger(String errorMessage) {
