@@ -55,8 +55,7 @@ public class OrderUpdateServer {
         this(DEFAULT_PORT, home, contactsFile);
     }
 
-    public int getPort()
-    {
+    public int getPort() {
         return port;
     }
 

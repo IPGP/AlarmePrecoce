@@ -6,13 +6,16 @@ package fr.ipgp.earlywarning.triggers;
 
 /**
  * Thrown to indicate that the trigger format could not be determined
+ *
  * @author Patrice Boissier
  */
 public class UnknownTriggerFormatException extends Exception {
-	private static final long serialVersionUID = 5720153655400554L;
-	UnknownTriggerFormatException() {
+    private static final long serialVersionUID = 5720153655400554L;
+
+    UnknownTriggerFormatException() {
     }
-	UnknownTriggerFormatException(String msg) {
+
+    UnknownTriggerFormatException(String msg) {
         super(msg);
     }
 }

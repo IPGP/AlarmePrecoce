@@ -19,8 +19,8 @@ public class Contact {
     /**
      * Normal constructor
      *
-     * @param name the name
-     * @param phone the phone number
+     * @param name     the name
+     * @param phone    the phone number
      * @param priority whether or not it should be prioritized in the call list
      */
     public Contact(String name, String phone, boolean priority) {

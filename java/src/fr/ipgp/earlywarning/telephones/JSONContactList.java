@@ -188,6 +188,7 @@ public class JSONContactList implements ContactList {
 
     /**
      * Finds the contacts in use in the call list.
+     *
      * @return a List of enabled contacts
      */
     public List<Contact> getEnabledContacts() {
