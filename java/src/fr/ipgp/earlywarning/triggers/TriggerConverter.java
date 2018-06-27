@@ -10,5 +10,5 @@ package fr.ipgp.earlywarning.triggers;
  * @author Patrice Boissier
  */
 public interface TriggerConverter {
-    public Trigger getTrigger();
+    Trigger getTrigger();
 }

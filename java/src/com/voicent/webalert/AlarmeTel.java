@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 
 public class AlarmeTel {
 
-    public static void main(String args[]) throws InterruptedException {
+    public static void main(String args[]) {
 
         File listeAppel = new File("c:/temp/testctf.voc");
         if (listeAppel.exists())

@@ -68,7 +68,7 @@ public class Voicent {
         System.out.println("callAudio: " + reqId);
 
         while (true) {
-            Thread.currentThread().sleep(30000);
+            Thread.sleep(30000);
             String status = voicent.callStatus(reqId);
             if (status.length() > 0) {
                 System.out.println(status);

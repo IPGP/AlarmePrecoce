@@ -38,6 +38,7 @@ public class MailerThread extends Thread {
         this("MailerThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private MailerThread(String name) {
         super(name);
     }
@@ -84,6 +85,9 @@ public class MailerThread extends Thread {
         smtpFrom = EarlyWarning.configuration.getString("mail.smtp.from");
         smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
+
+        // TODO: update Apache Commons Configuration lib. It should resolve this warning.
+        @SuppressWarnings("unchecked")
         List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
         List<InternetAddress> mails = new ArrayList<>();
         for (XMLConfiguration sub : fields) {

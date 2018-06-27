@@ -30,28 +30,28 @@ package com.voicent.webalert;
 
 
 public interface BroadcastList {
-    public static final String NAME = "name";
-    public static final String PHONE = "phone";
+    String NAME = "name";
+    String PHONE = "phone";
 
     /**
      * move the record forward
      */
-    public boolean next();
+    boolean next();
 
     /**
      * get the current record values
      *
      * @param name parameter name
      */
-    public String getValue(String name);
+    String getValue(String name);
 
     /**
      * total number of records
      */
-    public int getTotal();
+    int getTotal();
 
     /**
      * move the current record to the beginning
      */
-    public void reset();
+    void reset();
 }

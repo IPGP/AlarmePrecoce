@@ -39,6 +39,7 @@ public class TestQueueManagerThread {
         Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(), 1);
+        //noinspection MismatchedQueryAndUpdateOfCollection
         PriorityBlockingQueue<Trigger> pbq1 = new PriorityBlockingQueue<>();
         pbq1.offer(trig1);
         pbq1.offer(trig2);

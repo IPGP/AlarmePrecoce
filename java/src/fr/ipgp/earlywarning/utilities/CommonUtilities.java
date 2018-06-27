@@ -38,17 +38,13 @@ public class CommonUtilities {
      * @param lockFileName the name of the lock file
      * @return true if the application is unique else it returns false
      */
-    public static boolean appIsUnique(String lockFileName) throws FileNotFoundException, IOException {
+    public static boolean appIsUnique(String lockFileName) throws IOException {
         boolean locked;
         File fileLock = new File("Verrou.lock");
         RandomAccessFile raFileLock = new RandomAccessFile(fileLock, "rw");
 
 
-        if (raFileLock.getChannel().tryLock() == null) {
-            locked = false;
-        } else {
-            locked = true;
-        }
+        locked = raFileLock.getChannel().tryLock() != null;
         return locked;
     }
 
@@ -86,7 +82,7 @@ public class CommonUtilities {
         DateFormat formatter = new SimpleDateFormat(format);
         formatter.setLenient(false);
         try {
-            Date date = (Date) formatter.parse(dateString);
+            Date date = formatter.parse(dateString);
             return true;
         } catch (ParseException pe) {
             return false;

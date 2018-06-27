@@ -168,7 +168,7 @@ public class FileCallList implements CallList {
      * Actions to be made upon file change
      */
     public void fireFileChanged() {
-        FileCallListListener[] listenerList = (FileCallListListener[]) listeners.getListeners(FileCallListListener.class);
+        FileCallListListener[] listenerList = listeners.getListeners(FileCallListListener.class);
 
         for (FileCallListListener listener : listenerList) {
             listener.fileReferenceCallListChanged(new FileCallListChangedEvent(this, getFileName()));

@@ -21,6 +21,7 @@ public class Tile {
     }
 
     protected void removeUnits() {
+        // TODO: why is this empty? What's the point of this method?
     }
 
     protected List getUnits() {

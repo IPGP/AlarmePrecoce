@@ -154,8 +154,6 @@ public class EarlyWarning {
             appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
         } catch (NoSuchElementException nsee) {
             appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
-        } catch (IOException ioe) {
-            appLogger.error("I/O exception : " + ioe.getMessage() + ". HearBeat notification disabled.");
         }
     }
 

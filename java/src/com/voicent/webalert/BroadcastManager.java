@@ -53,7 +53,7 @@ public class BroadcastManager {
         manager.startBroadcast("SOS SOS");
 
         do {
-            Thread.currentThread().sleep(20000);
+            Thread.sleep(20000);
 
             System.out.println("Calls Made       : " + Integer.toString(manager.getCallsMade()));
             System.out.println("Calls Failed     : " + Integer.toString(manager.getCallsFailed()));
@@ -78,6 +78,7 @@ public class BroadcastManager {
      *
      * @param notes alert message
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean startBroadcast(String notes) {
         return bt_.startBroadcast(list_, notes);
     }
@@ -85,6 +86,7 @@ public class BroadcastManager {
     /**
      * Stop broadcast
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean stopBroadcast() {
         return bt_.stopBroadcast();
     }

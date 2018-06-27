@@ -49,6 +49,7 @@ public class EarlyWarningThread extends Thread {
         this("EarlyWarningThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private EarlyWarningThread(String name) throws IOException, ConversionException, NoSuchElementException {
         super(name);
         port = EarlyWarning.configuration.getInt("network.port");

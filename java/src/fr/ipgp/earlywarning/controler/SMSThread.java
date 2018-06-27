@@ -26,6 +26,7 @@ public class SMSThread extends Thread {
         this("SMSThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private SMSThread(String name) {
         super(name);
     }
@@ -51,7 +52,7 @@ public class SMSThread extends Thread {
     /**
      * Configure SMS facility
      */
-    private void configureSMS() throws Exception {
+    private void configureSMS() {
         username = EarlyWarning.configuration.getString("sms.clickatell.username");
         password = EarlyWarning.configuration.getString("sms.clickatell.password");
         apiId = EarlyWarning.configuration.getString("sms.clickatell.api_id");

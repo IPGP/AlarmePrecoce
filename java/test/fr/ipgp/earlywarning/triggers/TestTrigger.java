@@ -104,6 +104,7 @@ public class TestTrigger {
         Assert.assertEquals(trigger1.compareTo(trigger2), 1);
         Assert.assertEquals(trigger2.compareTo(trigger3), -1);
         Assert.assertEquals(trigger3.compareTo(trigger4), 1);
+        //noinspection EqualsWithItself
         Assert.assertEquals(trigger1.compareTo(trigger1), 0);
         Assert.assertEquals(trigger2.compareTo(trigger4), -1);
         Assert.assertEquals(trigger5.compareTo(trigger3), 1);

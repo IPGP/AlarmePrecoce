@@ -41,6 +41,7 @@ public class QueueManagerThread extends Thread {
         this("QueueManagerThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private QueueManagerThread(String name) {
         super(name);
         queue = new PriorityBlockingQueue<>();

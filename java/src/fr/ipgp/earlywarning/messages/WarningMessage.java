@@ -14,7 +14,7 @@ public interface WarningMessage {
     /**
      * @return a String representing the object
      */
-    public String toString();
+    String toString();
 
-    public WarningMessageType getType();
+    WarningMessageType getType();
 }

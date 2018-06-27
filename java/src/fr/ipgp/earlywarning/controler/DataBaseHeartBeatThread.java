@@ -32,6 +32,7 @@ public class DataBaseHeartBeatThread extends Thread {
         this("DataBaseHeartBeatThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private DataBaseHeartBeatThread(String name) throws ConversionException, NoSuchElementException {
         super(name);
         aliveMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_alive");
@@ -39,7 +40,7 @@ public class DataBaseHeartBeatThread extends Thread {
         delay = EarlyWarning.configuration.getInt("heartbeat.hearbeat_delay");
     }
 
-    public static synchronized DataBaseHeartBeatThread getInstance() throws IOException {
+    public static synchronized DataBaseHeartBeatThread getInstance() {
         if (uniqueInstance == null) {
             uniqueInstance = new DataBaseHeartBeatThread();
         }
