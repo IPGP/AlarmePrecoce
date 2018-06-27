@@ -21,6 +21,8 @@ import java.util.logging.Logger;
  * <li>While the confirmation code is incorrect and the CallOriginator tells the script the user can carry on trying, it keeps asking for the code</li>
  * <li>Finally hangs up.</li>
  * </ul>
+ *
+ * @author Thomas Kowalski
  */
 public class AlertCallScript extends BaseAgiScript {
     private static OnCodeReceivedListener onCodeReceivedListener;
@@ -79,6 +81,7 @@ public class AlertCallScript extends BaseAgiScript {
 
     /**
      * The main script
+     *
      * @param request the {@link AgiRequest}
      * @param channel the {@link AgiChannel}
      * @throws AgiException if something unexpected - but not a {@link AgiHangupException} - happens.

@@ -18,6 +18,8 @@ import java.io.IOException;
  * <li>OR Call valued constructor with only a confirmation code if you have already called the complete one once.</li>
  * <li>Call the <code>{@link CallOriginator}</code>'s <code>call</code> method, giving a phone number to dial. It will return a status ({@link CallResult} corresponding to the call result: <code>CorrectCode</code> if everything went fine, something else otherwise.</li>
  * </ul>
+ *
+ * @author Thomas Kowalski
  */
 public class CallOriginator implements ManagerEventListener {
     /**
@@ -57,6 +59,8 @@ public class CallOriginator implements ManagerEventListener {
     /**
      * Listener used by the AGI script to let the {@link CallOriginator} know the callee acknowledged the wekcome message.
      */
+    // TODO: Java 8 lambda migration
+    @SuppressWarnings("Convert2Lambda")
     private final OnConnectedListener onConnectedListener = new OnConnectedListener() {
         @Override
         public void onConnected() {
@@ -71,6 +75,8 @@ public class CallOriginator implements ManagerEventListener {
      * Listener used by the AGI script to let the {@link CallOriginator} know the call was hung up.
      * It may happen that using this signal method is way faster than waiting for the HangupManagerEvent.
      */
+    // TODO: Java 8 lambda migration
+    @SuppressWarnings("Convert2Lambda")
     private final OnHangupListener onHangupListener = new OnHangupListener() {
         @Override
         public void onHangup() {
