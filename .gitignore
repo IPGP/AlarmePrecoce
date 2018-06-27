@@ -97,3 +97,5 @@ target
 java/bin
 java/bin-test
 java/bin-eclipse
+
+!/java/lib/*.jar
