@@ -32,7 +32,7 @@ public class DataBaseHeartBeatThread extends Thread {
         this("DataBaseHeartBeatThread");
     }
 
-    private DataBaseHeartBeatThread(String name) throws IOException, ConversionException, NoSuchElementException {
+    private DataBaseHeartBeatThread(String name) throws ConversionException, NoSuchElementException {
         super(name);
         aliveMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_alive");
         startMessage = EarlyWarning.configuration.getInt("heartbeat.num_type_start");

@@ -17,6 +17,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="comm1" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20180130" level="project" />
     <orderEntry type="library" name="Maven: org.asteriskjava:asterisk-java:2.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.9" level="project" />
@@ -39,6 +40,5 @@
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:3.1.14" level="project" />
     <orderEntry type="library" name="Maven: postgresql:postgresql:8.3-603.jdbc3" level="project" />
     <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.6.0" level="project" />
-    <orderEntry type="library" name="comm1" level="project" />
   </component>
 </module>
