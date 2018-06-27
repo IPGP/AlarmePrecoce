@@ -1,6 +1,6 @@
-/**
- * Created Sat 08, 2008 19:39:09 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Sat 08, 2008 19:39:09 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.utilities;
 
@@ -30,13 +30,13 @@ public class DataBaseHeartBeat {
     private Connection connection;
 
     public DataBaseHeartBeat(Configuration configuration) throws ClassNotFoundException, ConversionException, NoSuchElementException, NullPointerException {
-        host = new String(configuration.getString("dbms.host"));
+        host = configuration.getString("dbms.host");
         port = configuration.getInt("dbms.port");
-        database = new String(configuration.getString("dbms.database"));
-        user = new String(configuration.getString("dbms.user"));
-        driver = new String(configuration.getString("dbms.driver"));
-        editor = new String(configuration.getString("dbms.editor"));
-        password = new String(configuration.getString("dbms.password"));
+        database = configuration.getString("dbms.database");
+        user = configuration.getString("dbms.user");
+        driver = configuration.getString("dbms.driver");
+        editor = configuration.getString("dbms.editor");
+        password = configuration.getString("dbms.password");
         applicationNumber = configuration.getInt("heartbeat.num_appli");
         loadDriver();
     }

@@ -1,7 +1,7 @@
 package fr.ipgp.earlywarning.messages;
-/**
- * Created Mar 13, 2008 9:38:42 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 13, 2008 9:38:42 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
 import org.junit.After;
@@ -21,7 +21,7 @@ public class TestTextWarningMessage {
 
     @Before
     public void setUp() {
-        testText = new String("test text");
+        testText = "test text";
     }
 
     @After

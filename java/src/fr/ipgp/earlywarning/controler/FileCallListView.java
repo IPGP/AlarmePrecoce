@@ -1,6 +1,6 @@
-/**
- * Created Apr 26, 2008 08:20:34 PM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created Apr 26, 2008 08:20:34 PM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -12,7 +12,7 @@ import fr.ipgp.earlywarning.telephones.FileCallListListener;
  * @author Patrice Boissier
  */
 public abstract class FileCallListView implements FileCallListListener {
-    private FileCallListControler controler = null;
+    private FileCallListControler controler;
 
     public FileCallListView(FileCallListControler controler) {
         super();

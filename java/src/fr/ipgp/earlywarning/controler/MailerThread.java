@@ -1,20 +1,18 @@
-/**
- * Created May 07, 2008 05:28:45 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created May 07, 2008 05:28:45 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.Mailer;
 import org.apache.commons.configuration.ConversionException;
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -73,7 +71,6 @@ public class MailerThread extends Thread {
         if (emails.size() == 0) {
             EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
-            return;
         }
     }
 
@@ -88,9 +85,8 @@ public class MailerThread extends Thread {
         smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
         List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
-        List<InternetAddress> mails = new ArrayList<InternetAddress>();
-        for (Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext(); ) {
-            HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
+        List<InternetAddress> mails = new ArrayList<>();
+        for (XMLConfiguration sub : fields) {
             String mail = sub.getString("email");
             try {
                 InternetAddress internetAddress = new javax.mail.internet.InternetAddress(mail);
@@ -112,7 +108,7 @@ public class MailerThread extends Thread {
      *
      * @param subject the mail subject
      * @param body    the mail body
-     * @throws MessagingException
+     * @throws MessagingException if the notifications can't be sent
      */
     public void sendNotification(String subject, String body) throws MessagingException {
         mailer.sendNotificationsAuth(emails, subject, body);

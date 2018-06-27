@@ -1,8 +1,8 @@
 package fr.ipgp.earlywarning.triggers;
 
-/**
- * Created Mar 12, 2008 10:06:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 12, 2008 10:06:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
 import fr.ipgp.earlywarning.messages.TextWarningMessage;
@@ -15,9 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,15 +42,15 @@ public class TestTrigger {
     }
 
     @Before
-    public void setUp() throws UnknownHostException, SocketException {
+    public void setUp() throws UnknownHostException {
         id = 1635132135;
         priority = 1;
         callList = new TextCallList("0692703856");
         message = new TextWarningMessage("Alerte : tout brule!!");
         inetAddress = InetAddress.getByName("localhost");
-        application = new String("Sismo");
-        type = new String("v1");
-        properties = new HashMap<String, String>();
+        application = "Sismo";
+        type = "v1";
+        properties = new HashMap<>();
         repeat = true;
         properties.put("key1", "value1");
         properties.put("key2", "value2");
@@ -66,7 +64,7 @@ public class TestTrigger {
     }
 
     @Test
-    public void testCreateTrigger() throws IOException {
+    public void testCreateTrigger() {
         Trigger trig = new Trigger(id, 1);
         trig.setApplication(application);
         trig.setCallList(callList);
@@ -91,13 +89,13 @@ public class TestTrigger {
         Assert.assertEquals(date, trig.getDate());
         Assert.assertEquals(confirmCode, trig.getConfirmCode());
         Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
-        Long idLong = new Long(id);
-        Integer priorityInteger = new Integer(priority);
+        Long idLong = id;
+        Integer priorityInteger = priority;
         Assert.assertEquals(idLong.hashCode() + priorityInteger.hashCode(), trig.hashCode());
     }
 
     @Test
-    public void testTriggerComparison() throws IOException {
+    public void testTriggerComparison() {
         Trigger trigger1 = new Trigger(CommonUtilities.getUniqueId(), 4);
         Trigger trigger2 = new Trigger(CommonUtilities.getUniqueId(), 1);
         Trigger trigger3 = new Trigger(CommonUtilities.getUniqueId(), 2);
@@ -109,9 +107,9 @@ public class TestTrigger {
         Assert.assertEquals(trigger1.compareTo(trigger1), 0);
         Assert.assertEquals(trigger2.compareTo(trigger4), -1);
         Assert.assertEquals(trigger5.compareTo(trigger3), 1);
-        Assert.assertFalse(trigger1.equals(trigger2));
-        Assert.assertFalse(trigger2.equals(trigger4));
-        Assert.assertTrue(trigger1.equals(trigger1));
+        Assert.assertEquals(trigger1.equals(trigger2), false);
+        Assert.assertEquals(trigger2.equals(trigger4), false);
+        Assert.assertEquals(trigger1, trigger1);
     }
 
 }

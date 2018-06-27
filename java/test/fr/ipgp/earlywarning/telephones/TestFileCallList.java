@@ -1,6 +1,6 @@
-/**
- * Created Mar , 2008 11:01:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created Mar , 2008 11:01:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.telephones;
 
@@ -26,9 +26,9 @@ public class TestFileCallList {
 
     @Before
     public void setUp() {
-        fileReference1 = new String("callList.voc");
-        fileReference2 = new String("callList.txt");
-        fileReference3 = new String("callList.toto");
+        fileReference1 = "callList.voc";
+        fileReference2 = "callList.txt";
+        fileReference3 = "callList.toto";
     }
 
     @After
@@ -45,16 +45,14 @@ public class TestFileCallList {
             FileCallList frcl2 = new FileCallList(file2);
             Assert.assertEquals(fileReference1, frcl1.getFileName());
             Assert.assertEquals("voc", frcl1.getType());
-            Assert.assertEquals(null, frcl1.getFile().getParent());
+            Assert.assertNull(frcl1.getFile().getParent());
             Assert.assertEquals(file1, frcl1.getFile());
             Assert.assertEquals(fileReference2, frcl2.getFileName());
             Assert.assertEquals("txt", frcl2.getType());
             Assert.assertEquals("/home/boissier", frcl2.getFile().getParent());
             Assert.assertEquals(file2, frcl2.getFile());
-        } catch (InvalidFileNameException ifne) {
+        } catch (InvalidFileNameException | FileNotFoundException ifne) {
             System.out.println(ifne.getMessage());
-        } catch (FileNotFoundException fnfe) {
-            System.out.println(fnfe.getMessage());
         }
     }
 
@@ -63,10 +61,8 @@ public class TestFileCallList {
         try {
             File file3 = new File("/home/boissier/toto.sdf");
             FileCallList frcl3 = new FileCallList(file3);
-        } catch (InvalidFileNameException ifne) {
+        } catch (InvalidFileNameException | FileNotFoundException ifne) {
             System.out.println(ifne.getMessage());
-        } catch (FileNotFoundException fnfe) {
-            System.out.println(fnfe.getMessage());
         }
     }
 }

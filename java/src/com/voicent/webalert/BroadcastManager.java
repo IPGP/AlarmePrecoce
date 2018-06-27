@@ -27,7 +27,7 @@ package com.voicent.webalert;
 public class BroadcastManager {
     private static BroadcastManager inst_ = null;
     private BroadcastListFile list_ = null;
-    private BroadcastThread bt_ = null;
+    private BroadcastThread bt_;
 
     /**
      * Constructor with default localhost:8155

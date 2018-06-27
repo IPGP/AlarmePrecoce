@@ -1,5 +1,5 @@
-/**
- *
+/*
+
  */
 package fr.ipgp.earlywarning.audio;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TestAudio {
 
     /**
-     * @param args
+     * @param args command line arguments
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
@@ -34,7 +34,7 @@ public class TestAudio {
             System.out.println("Line anavailable exception : " + lue.getMessage());
         } catch (IOException ioe) {
             System.out.println("I/O exception : " + ioe.getMessage());
-        } catch (InterruptedException ie) {
+        } catch (InterruptedException ignored) {
 
         }
     }

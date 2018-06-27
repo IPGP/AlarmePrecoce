@@ -27,14 +27,14 @@ import java.util.ArrayList;
 
 
 public class BroadcastThread extends Thread {
-    private Voicent voicent_ = null;
+    private Voicent voicent_;
     private BroadcastList list_ = null;
     private String notes_ = null;
     private boolean isOngoing_ = false;
     private int callsMade_ = 0;
     private int callsFailed_ = 0;
-    private int lines_ = 1;
-    private ArrayList curReqIds_ = new ArrayList();
+    private int lines_;
+    private ArrayList<String> curReqIds_ = new ArrayList<>();
 
     public BroadcastThread() {
         // We use only one gateway in this sample, but you can create
@@ -102,7 +102,7 @@ public class BroadcastThread extends Thread {
             boolean hasFinishedCall = false;
             int index = 0;
             while (index < curReqIds_.size()) {
-                String reqId = (String) curReqIds_.get(index);
+                String reqId = curReqIds_.get(index);
                 String status = voicent_.callStatus(reqId);
                 if (status.length() == 0) {
                     index++;
@@ -124,8 +124,8 @@ public class BroadcastThread extends Thread {
             // if no finished calls, wait 10 seconds before continue
             if (!hasFinishedCall) {
                 try {
-                    Thread.currentThread().sleep(10000);
-                } catch (InterruptedException e) {
+                    sleep(10000);
+                } catch (InterruptedException ignored) {
                 }
             }
         }

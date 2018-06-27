@@ -1,6 +1,6 @@
-/**
- * Created Apr 26, 2008 08:21:54 PM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created Apr 26, 2008 08:21:54 PM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -14,8 +14,8 @@ import fr.ipgp.earlywarning.view.JComboBoxFileCallList;
  * @author Patrice Boissier
  */
 public class FileCallListControler {
-    public FileCallListView listView = null;
-    private FileCallList fileCallList = null;
+    public FileCallListView listView;
+    private FileCallList fileCallList;
 
     public FileCallListControler(FileCallList fileCallList, FileCallLists fileCallLists) {
         this.fileCallList = fileCallList;
@@ -40,7 +40,7 @@ public class FileCallListControler {
     /**
      * Action to be made when file is changed
      *
-     * @param file
+     * @param file the file that has changed
      */
     public void notifyFileChanged(String file) {
         fileCallList.setFileName(file);

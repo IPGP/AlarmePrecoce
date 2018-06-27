@@ -98,4 +98,4 @@ java/bin
 java/bin-test
 java/bin-eclipse
 
-!/java/lib/*.jar
+!java/lib/*.jar

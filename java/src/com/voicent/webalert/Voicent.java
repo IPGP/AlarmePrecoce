@@ -132,28 +132,33 @@ public class Voicent {
      * @return Call request ID
      */
     public String callAudio(String phoneno, String audiofile, boolean selfdelete) {
-        // call request url
-        String urlstr = "/ocall/callreqHandler.jsp";
+        try {
+            // call request url
+            String urlstr = "/ocall/callreqHandler.jsp";
 
-        // setting the http post string
-        String poststr = "info=";
-        poststr += URLEncoder.encode("Simple Audio Call " + phoneno);
+            // setting the http post string
+            String poststr = "info=";
+            poststr += URLEncoder.encode("Simple Audio Call " + phoneno, "UTF-8");
 
-        poststr += "&phoneno=";
-        poststr += phoneno;
+            poststr += "&phoneno=";
+            poststr += phoneno;
 
-        poststr += "&firstocc=10";
+            poststr += "&firstocc=10";
 
-        poststr += "&selfdelete=";
-        poststr += (selfdelete ? "1" : "0");
+            poststr += "&selfdelete=";
+            poststr += (selfdelete ? "1" : "0");
 
-        poststr += "&audiofile=";
-        poststr += URLEncoder.encode(audiofile);
+            poststr += "&audiofile=";
+            poststr += URLEncoder.encode(audiofile, "UTF-8");
 
-        // Send Call Request
-        String rcstr = postToGateway(urlstr, poststr);
+            // Send Call Request
+            String rcstr = postToGateway(urlstr, poststr);
 
-        return getReqId(rcstr);
+            return getReqId(rcstr);
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -163,35 +168,43 @@ public class Voicent {
      * @return call status
      */
     public String callStatus(String reqID) {
-        // call status url
-        String urlstr = "/ocall/callstatusHandler.jsp";
+        try {
+            // call status url
+            String urlstr = "/ocall/callstatusHandler.jsp";
 
-        // setting the http post string
-        String poststr = "reqid=";
-        poststr += URLEncoder.encode(reqID);
+            // setting the http post string
+            String poststr = "reqid=";
+            poststr += URLEncoder.encode(reqID, "UTF-8");
 
-        // Send Call Request
-        String rcstr = postToGateway(urlstr, poststr);
+            // Send Call Request
+            String rcstr = postToGateway(urlstr, poststr);
 
-        return getCallStatus(rcstr);
+            return getCallStatus(rcstr);
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * Remove all request from the gateway
      *
      * @param reqID Call request ID on the gateway
-     * @return call status
      */
     public void callRemove(String reqID) {
-        // call status url
-        String urlstr = "/ocall/callremoveHandler.jsp";
+        try {
+            // call status url
+            String urlstr = "/ocall/callremoveHandler.jsp";
 
-        // setting the http post string
-        String poststr = "reqid=";
-        poststr += URLEncoder.encode(reqID);
+            // setting the http post string
+            String poststr = "reqid=";
+            poststr += URLEncoder.encode(reqID, "UTF-8");
 
-        // Send Call remove post
-        postToGateway(urlstr, poststr);
+            // Send Call remove post
+            postToGateway(urlstr, poststr);
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -202,40 +215,45 @@ public class Voicent {
      * @param wavfile  Audio file used for the broadcast
      * @param ccode    Confirmation code
      */
+
     public void callTillConfirm(String vcastexe, String vocfile, String wavfile, String ccode) {
-        // call request url
-        String urlstr = "/ocall/callreqHandler.jsp";
+        try {
+            // call request url
+            String urlstr = "/ocall/callreqHandler.jsp";
 
-        // setting the http post string
-        String poststr = "info=";
-        poststr += URLEncoder.encode("Simple Call till Confirm");
+            // setting the http post string
+            String poststr = "info=";
+            poststr += URLEncoder.encode("Simple Call till Confirm", "UTF-8");
 
-        poststr += "&phoneno=1111111"; // any number
+            poststr += "&phoneno=1111111"; // any number
 
-        poststr += "&firstocc=10";
-        poststr += "&selfdelete=0";
+            poststr += "&firstocc=10";
+            poststr += "&selfdelete=0";
 
-        poststr += "&startexec=";
-        poststr += URLEncoder.encode(vcastexe);
+            poststr += "&startexec=";
+            poststr += URLEncoder.encode(vcastexe, "UTF-8");
 
-        String cmdline = "\"";
-        cmdline += vocfile;
-        cmdline += "\"";
-        cmdline += " -startnow";
-        cmdline += " -confirmcode ";
-        cmdline += ccode;
-        cmdline += " -wavfile ";
-        cmdline += "\"";
-        cmdline += wavfile;
-        cmdline += "\"";
+            String cmdline = "\"";
+            cmdline += vocfile;
+            cmdline += "\"";
+            cmdline += " -startnow";
+            cmdline += " -confirmcode ";
+            cmdline += ccode;
+            cmdline += " -wavfile ";
+            cmdline += "\"";
+            cmdline += wavfile;
+            cmdline += "\"";
 
-        // add -cleanstatus if necessary
+            // add -cleanstatus if necessary
 
-        poststr += "&cmdline=";
-        poststr += URLEncoder.encode(cmdline);
+            poststr += "&cmdline=";
+            poststr += URLEncoder.encode(cmdline, "UTF-8");
 
-        // Send like a Call Request
-        postToGateway(urlstr, poststr);
+            // Send like a Call Request
+            postToGateway(urlstr, poststr);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private String postToGateway(String urlstr, String poststr) {
@@ -253,7 +271,7 @@ public class Voicent {
 
             InputStream in = conn.getInputStream();
 
-            StringBuffer rcstr = new StringBuffer();
+            StringBuilder rcstr = new StringBuilder();
             byte[] b = new byte[4096];
             int len;
             while ((len = in.read(b)) != -1)
@@ -279,13 +297,13 @@ public class Voicent {
     }
 
     private String getCallStatus(String rcstr) {
-        if (rcstr.indexOf("^made^") != -1)
+        if (rcstr.contains("^made^"))
             return "Call Made";
 
-        if (rcstr.indexOf("^failed^") != -1)
+        if (rcstr.contains("^failed^"))
             return "Call Failed";
 
-        if (rcstr.indexOf("^retry^") != -1)
+        if (rcstr.contains("^retry^"))
             return "Call Will Retry";
 
         return "";

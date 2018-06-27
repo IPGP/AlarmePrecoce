@@ -1,6 +1,6 @@
-/**
- * Created Mar 5, 2008 8:24:15 PM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 5, 2008 8:24:15 PM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.messages;
 
@@ -21,8 +21,7 @@ public class FileWarningMessage implements WarningMessage {
      * @return a String representing the object
      */
     public String toString() {
-        String result = file.toString();
-        return result;
+        return file;
     }
 
     /**

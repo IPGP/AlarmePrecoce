@@ -1,6 +1,6 @@
-/**
- * Created Mar 01, 2008 11:01:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 01, 2008 11:01:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -133,7 +133,7 @@ public class EarlyWarningThread extends Thread {
     /**
      * Create a custom error trigger based on the error message.
      *
-     * @param errorMessage
+     * @param errorMessage the potentiel error message to show
      */
     private Trigger createErrorTrigger(String errorMessage) {
         try {
@@ -145,13 +145,13 @@ public class EarlyWarningThread extends Thread {
                 message = new TextWarningMessage(errorMessage);
             else
                 message = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.error_message"));
-            String application = new String("EarlyWarning");
-            String type = new String("v2");
+            String application = "EarlyWarning";
+            String type = "v2";
             boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
             Date date1 = new Date();
             SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = simpleFormat.format(date1);
-            String confirmCode = new String(EarlyWarning.configuration.getString("triggers.defaults.confirm_code"));
+            String confirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
             Trigger trig = new Trigger(id, priority);
             trig.setApplication(application);
             trig.setCallList(defaultCallList);

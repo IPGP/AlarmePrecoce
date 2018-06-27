@@ -1,6 +1,6 @@
-/**
- * Created May 04, 2008 10:38:05 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
+/*
+  Created May 04, 2008 10:38:05 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP.
  */
 package fr.ipgp.earlywarning.utilities;
 
@@ -67,12 +67,9 @@ public class Mailer {
         message.setSubject(subject);
         message.setText(body);
 
-        Transport transport = session.getTransport("smtp");
-        try {
+        try (Transport transport = session.getTransport("smtp")) {
             transport.connect(username, password);
             transport.sendMessage(message, message.getAllRecipients());
-        } finally {
-            transport.close();
         }
     }
 

@@ -1,6 +1,6 @@
-/**
- * Created Sep 08, 2008 2:54:12 PM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Sep 08, 2008 2:54:12 PM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.audio;
 
@@ -43,15 +43,12 @@ public class AudioSerialMessage {
         } catch (ConversionException ce) {
             EarlyWarning.appLogger.error("Audio Serial speed or port has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         } catch (NoSuchElementException nsee) {
             EarlyWarning.appLogger.error("Audio Serial speed or port is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         } catch (NoSuchPortException nspe) {
             EarlyWarning.appLogger.error("No such port " + comPort + ". Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-            return;
         }
     }
 
@@ -163,8 +160,8 @@ public class AudioSerialMessage {
      *
      * @param fileName the file name to be copied
      * @param out      the output stream to copy to
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if the file to copy does not exist
+     * @throws IOException           if the destination file can not be written
      */
     private void copy(String fileName, OutputStream out) throws FileNotFoundException, IOException {
         File file = new File(fileName);

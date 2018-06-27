@@ -1,6 +1,6 @@
-/**
- * Created Mar 5, 2008 3:00:05 PM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Mar 5, 2008 3:00:05 PM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.triggers;
 
@@ -184,7 +184,7 @@ public class Trigger implements Comparable {
      */
     public void setProperty(String key, Object value) {
         if (properties == null) {
-            properties = new HashMap<String, Object>();
+            properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }

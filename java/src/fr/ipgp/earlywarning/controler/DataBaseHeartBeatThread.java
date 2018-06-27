@@ -1,6 +1,6 @@
-/**
- * Created Fri 07, 2008 11:40:40 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Fri 07, 2008 11:40:40 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.controler;
 
@@ -19,15 +19,16 @@ import java.util.NoSuchElementException;
  *
  * @author Patrice Boissier
  */
+@SuppressWarnings("LoopConditionNotUpdatedInsideLoop")
 public class DataBaseHeartBeatThread extends Thread {
     private static DataBaseHeartBeatThread uniqueInstance;
+    protected final int aliveMessage;
+    protected final int startMessage;
+    protected final int delay;
+    protected final boolean moreHeartBeats = true;
     protected DataBaseHeartBeat dataBaseHeartBeat;
-    protected int aliveMessage;
-    protected int startMessage;
-    protected int delay;
-    protected boolean moreHeartBeats = true;
 
-    private DataBaseHeartBeatThread() throws IOException, ConversionException, NoSuchElementException {
+    private DataBaseHeartBeatThread() throws ConversionException, NoSuchElementException {
         this("DataBaseHeartBeatThread");
     }
 
@@ -58,11 +59,7 @@ public class DataBaseHeartBeatThread extends Thread {
             EarlyWarning.appLogger.error("An element value has wrong type : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.error("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
-            EarlyWarning.appLogger.debug("Thread is stopping");
-            return;
-        } catch (NullPointerException npe) {
+        } catch (NoSuchElementException | NullPointerException nsee) {
             EarlyWarning.appLogger.error("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
@@ -80,6 +77,7 @@ public class DataBaseHeartBeatThread extends Thread {
         }
 
         // HeartBeat notification
+        //noinspection InfiniteLoopStatement,LoopConditionNotUpdatedInsideLoop
         while (moreHeartBeats) {
             try {
                 int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, CommonUtilities.dateToISO());

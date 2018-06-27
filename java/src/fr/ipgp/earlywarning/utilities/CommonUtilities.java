@@ -1,6 +1,6 @@
-/**
- * Created Tue 06, 2008 10:32:15 AM
- * Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
+/*
+  Created Tue 06, 2008 10:32:15 AM
+  Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 package fr.ipgp.earlywarning.utilities;
 
@@ -81,6 +81,7 @@ public class CommonUtilities {
      * @param format     the format used
      * @return true if the date is valid, else returns false
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isDate(String dateString, String format) {
         DateFormat formatter = new SimpleDateFormat(format);
         formatter.setLenient(false);
