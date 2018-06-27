@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
 /**
  * Entry point for the application<br/>
  * First start the logger (Log4J)<br/>
- * Then, it cheks its own unicity.<br/>
+ * Then, it checks its own uniqueness.<br/>
  * Reads the configuration file and then create the EarlyWarningThread.<br/>
  * If the configuration file specifies it, it starts the DataBaseHeartBeatThread.<br/>
  * Last, it creates the GUI
@@ -89,7 +89,7 @@ public class EarlyWarning {
     }
 
     /**
-     * Check unicity of the application
+     * Check uniqueness of the application
      */
     private static void checkUnicity() {
         try {

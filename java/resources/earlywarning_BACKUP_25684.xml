@@ -93,17 +93,7 @@
             <host>localhost</host>
             <port>8155</port>
             <vcastexe>C:/Program Files/Voicent/BroadcastByPhone/bin/vcast.exe</vcastexe>
-            <
-            <
-            <
-            <
-            <
-            <
-            < HEAD
             <resources_path>./resources/vocs</resources_path>
-            =======
-            <resources_path>./resources/vocs/</resources_path>
-            >>>>>>> feature/InterfaceWeb
             <retry>10</retry>
         </voicent>
     </gateway>

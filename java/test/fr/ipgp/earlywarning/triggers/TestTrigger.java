@@ -108,7 +108,9 @@ public class TestTrigger {
         Assert.assertEquals(trigger1.compareTo(trigger1), 0);
         Assert.assertEquals(trigger2.compareTo(trigger4), -1);
         Assert.assertEquals(trigger5.compareTo(trigger3), 1);
+        //noinspection SimplifiableJUnitAssertion
         Assert.assertEquals(trigger1.equals(trigger2), false);
+        //noinspection SimplifiableJUnitAssertion
         Assert.assertEquals(trigger2.equals(trigger4), false);
         Assert.assertEquals(trigger1, trigger1);
     }

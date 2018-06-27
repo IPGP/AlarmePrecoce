@@ -9,7 +9,6 @@ import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.DataBaseHeartBeat;
 import org.apache.commons.configuration.ConversionException;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 

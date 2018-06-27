@@ -44,8 +44,8 @@
             if (tleft === 1)
                 window.location.reload();
             else {
-                tleft--
-                window.status = "page rerefresh in " + tleft + " seconds"
+                tleft--;
+                window.status = "page rerefresh in " + tleft + " seconds";
                 setTimeout("beginrefresh()", 1000)
             }
         }

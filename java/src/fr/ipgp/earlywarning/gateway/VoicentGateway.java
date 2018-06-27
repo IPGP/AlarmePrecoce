@@ -193,7 +193,10 @@ public class VoicentGateway implements Gateway {
             String postString = "reqid=";
             postString += URLEncoder.encode(requestID, encoding);
             String requestCallString = postToGateway(urlString, postString);
-            return getCallStatus(requestCallString);
+            if (requestCallString != null)
+                return getCallStatus(requestCallString);
+            else
+                return null;
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -211,7 +214,10 @@ public class VoicentGateway implements Gateway {
             String postString = "reqid=";
             postString += URLEncoder.encode(requestID, encoding);
             String requestCallRemove = postToGateway(urlString, postString);
-            return getCallRemovedStatus(requestCallRemove);
+            if (requestCallRemove != null)
+                return getCallRemovedStatus(requestCallRemove);
+            else
+                return null;
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -404,7 +410,7 @@ public class VoicentGateway implements Gateway {
     /**
      * @return the created log voc file
      */
-    private String createLogVocFile() throws FileNotFoundException, IOException {
+    private String createLogVocFile() throws IOException {
         File logDir = new File(resources + "/log");
         if (!logDir.exists())
             if (!logDir.mkdir())
@@ -422,7 +428,7 @@ public class VoicentGateway implements Gateway {
     /**
      * @return the created log voc file
      */
-    private String createLogVocFile(String voc) throws FileNotFoundException, IOException {
+    private String createLogVocFile(String voc) throws IOException {
         File logDir = new File(resources + "/log");
         if (!logDir.exists())
             if (!logDir.mkdir())

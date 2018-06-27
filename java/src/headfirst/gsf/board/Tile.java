@@ -20,6 +20,7 @@ public class Tile {
         units.remove(unit);
     }
 
+    @SuppressWarnings("EmptyMethod")
     protected void removeUnits() {
         // TODO: why is this empty? What's the point of this method?
     }

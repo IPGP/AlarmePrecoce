@@ -64,7 +64,7 @@ public class SMSThread extends Thread {
      * Send a SMS to a duty phone
      *
      * @param message the SMS message
-     * @throws MessagingException
+     * @throws Exception (MessagingException) if the SMS can't be sent
      */
     public void sendSMS(String message) throws Exception {
         ClickatellHttp.Message response = clickatell.sendMessage(dutyPhone, message);

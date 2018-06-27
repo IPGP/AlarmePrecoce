@@ -77,8 +77,6 @@ public class AudioSerialMessage {
      * Opens and configures the serial port, sets the DTR to true and then sends the message ASCII text.<br/>
      * It then waits for "delay" seconds and starts to play the audio message.<br/>
      * Finally the serial port is closed.
-     *
-     * @param message the ASCII message
      */
     public void sendMessage(Trigger trigger, String resourcesPath, FileWarningMessage defaultWarningMessage) {
         try {
