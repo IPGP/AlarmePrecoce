@@ -1,4 +1,4 @@
-package fr.ipgp .earlywarning.asterisk;
+package fr.ipgp.earlywarning.asterisk;
 
 /**
  * A listener to listen to hang up events (on the AGI script side and on callee's side)

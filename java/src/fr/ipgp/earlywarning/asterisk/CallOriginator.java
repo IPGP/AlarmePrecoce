@@ -1,4 +1,4 @@
-package fr.ipgp .earlywarning.asterisk;
+package fr.ipgp.earlywarning.asterisk;
 
 import org.asteriskjava.manager.*;
 import org.asteriskjava.manager.action.OriginateAction;
@@ -375,6 +375,10 @@ public class CallOriginator implements ManagerEventListener {
      * The result of a call session.
      */
     public enum CallResult {
+        /**
+         * No call emitted yet.
+         */
+        Initial,
         /**
          * The callee did not answer.
          */

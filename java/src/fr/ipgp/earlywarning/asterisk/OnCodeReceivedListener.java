@@ -1,4 +1,4 @@
-package fr.ipgp .earlywarning.asterisk;
+package fr.ipgp.earlywarning.asterisk;
 
 /**
  * A listener for DTMF code received events.
