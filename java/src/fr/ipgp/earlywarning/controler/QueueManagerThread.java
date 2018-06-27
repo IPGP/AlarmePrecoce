@@ -41,6 +41,7 @@ public class QueueManagerThread extends Thread {
         this("QueueManagerThread");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private QueueManagerThread(String name) {
         super(name);
         queue = new PriorityBlockingQueue<>();
@@ -94,6 +95,7 @@ public class QueueManagerThread extends Thread {
     /**
      * @param useMail the useMail to set
      */
+    @SuppressWarnings("SameParameterValue")
     protected void setUseMail(boolean useMail) {
         this.useMail = useMail;
     }
@@ -101,6 +103,7 @@ public class QueueManagerThread extends Thread {
     /**
      * @param useSMS the useSMS to set
      */
+    @SuppressWarnings("SameParameterValue")
     protected void setUseSMS(boolean useSMS) {
         this.useSMS = useSMS;
     }
@@ -126,6 +129,8 @@ public class QueueManagerThread extends Thread {
         while (moreTriggers) {
             if (queue.size() > 0) {
                 Trigger trig = queue.poll();
+                assert trig != null;
+
                 int retryCounter = 0;
                 while (gateway.callTillConfirm(trig, defaultWarningMessage) == null && retryCounter < retry) {
                     EarlyWarning.appLogger.info("Server response : null. Retrying for the " + retryCounter + " time.");

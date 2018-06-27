@@ -66,6 +66,7 @@ public class BroadcastThread extends Thread {
         return true;
     }
 
+    @SuppressWarnings("SameReturnValue")
     public boolean stopBroadcast() {
         isOngoing_ = false;
         return true;

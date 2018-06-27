@@ -44,11 +44,11 @@ public class TestFileCallList {
             FileCallList frcl1 = new FileCallList(fileReference1);
             FileCallList frcl2 = new FileCallList(file2);
             Assert.assertEquals(fileReference1, frcl1.getFileName());
-            Assert.assertEquals("voc", frcl1.getType());
+            Assert.assertEquals(CallListType.VOC, frcl1.getType());
             Assert.assertNull(frcl1.getFile().getParent());
             Assert.assertEquals(file1, frcl1.getFile());
             Assert.assertEquals(fileReference2, frcl2.getFileName());
-            Assert.assertEquals("txt", frcl2.getType());
+            Assert.assertEquals(CallListType.TEXT, frcl2.getType());
             Assert.assertEquals("/home/boissier", frcl2.getFile().getParent());
             Assert.assertEquals(file2, frcl2.getFile());
         } catch (InvalidFileNameException | FileNotFoundException ifne) {

@@ -19,6 +19,8 @@ public class FileCallLists implements CallLists {
     private List<FileCallList> fileCallLists = new ArrayList<>();
 
     public FileCallLists(File directory) throws InvalidFileNameException, FileNotFoundException {
+        // TODO: Java8 Migration: change this to a lambda-expression
+        @SuppressWarnings("Convert2Lambda")
         File[] files = directory.listFiles(
                 new FilenameFilter() {
                     public boolean accept(File dir, String name) {

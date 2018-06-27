@@ -34,6 +34,6 @@ public class TestTextCallList {
         TextCallList textCallList = new TextCallList(testText);
         Assert.assertEquals(testText, textCallList.getText());
         Assert.assertEquals(testText, textCallList.toString());
-        Assert.assertEquals("text", textCallList.getType());
+        Assert.assertEquals(CallListType.TEXT, textCallList.getType());
     }
 }

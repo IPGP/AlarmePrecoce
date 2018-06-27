@@ -193,7 +193,10 @@ public class VoicentGateway implements Gateway {
             String postString = "reqid=";
             postString += URLEncoder.encode(requestID, encoding);
             String requestCallString = postToGateway(urlString, postString);
-            return getCallStatus(requestCallString);
+            if (requestCallString != null)
+                return getCallStatus(requestCallString);
+            else
+                return null;
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -211,7 +214,10 @@ public class VoicentGateway implements Gateway {
             String postString = "reqid=";
             postString += URLEncoder.encode(requestID, encoding);
             String requestCallRemove = postToGateway(urlString, postString);
-            return getCallRemovedStatus(requestCallRemove);
+            if (requestCallRemove != null)
+                return getCallRemovedStatus(requestCallRemove);
+            else
+                return null;
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -280,8 +286,7 @@ public class VoicentGateway implements Gateway {
 
             postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 
-            String requestCallTillConfirm = postToGateway(urlString, postString);
-            return requestCallTillConfirm;
+            return postToGateway(urlString, postString);
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -310,8 +315,7 @@ public class VoicentGateway implements Gateway {
 
             postString += "&cmdline=" + URLEncoder.encode(cmdline, encoding);
 
-            String requestCallTillConfirm = postToGateway(urlString, postString);
-            return requestCallTillConfirm;
+            return postToGateway(urlString, postString);
         } catch (UnsupportedEncodingException uee) {
             return null;
         }
@@ -526,15 +530,12 @@ public class VoicentGateway implements Gateway {
             return "Call id unknown";
     }
 
-    private void copyFile(File srcFile, File dstFile) throws IOException {
+    private void copyFile(File srcFile, File dstFile) {
         try (InputStream in = new FileInputStream(srcFile); OutputStream out = new FileOutputStream(dstFile)) {
             byte[] buf = new byte[1024];
             int len;
-            while ((len = in.read(buf)) > 0) {
+            while ((len = in.read(buf)) > 0)
                 out.write(buf, 0, len);
-            }
-            in.close();
-            out.close();
         } catch (FileNotFoundException ex) {
             System.out.println(ex.getMessage() + " in the specified directory.");
         } catch (IOException e) {

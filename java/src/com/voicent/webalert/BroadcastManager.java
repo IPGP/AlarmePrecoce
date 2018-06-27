@@ -78,6 +78,7 @@ public class BroadcastManager {
      *
      * @param notes alert message
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean startBroadcast(String notes) {
         return bt_.startBroadcast(list_, notes);
     }
@@ -85,6 +86,7 @@ public class BroadcastManager {
     /**
      * Stop broadcast
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean stopBroadcast() {
         return bt_.stopBroadcast();
     }

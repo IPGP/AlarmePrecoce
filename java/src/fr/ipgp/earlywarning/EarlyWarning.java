@@ -10,6 +10,7 @@ import fr.ipgp.earlywarning.controler.FileCallListControler;
 import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.telephones.FileCallLists;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
+import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
@@ -25,7 +26,7 @@ import java.util.NoSuchElementException;
 /**
  * Entry point for the application<br/>
  * First start the logger (Log4J)<br/>
- * Then, it cheks its own unicity.<br/>
+ * Then, it checks its own uniqueness.<br/>
  * Reads the configuration file and then create the EarlyWarningThread.<br/>
  * If the configuration file specifies it, it starts the DataBaseHeartBeatThread.<br/>
  * Last, it creates the GUI
@@ -52,6 +53,8 @@ public class EarlyWarning {
         startEarlyWarningThread();
 
         startDataBaseHeartBeatThread();
+
+        startContactsServer();
 
         createGui();
 
@@ -86,7 +89,7 @@ public class EarlyWarning {
     }
 
     /**
-     * Check unicity of the application
+     * Check uniqueness of the application
      */
     private static void checkUnicity() {
         try {
@@ -98,6 +101,24 @@ public class EarlyWarning {
             appLogger.warn("Unable to create lock file to ensure unicity of the application");
         } catch (IOException ioe) {
             appLogger.warn("Unable to set lock file to ensure unicity of the application");
+        }
+    }
+
+    private static void startContactsServer() {
+        OrderUpdateServer server = null;
+        try {
+            server = new OrderUpdateServer("resources/www/", "resources/contacts.json");
+        } catch (IOException e) {
+            appLogger.fatal("Fatal error : contacts JSON file is not readable or writable.");
+            System.exit(1);
+        }
+
+        try {
+            server.startServer();
+        } catch (IOException e) {
+            appLogger.fatal("Fatal error : cannot start server on port " + server.getPort());
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -133,8 +154,6 @@ public class EarlyWarning {
             appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
         } catch (NoSuchElementException nsee) {
             appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
-        } catch (IOException ioe) {
-            appLogger.error("I/O exception : " + ioe.getMessage() + ". HearBeat notification disabled.");
         }
     }
 

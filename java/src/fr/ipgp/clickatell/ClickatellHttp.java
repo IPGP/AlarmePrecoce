@@ -335,10 +335,10 @@ public class ClickatellHttp {
      * @throws Exception If there is anything wrong with the submission this will get
      *                   thrown.
      */
-    public Message[] sendAdvancedMessage(String[] numbers,
-                                         String messageContent, HashMap<String, String> features)
-            throws Exception {
+    public Message[] sendAdvancedMessage(String[] numbers, String messageContent, HashMap<String, String> features) throws Exception {
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         ArrayList<Message> messages = new ArrayList<>();
+
         StringBuilder urlParameters;
         // Build Parameters:
         urlParameters = new StringBuilder("user=" + URLEncoder.encode(this.userName, "UTF-8")
