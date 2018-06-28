@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AlarmePrecoce" target="8" />
+      <module name="AlarmePrecoce" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -8,8 +8,6 @@ import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class JSONContactList implements ContactList {
     /**
@@ -180,19 +178,18 @@ public class JSONContactList implements ContactList {
     }
 
     /**
-     * @return the stream for the contacts List
-     */
-    public Stream<Contact> stream() {
-        return contacts.stream();
-    }
-
-    /**
      * Finds the contacts in use in the call list.
      *
      * @return a List of enabled contacts
      */
     public List<Contact> getEnabledContacts() {
-        return this.stream().filter(c -> callList.indexOf(c.phone) > -1).collect(Collectors.toList());
+        List<Contact> result = new ArrayList<>();
+
+        for (Contact c : contacts)
+            if (callList.indexOf(c.phone) > -1)
+                result.add(c);
+
+        return result;
     }
 
     /**
@@ -201,13 +198,30 @@ public class JSONContactList implements ContactList {
      * @return the names of the contacts
      */
     public List<String> getNames() {
-        return this.stream().map(c -> c.name).collect(Collectors.toList());
+        List<String> names = new ArrayList<>();
+        for (Contact c : contacts)
+            names.add(c.name);
+
+        return names;
     }
 
     public void clean(List<String> names) {
-        contacts = this.stream().filter(c -> names.indexOf(c.name) > -1).collect(Collectors.toList());
-        List<String> existingNumbers = this.stream().map(c -> c.phone).collect(Collectors.toList());
-        callList = callList.stream().filter(number -> existingNumbers.indexOf(number) > -1).collect(Collectors.toList());
+        List<Contact> newContacts = new ArrayList<>();
+
+        for (Contact c : contacts)
+            if (names.indexOf(c.name) > -1)
+                newContacts.add(c);
+
+        contacts = newContacts;
+
+        List<String> existingNumbers = new ArrayList<>();
+        for (Contact c : contacts)
+            existingNumbers.add(c.phone);
+
+        List<String> newCallList = new ArrayList<>();
+        for (String number : callList)
+            if (existingNumbers.indexOf(number) > -1)
+                newCallList.add(number);
     }
 
     /**

@@ -20,7 +20,7 @@ public class Board {
         tiles = new ArrayList<>(width);
 
         for (int i = 0; i < width; i++) {
-            tiles.add(i, new ArrayList<>(height));
+            tiles.add(i, new ArrayList<Tile>(height));
             for (int j = 0; j < height; j++) {
                 tiles.get(i).add(j, new Tile());
             }
