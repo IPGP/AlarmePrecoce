@@ -94,9 +94,12 @@ hs_err_pid*
 
 java/defaultCallList.voc
 target
+java/target
 java/bin
 java/bin-test
 java/bin-eclipse
 java/dist
 
 !java/lib/*.jar
+
+Javadoc
