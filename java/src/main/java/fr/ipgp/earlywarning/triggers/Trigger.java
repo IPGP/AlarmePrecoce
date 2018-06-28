@@ -276,7 +276,7 @@ public class Trigger implements Comparable {
         body += "Confirmation code : " + confirmCode + "\n";
         body += "Call list : " + callList.toString() + "\n";
         body += "Warning message : " + message.toString() + "\n";
-        if (message.getType() == WarningMessageType.WAV)
+        if (message.getType() == WarningMessageType.AUDIO)
             body += "Text Warning message : " + textMessage + "\n";
         return body;
     }

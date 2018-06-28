@@ -2,9 +2,8 @@ package fr.ipgp.earlywarning.gateway;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.asterisk.CallOriginator;
-import fr.ipgp.earlywarning.messages.GSMWarningMessage;
-import fr.ipgp.earlywarning.messages.WAVWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
+import fr.ipgp.earlywarning.asterisk.LocalAgiServer;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.telephones.Contact;
 import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.telephones.JSONContactList;
@@ -15,8 +14,9 @@ import org.asteriskjava.manager.ManagerConnectionFactory;
 import org.asteriskjava.manager.TimeoutException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,22 +29,23 @@ public class AsteriskGateway implements Gateway {
     private String username;
     private String password;
 
-    ManagerConnection buildManagerConnection()
-    {
+    LocalAgiServer server;
+
+    ManagerConnection buildManagerConnection() {
         ManagerConnectionFactory factory = new ManagerConnectionFactory(host, port, username, password);
         ManagerConnection managerConnection = factory.createManagerConnection();
         return managerConnection;
     }
 
-    public AsteriskGateway(String host, int port, String username, String password)
-    {
+    public AsteriskGateway(String host, int port, String username, String password) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+
+        server = new LocalAgiServer();
     }
 
-    @Override
     public String callAudio(String phoneNumber, String audioFile, boolean selfDelete) {
         CallOriginator originator = new CallOriginator(buildManagerConnection(), "");
         try {
@@ -62,62 +63,113 @@ public class AsteriskGateway implements Gateway {
         }
     }
 
-    @Override
     public String callTillConfirm(String logFile, String messageFile, String confirmCode, String[] phoneNumbers) {
-        return null;
+        return callTillConfirm(Arrays.asList(phoneNumbers), messageFile, confirmCode);
     }
 
     @Override
     public String callTillConfirm(String logFile, String messageFile, String confirmCode, FileCallList callList) {
+        EarlyWarning.appLogger.fatal("AsteriskGateway doesn't handle FileCallList");
         return null;
     }
 
-    @Override
-    public String callTillConfirm(String callList, String messageFile, String confirmCode) throws IOException {
-        File f = new File(callList);
-        if (!f.exists())
-            throw new FileNotFoundException("CallList doesn't exist.");
 
+    public String callTillConfirm(List<String> numbers, String messageFile, String confirmCode) {
         CallOriginator originator = new CallOriginator(buildManagerConnection(), confirmCode);
 
-        JSONContactList list = new JSONContactList(callList);
-
-        List<Contact> contacts = list.getEnabledContacts();
-        Iterator<Contact> iterator = contacts.iterator();
+        Iterator<String> iterator = numbers.iterator();
 
         // Assert: there is at least one enabled contact
         assert iterator.hasNext();
 
         CallOriginator.CallResult result = Initial;
         do {
-            if (!iterator.hasNext())
-                iterator = contacts.iterator();
+            if (result != Initial) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ignored) {
+                }
+            }
 
-            Contact toCall = iterator.next();
+            if (!iterator.hasNext())
+                iterator = numbers.iterator();
+
+            String toCall = iterator.next();
+            EarlyWarning.appLogger.info("Calling " + toCall);
 
             try {
-                result = originator.call(toCall.phone);
-            } catch (AuthenticationFailedException ignored) {
+                result = originator.call(toCall);
+            } catch (org.asteriskjava.manager.AuthenticationFailedException ignored) {
                 // We can ignore this exception since we test at launch time that the credentials are correct.
-            } catch (TimeoutException e) {
-                EarlyWarning.appLogger.error("Origination request timed out for contact " + toCall.name);
+                EarlyWarning.appLogger.error("Wrong authentication.");
+            } catch (org.asteriskjava.manager.TimeoutException e) {
+                EarlyWarning.appLogger.error("Origination request timed out for number " + toCall);
+            } catch (IOException ex) {
+                EarlyWarning.appLogger.error(ex.getMessage());
             }
 
         } while (result != CorrectCode);
 
-        return "0";
+        return "OK";
     }
 
     @Override
-    public String callTillConfirm(Trigger trigger, WarningMessage defaultWarningMessage) throws IOException {
+    public String callTillConfirm(String callList, String messageFile, String confirmCode) {
+        File f = new File(callList);
+        if (!f.exists()) {
+            if (callList.contains(",")) {
+                EarlyWarning.appLogger.warn("AsteriskGateway callList is not a file: " + callList + ". Treating as a text-list.");
+                List<String> contacts = Arrays.asList(callList.split(","));
+                return callTillConfirm(contacts, messageFile, confirmCode);
+            } else {
+                EarlyWarning.appLogger.warn("AsteriskGateway callList is not a file: " + callList + ". Using default JSON contact list.");
+                try {
+                    JSONContactList list = new JSONContactList(EarlyWarning.configuration.getString("contacts.file"));
+                    List<Contact> contacts = list.getCallList();
+
+                    List<String> numbers = new ArrayList<>();
+                    for (Contact c : contacts)
+                        numbers.add(c.phone);
+
+                    return callTillConfirm(numbers, messageFile, confirmCode);
+                } catch (IOException ignored) {
+                    // This can't happen: we verified that the file exists
+                    return null;
+                }
+            }
+        } else {
+            try {
+                JSONContactList list = new JSONContactList(callList);
+                List<Contact> contacts = list.getCallList();
+
+                List<String> numbers = new ArrayList<>();
+                for (Contact c : contacts)
+                    numbers.add(c.phone);
+
+                return callTillConfirm(numbers, messageFile, confirmCode);
+            } catch (IOException ignored) {
+                // This can't happen: we verified that the file exists
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public String callTillConfirm(Trigger trigger, AudioWarningMessage defaultWarningMessage) {
         String confirmCode = trigger.getConfirmCode();
         String file;
         switch (trigger.getMessage().getType()) {
-            case GSM:
-                file = ((WAVWarningMessage)trigger.getMessage()).getFile();
+            case AUDIO:
+                file = ((AudioWarningMessage) trigger.getMessage()).getFile();
+
+                // In typical triggers, audio files' names end with .wav, we want to remove this
+                if (file.toLowerCase().endsWith(".wav"))
+                    file = file.substring(0, file.length() - 4);
+
                 break;
+
             default:
-                file = ((GSMWarningMessage) defaultWarningMessage).getFile();
+                file = defaultWarningMessage.getFile();
         }
 
         return callTillConfirm(trigger.getCallList().getName(), file, confirmCode);

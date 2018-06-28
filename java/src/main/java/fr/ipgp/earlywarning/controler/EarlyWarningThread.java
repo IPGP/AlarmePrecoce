@@ -5,7 +5,7 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.messages.TextWarningMessage;
 import fr.ipgp.earlywarning.messages.WarningMessage;
 import fr.ipgp.earlywarning.telephones.FileCallList;
@@ -40,7 +40,7 @@ public class EarlyWarningThread extends Thread {
     protected boolean triggerOnError;
     private QueueManagerThread queueManagerThread;
     private FileCallList defaultCallList;
-    private FileWarningMessage defaultWarningMessage = null;
+    private AudioWarningMessage defaultWarningMessage = null;
     private boolean defaultRepeat = true;
     private String defaultConfirmCode = null;
     private int defaultPriority = 1;
@@ -145,7 +145,7 @@ public class EarlyWarningThread extends Thread {
             if (supportText2Speech)
                 message = new TextWarningMessage(errorMessage);
             else
-                message = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.error_message"));
+                message = new AudioWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.error_message"));
             String application = "EarlyWarning";
             String type = "v2";
             boolean repeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
@@ -197,7 +197,7 @@ public class EarlyWarningThread extends Thread {
      */
     private void configureThread() {
         try {
-            defaultWarningMessage = new FileWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
+            defaultWarningMessage = new AudioWarningMessage(EarlyWarning.configuration.getString("gateway.defaults.warning_message"));
             defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
             defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
             defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");

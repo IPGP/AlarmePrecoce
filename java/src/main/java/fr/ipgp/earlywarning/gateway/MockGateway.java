@@ -4,7 +4,7 @@
  */
 package fr.ipgp.earlywarning.gateway;
 
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.triggers.Trigger;
 
@@ -72,7 +72,7 @@ public class MockGateway implements Gateway {
         return "";
     }
 
-    public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {
+    public String callTillConfirm(Trigger trigger, AudioWarningMessage defaultWarningMessage) {
         return "";
     }
 }

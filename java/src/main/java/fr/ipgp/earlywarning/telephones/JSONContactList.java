@@ -84,6 +84,15 @@ public class JSONContactList implements ContactList {
         throw new NoSuchContactException("No contact found for name " + name);
     }
 
+    public Contact getContactByNumber(String number) throws NoSuchContactException {
+        for (Contact c : contacts) {
+            if (c.phone.equals(number))
+                return c;
+        }
+
+        throw new NoSuchContactException("No contact found for phone number " + number);
+    }
+
     /**
      * Adds a contact and tries to save the JSON file.
      *
@@ -191,6 +200,18 @@ public class JSONContactList implements ContactList {
         for (Contact c : contacts)
             if (callList.indexOf(c.phone) > -1)
                 result.add(c);
+
+        return result;
+    }
+
+    public List<Contact> getCallList() {
+        List<Contact> result = new ArrayList<>();
+
+        for (String number : callList)
+            try {
+                result.add(getContactByNumber(number));
+            } catch (NoSuchContactException ignored) {
+            }
 
         return result;
     }

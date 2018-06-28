@@ -1,5 +1,6 @@
 package fr.ipgp.earlywarning.asterisk;
 
+import fr.ipgp.earlywarning.EarlyWarning;
 import org.asteriskjava.manager.*;
 import org.asteriskjava.manager.action.OriginateAction;
 import org.asteriskjava.manager.event.DbGetResponseEvent;
@@ -32,7 +33,7 @@ public class CallOriginator implements ManagerEventListener {
     /**
      * The maximum amount of time to ring before giving up the call. It's not necessarily the real value: the call will be hung up when the <code>ringTimeout</code> is over AND the welcome audio file finished.
      */
-    private static final int ringTimeout = 15 * SECOND;
+    private static int ringTimeout;
     /**
      * The timeout (in milliseconds) for the ManagerAction to be accepted by the server
      */
@@ -140,6 +141,8 @@ public class CallOriginator implements ManagerEventListener {
         this.localConnection = true;
 
         this.confirmCode = code;
+
+        EarlyWarning.appLogger.info("Confirmation code: " + code);
     }
 
     /**
@@ -221,6 +224,9 @@ public class CallOriginator implements ManagerEventListener {
      * @throws IOException                   if ManagerEvents listeners can't be set
      */
     private void init() throws AuthenticationFailedException, TimeoutException, IOException {
+        callAction = CallAction.Retry;
+        remainingTries = EarlyWarning.configuration.getInt("gateway.asterisk.retries", 3);
+        ringTimeout = EarlyWarning.configuration.getInt("gateway.asterisk.ring_timeout", 15 * SECOND);
         hungUp = false;
         connected = false;
 

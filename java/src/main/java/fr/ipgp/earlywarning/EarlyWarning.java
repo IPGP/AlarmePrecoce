@@ -11,6 +11,7 @@ import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.telephones.FileCallLists;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
+import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
@@ -18,6 +19,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,8 +42,7 @@ public class EarlyWarning {
     private static FileCallList defaultCallList;
     private static FileCallLists fileCallLists;
 
-    public static void main(String[] args) {
-
+    public static void main(final String[] args) {
         setLogger();
 
         checkUnicity();
@@ -55,6 +56,20 @@ public class EarlyWarning {
         startDataBaseHeartBeatThread();
 
         startContactsServer();
+
+        Thread thread = new Thread() {
+            public void run()
+            {
+                try {
+                    Thread.sleep(2500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Sending data");
+                TriggerV2Sender3.main(args);
+            }
+        };
+        thread.start();
 
         createGui();
 
@@ -107,7 +122,9 @@ public class EarlyWarning {
     private static void startContactsServer() {
         OrderUpdateServer server = null;
         try {
-            server = new OrderUpdateServer("resources/www/", "resources/contacts.json");
+            String home = EarlyWarning.configuration.getString("contacts.home");
+            String file = EarlyWarning.configuration.getString("contacts.file");
+            server = new OrderUpdateServer(home, file);
         } catch (IOException e) {
             appLogger.fatal("Fatal error : contacts JSON file is not readable or writable.");
             System.exit(1);
@@ -161,7 +178,12 @@ public class EarlyWarning {
      * Create GUI
      */
     private static void createGui() {
-        FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
-        fileCallListControler.displayView();
+        try {
+            FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
+            fileCallListControler.displayView();
+        } catch (HeadlessException ignored)
+        {
+            appLogger.info("Running in headless mode.");
+        }
     }
 }

@@ -4,7 +4,7 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.messages.TextWarningMessage;
 import fr.ipgp.earlywarning.messages.WarningMessage;
 import fr.ipgp.earlywarning.telephones.FileCallList;
@@ -159,7 +159,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
             }
         }
         if (warningMessage.toString().matches("\\w+\\.wav"))
-            trigger.setMessage(new FileWarningMessage(warningMessage.toString()));
+            trigger.setMessage(new AudioWarningMessage(warningMessage.toString()));
         else {
             if (warningMessage.toString().matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
                 trigger.setMessage(new TextWarningMessage(warningMessage.toString()));
