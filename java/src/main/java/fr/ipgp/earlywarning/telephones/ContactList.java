@@ -3,7 +3,7 @@ package fr.ipgp.earlywarning.telephones;
 import java.util.List;
 
 public interface ContactList {
-    Contact getContactByName(String name);
+    Contact getContactByName(String name) throws NoSuchContactException;
 
     void addContact(Contact contact);
 

@@ -1,6 +1,5 @@
 package fr.ipgp.earlywarning.telephones;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -73,15 +72,15 @@ public class JSONContactList implements ContactList {
      *
      * @param name the name of the contact
      * @return the corresponding contact
-     * @throws ValueException if no corresponding Contact exists in the list
+     * @throws NoSuchContactException if no corresponding Contact exists in the list
      */
-    public Contact getContactByName(String name) {
+    public Contact getContactByName(String name) throws NoSuchContactException {
         for (Contact c : contacts) {
             if (c.name.equals(name))
                 return c;
         }
 
-        throw new ValueException("No contact found for name " + name);
+        throw new NoSuchContactException("No contact found for name " + name);
     }
 
     /**
@@ -222,6 +221,8 @@ public class JSONContactList implements ContactList {
         for (String number : callList)
             if (existingNumbers.indexOf(number) > -1)
                 newCallList.add(number);
+
+        callList = newCallList;
     }
 
     /**
@@ -244,8 +245,15 @@ public class JSONContactList implements ContactList {
      */
     public void updateCallList(List<String> names) {
         callList.clear();
-        for (String name : names)
-            callList.add(getContactByName(name).phone);
+        for (String name : names) {
+            try {
+                assert getNames().indexOf(name) > -1;
+                callList.add(getContactByName(name).phone);
+            } catch (NoSuchContactException ignored) {
+                // This can't happen, since only existing contacts can be added to the call list.
+            }
+
+        }
     }
 
     /**
