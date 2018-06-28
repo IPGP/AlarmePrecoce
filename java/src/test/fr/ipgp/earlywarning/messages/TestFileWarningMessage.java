@@ -31,8 +31,8 @@ public class TestFileWarningMessage {
 
     @Test
     public void testCreateFileWarningMessage() {
-        FileWarningMessage fileWarningMessage = new FileWarningMessage(testFile);
-        Assert.assertEquals(testFile, fileWarningMessage.getFile());
-        Assert.assertEquals(testFile, fileWarningMessage.toString());
+        AudioWarningMessage audioWarningMessage = new AudioWarningMessage(testFile);
+        Assert.assertEquals(testFile, audioWarningMessage.getFile());
+        Assert.assertEquals(testFile, audioWarningMessage.toString());
     }
 }

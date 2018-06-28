@@ -4,7 +4,7 @@ package fr.ipgp.earlywarning.controler;
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.junit.After;
@@ -35,7 +35,7 @@ public class TestQueueManagerThread {
 
     @Test
     public void testCreateQueueManagerThread() {
-        FileWarningMessage mess = new FileWarningMessage("toto.wav");
+        AudioWarningMessage mess = new AudioWarningMessage("toto.wav");
         Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(), 1);
@@ -58,7 +58,7 @@ public class TestQueueManagerThread {
 
     @Test
     public void testAddTriggerInQueueManagerThread() {
-        FileWarningMessage mess = new FileWarningMessage("toto.wav");
+        AudioWarningMessage mess = new AudioWarningMessage("toto.wav");
         Trigger trig1 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig2 = new Trigger(CommonUtilities.getUniqueId(), 2);
         Trigger trig3 = new Trigger(CommonUtilities.getUniqueId(), 1);

@@ -215,7 +215,7 @@
             }
         };
 
-        req.open("POST", "http://localhost:6001/update", true);
+        req.open("POST", "http://195.83.188.41:6001/update", true);
         req.setRequestHeader("Content-Type", "application/json");
         req.send(JSON.stringify(result));
     }
@@ -278,7 +278,7 @@
             removePriority();
 
         var req = new XMLHttpRequest();
-        req.open("POST", "http://localhost:6001/new", true);
+        req.open("POST", "http://195.83.188.41:6001/new", true);
         req.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 if (data.priority) {

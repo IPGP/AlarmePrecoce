@@ -10,7 +10,7 @@ import org.asteriskjava.fastagi.*;
  *
  * @author Thomas Kowalski
  */
-class LocalAgiServer {
+public class LocalAgiServer {
     /**
      * The base {@link AgiServer} to run
      */

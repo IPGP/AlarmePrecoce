@@ -6,9 +6,11 @@ package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.AudioSerialMessage;
+import fr.ipgp.earlywarning.gateway.AsteriskGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
 import fr.ipgp.earlywarning.gateway.VoicentGateway;
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
+import fr.ipgp.earlywarning.telephones.NoSuchContactException;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.apache.commons.configuration.ConversionException;
 
@@ -24,7 +26,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class QueueManagerThread extends Thread {
     private static QueueManagerThread uniqueInstance;
-    private static FileWarningMessage defaultWarningMessage;
+    private static AudioWarningMessage defaultWarningMessage;
     protected boolean moreTriggers = true;
     private PriorityBlockingQueue<Trigger> queue;
     private Gateway gateway;
@@ -47,7 +49,7 @@ public class QueueManagerThread extends Thread {
         queue = new PriorityBlockingQueue<>();
     }
 
-    public static synchronized QueueManagerThread getInstance(FileWarningMessage warningMessage) {
+    public static synchronized QueueManagerThread getInstance(AudioWarningMessage warningMessage) {
         if (uniqueInstance == null) {
             uniqueInstance = new QueueManagerThread();
         }
@@ -224,7 +226,42 @@ public class QueueManagerThread extends Thread {
         }
     }
 
-    private void configureGateway() {
+    private void configureGateway()
+    {
+        String active = EarlyWarning.configuration.getString("gateway.active");
+        if (active.equalsIgnoreCase("asterisk"))
+            configureAsteriskGateway();
+        else if (active.equalsIgnoreCase("voicent"))
+            configureVoicentGateway();
+        else
+        {
+            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: " + active + ", should be 'asterisk' or 'voicent'");
+            System.exit(-1);
+        }
+    }
+
+    private void configureAsteriskGateway() {
+        try {
+            String host = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_host");
+            int port = EarlyWarning.configuration.getInt("gateway.asterisk.settings.ami_port");
+            String username = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_user");
+            String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
+
+            gateway = new AsteriskGateway(host, port, username, password);
+        }
+        catch (ConversionException e)
+        {
+            EarlyWarning.appLogger.fatal("Wrong value.");
+            System.exit(-1);
+        }
+        catch (NoSuchElementException e)
+        {
+            EarlyWarning.appLogger.fatal("Missing config.");
+            System.exit(-1);
+        }
+    }
+
+    private void configureVoicentGateway() {
         try {
             String host = EarlyWarning.configuration.getString("gateway.voicent.host");
             int port = EarlyWarning.configuration.getInt("gateway.voicent.port");

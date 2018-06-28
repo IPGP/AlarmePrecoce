@@ -5,7 +5,7 @@
 package fr.ipgp.earlywarning.gateway;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.messages.FileWarningMessage;
+import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.telephones.FileCallList;
 import fr.ipgp.earlywarning.telephones.TextCallList;
 import fr.ipgp.earlywarning.triggers.Trigger;
@@ -351,14 +351,14 @@ public class VoicentGateway implements Gateway {
     /**
      *
      */
-    public String callTillConfirm(Trigger trigger, FileWarningMessage defaultWarningMessage) {
+    public String callTillConfirm(Trigger trigger, AudioWarningMessage defaultWarningMessage) {
 
         String confirmCode = trigger.getConfirmCode();
         String wavFile;
         switch (trigger.getMessage().getType()) {
-            case WAV:
-                FileWarningMessage fileWarningMessage = (FileWarningMessage) trigger.getMessage();
-                wavFile = fileWarningMessage.getFile();
+            case AUDIO:
+                AudioWarningMessage audioWarningMessage = (AudioWarningMessage) trigger.getMessage();
+                wavFile = audioWarningMessage.getFile();
                 break;
             default:
                 wavFile = defaultWarningMessage.getFile();

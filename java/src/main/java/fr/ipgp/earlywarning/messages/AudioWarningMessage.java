@@ -9,11 +9,11 @@ package fr.ipgp.earlywarning.messages;
  *
  * @author Patrice Boissier
  */
-public class FileWarningMessage implements WarningMessage {
-    private final WarningMessageType type = WarningMessageType.WAV;
+public class AudioWarningMessage implements WarningMessage {
+    private final WarningMessageType type = WarningMessageType.AUDIO;
     private String file;
 
-    public FileWarningMessage(String file) {
+    public AudioWarningMessage(String file) {
         this.file = file;
     }
 
