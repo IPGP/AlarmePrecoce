@@ -103,3 +103,5 @@ java/dist
 !java/lib/*.jar
 
 Javadoc
+
+*.lock
