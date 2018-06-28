@@ -21,6 +21,7 @@
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/libraries
 
 # CMake
 cmake-build-debug/
@@ -107,3 +108,5 @@ Javadoc
 *.lock
 
 java/dependency-reduced-pom.xml
+
+java/tests

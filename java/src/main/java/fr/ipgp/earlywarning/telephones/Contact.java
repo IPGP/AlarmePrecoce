@@ -57,4 +57,20 @@ public class Contact {
         object.put("priority", priority);
         return object;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o.getClass() == this.getClass())
+            return equals((Contact)o);
+            else
+                return false;
+    }
+
+    public boolean equals(Contact c)
+    {
+        return c.priority == this.priority
+                && c.name.equals(this.name)
+                && c.phone.equals(this.phone);
+    }
 }

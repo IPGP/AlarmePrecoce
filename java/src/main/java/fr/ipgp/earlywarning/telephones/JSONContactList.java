@@ -1,5 +1,6 @@
 package fr.ipgp.earlywarning.telephones;
 
+import org.apache.commons.lang.NullArgumentException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -100,10 +101,13 @@ public class JSONContactList implements ContactList {
     /**
      * Adds a contact to the contact list.
      *
-     * @param contact    the contact to be added
+     * @param contact    <b>not null</b> the contact to be added
      * @param writeAfter if true, tries to write the JSON file after adding the contact.
      */
     public void addContact(Contact contact, boolean writeAfter) {
+        if (contact == null)
+            throw new NullArgumentException("Can't add a null contact.");
+
         contacts.add(contact);
 
         if (contact.priority)
@@ -191,6 +195,10 @@ public class JSONContactList implements ContactList {
         return result;
     }
 
+    public List<Contact> getAvailableContacts() {
+        return contacts;
+    }
+
     /**
      * Gets the names of all the contacts in the list
      *
@@ -204,6 +212,11 @@ public class JSONContactList implements ContactList {
         return names;
     }
 
+    /**
+     * Removes all the contacts whose name is not in <code>names</code> from the list.
+     *
+     * @param names the names of the contact to keep
+     */
     public void clean(List<String> names) {
         List<Contact> newContacts = new ArrayList<>();
 

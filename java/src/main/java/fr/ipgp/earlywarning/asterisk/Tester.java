@@ -32,7 +32,7 @@ public class Tester {
 
         // Create a ManagerFactory.
         // Creating one here allows us to use the same for multiple calls with the CallOriginator
-        ManagerConnectionFactory factory = new ManagerConnectionFactory("195.83.188.41", 5038, "manager", "ovpf");
+        ManagerConnectionFactory factory = new ManagerConnectionFactory("localhost", 5038, "manager", "ovpf");
         ManagerConnection managerConnection = factory.createManagerConnection();
 
         // Construct the CallOriginator with our ManagerConnection and the confirmation code defined up
