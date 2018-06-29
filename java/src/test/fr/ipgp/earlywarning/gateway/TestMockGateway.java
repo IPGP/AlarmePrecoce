@@ -29,8 +29,6 @@ public class TestMockGateway {
     @Test
     public void testCreateMockGateway() {
         MockGateway mockGateway = MockGateway.getInstance();
-        System.out.println(mockGateway.callStatus("bidon"));
-        System.out.println(mockGateway.callStatus("bidon"));
-        System.out.println(mockGateway.callStatus("bidon"));
+        // TODO?
     }
 }

@@ -6,8 +6,10 @@ package fr.ipgp.earlywarning.triggers;
 
 import fr.ipgp.earlywarning.messages.TextWarningMessage;
 import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.telephones.ContactList;
+import fr.ipgp.earlywarning.telephones.ContactListMapper;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
+import fr.ipgp.earlywarning.telephones.NoSuchListException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,6 +40,13 @@ public class TestDatagramTriggerConverter {
         packet.setPort(4445);
         packet.setAddress(address);
 
+        try {
+            ContactListMapper.testDefaultList();
+        } catch (NoSuchListException e) {
+            Assert.fail("Test can't be ran: no default contact list set.");
+        } catch (IOException e) {
+            Assert.fail("Test can't be ran: default contact list can't be initialized: " + e.getMessage());
+        }
     }
 
     @After
@@ -47,9 +56,8 @@ public class TestDatagramTriggerConverter {
 
     public void testDecodeTrigger(String message) {
         try {
-
-            WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-            FileCallList callList = new FileCallList("defaultCallList.txt");
+            String warningMessage = "Declenchement";
+            ContactList callList = ContactListMapper.getInstance().getDefaultList();
             packet.setData(message.getBytes());
             packet.setLength(message.length());
             DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, callList, warningMessage, true, "11", 1);
@@ -63,8 +71,8 @@ public class TestDatagramTriggerConverter {
     @Test
     public void testCreateV1Trigger() {
         try {
-            WarningMessage warningMessage = new TextWarningMessage("Declenchement");
-            FileCallList callList = new FileCallList("resources/defaultCallList.voc");
+            String warningMessage = "Declenchement";
+            ContactList callList = ContactListMapper.getInstance().getDefaultList();
             String message = "Sismo 13/03/2008 13:22:04 Declenchement";
             packet.setData(message.getBytes());
             packet.setLength(message.length());
@@ -72,7 +80,7 @@ public class TestDatagramTriggerConverter {
             Trigger trig = datagram2Trigger.getTrigger();
             datagram2Trigger.decode();
             Assert.assertEquals("Sismo", trig.getApplication());
-            Assert.assertEquals(callList, trig.getCallList());
+            Assert.assertEquals(callList, trig.getContactList());
             Assert.assertEquals(address, trig.getInetAddress());
             Assert.assertEquals(warningMessage, trig.getMessage());
             Assert.assertEquals(1, trig.getPriority());

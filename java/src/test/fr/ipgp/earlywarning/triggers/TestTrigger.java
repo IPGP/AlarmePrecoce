@@ -5,10 +5,8 @@ package fr.ipgp.earlywarning.triggers;
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.messages.TextWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.telephones.CallList;
-import fr.ipgp.earlywarning.telephones.TextCallList;
+import fr.ipgp.earlywarning.telephones.ContactList;
+import fr.ipgp.earlywarning.telephones.SingleContactList;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,8 +25,8 @@ public class TestTrigger {
 
     public long id;
     public int priority;
-    public CallList callList;
-    public WarningMessage message;
+    public ContactList contactList;
+    public String message;
     public InetAddress inetAddress;
     public String application;
     public String type;
@@ -45,8 +43,8 @@ public class TestTrigger {
     public void setUp() throws UnknownHostException {
         id = 1635132135;
         priority = 1;
-        callList = new TextCallList("0692703856");
-        message = new TextWarningMessage("Alerte : tout brule!!");
+        contactList = new SingleContactList("0692703856");
+        message = "Alerte : tout brule!!";
         inetAddress = InetAddress.getByName("localhost");
         application = "Sismo";
         type = "v1";
@@ -67,7 +65,7 @@ public class TestTrigger {
     public void testCreateTrigger() {
         Trigger trig = new Trigger(id, 1);
         trig.setApplication(application);
-        trig.setCallList(callList);
+        trig.setContactList(contactList);
         trig.setInetAddress(inetAddress);
         trig.setMessage(message);
         trig.setPriority(priority);
@@ -78,7 +76,7 @@ public class TestTrigger {
         trig.setDate(date);
         trig.setConfirmCode(confirmCode);
         Assert.assertEquals(application, trig.getApplication());
-        Assert.assertEquals(callList, trig.getCallList());
+        Assert.assertEquals(contactList, trig.getContactList());
         Assert.assertEquals(id, trig.getId());
         Assert.assertEquals(inetAddress, trig.getInetAddress());
         Assert.assertEquals(message, trig.getMessage());

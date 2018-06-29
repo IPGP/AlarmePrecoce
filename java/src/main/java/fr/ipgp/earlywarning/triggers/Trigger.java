@@ -6,7 +6,7 @@ package fr.ipgp.earlywarning.triggers;
 
 import fr.ipgp.earlywarning.messages.WarningMessage;
 import fr.ipgp.earlywarning.messages.WarningMessageType;
-import fr.ipgp.earlywarning.telephones.CallList;
+import fr.ipgp.earlywarning.telephones.ContactList;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -23,8 +23,8 @@ public class Trigger implements Comparable {
     private String type;
     private InetAddress inetAddress;
     private String application;
-    private CallList callList;
-    private WarningMessage message;
+    private ContactList contactList;
+    private String messageId;
     private String textMessage;
     private boolean repeat;
     private String date;
@@ -97,15 +97,15 @@ public class Trigger implements Comparable {
     /**
      * @return the callList
      */
-    public CallList getCallList() {
-        return callList;
+    public ContactList getContactList() {
+        return contactList;
     }
 
     /**
-     * @param callList the callList to set
+     * @param contactList the callList to set
      */
-    public void setCallList(CallList callList) {
-        this.callList = callList;
+    public void setContactList(ContactList contactList) {
+        this.contactList = contactList;
     }
 
     /**
@@ -130,17 +130,17 @@ public class Trigger implements Comparable {
     }
 
     /**
-     * @return the message
+     * @return the message ID
      */
-    public WarningMessage getMessage() {
-        return message;
+    public String getMessage() {
+        return messageId;
     }
 
     /**
-     * @param message the message to set
+     * @param messageName the message to set
      */
-    public void setMessage(WarningMessage message) {
-        this.message = message;
+    public void setMessage(String messageName) {
+        this.messageId = messageName;
     }
 
     /**
@@ -261,7 +261,7 @@ public class Trigger implements Comparable {
     public String showTrigger() {
         return "Id : " + id + " - Priority : " + priority + " - Type : " + type + " From : " + inetAddress.toString() +
                 " - Application : " + application + " - Repeat : " + repeat + " - Date : " + date + " - Confirm Code : " + confirmCode +
-                " - Call List : " + callList.toString() + " - Warning Message : " + message.toString();
+                " - Contact List : " + contactList.toString() + " - Warning Message ID : " + messageId.toString();
     }
 
     /**
@@ -274,10 +274,8 @@ public class Trigger implements Comparable {
         body += "From host : " + inetAddress.toString() + "\n";
         body += "From application : " + application + "\n";
         body += "Confirmation code : " + confirmCode + "\n";
-        body += "Call list : " + callList.toString() + "\n";
-        body += "Warning message : " + message.toString() + "\n";
-        if (message.getType() == WarningMessageType.AUDIO)
-            body += "Text Warning message : " + textMessage + "\n";
+        body += "Contact list : " + contactList.toString() + "\n";
+        body += "Warning message ID : " + messageId.toString() + "\n";
         return body;
     }
 }

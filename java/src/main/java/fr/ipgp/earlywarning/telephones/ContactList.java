@@ -55,6 +55,12 @@ public interface ContactList {
     void updateCallList(List<String> names);
 
     /**
+     * Returns the list of the contacts to call, in the right order.
+     * @return
+     */
+    List<Contact> getCallList();
+
+    /**
      *
      * @return the available contacts, in the form of a JSON Array
      */

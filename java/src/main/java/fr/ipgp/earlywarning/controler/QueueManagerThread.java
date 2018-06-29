@@ -8,13 +8,16 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.AudioSerialMessage;
 import fr.ipgp.earlywarning.gateway.AsteriskGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
-import fr.ipgp.earlywarning.gateway.VoicentGateway;
 import fr.ipgp.earlywarning.messages.AudioWarningMessage;
-import fr.ipgp.earlywarning.telephones.NoSuchContactException;
+import fr.ipgp.earlywarning.messages.NoSuchMessageException;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
+import fr.ipgp.earlywarning.telephones.ContactListMapper;
+import fr.ipgp.earlywarning.telephones.NoSuchListException;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.apache.commons.configuration.ConversionException;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -26,7 +29,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class QueueManagerThread extends Thread {
     private static QueueManagerThread uniqueInstance;
-    private static AudioWarningMessage defaultWarningMessage;
+    private static String defaultWarningMessage;
     protected boolean moreTriggers = true;
     private PriorityBlockingQueue<Trigger> queue;
     private Gateway gateway;
@@ -49,7 +52,7 @@ public class QueueManagerThread extends Thread {
         queue = new PriorityBlockingQueue<>();
     }
 
-    public static synchronized QueueManagerThread getInstance(AudioWarningMessage warningMessage) {
+    public static synchronized QueueManagerThread getInstance(String warningMessage) {
         if (uniqueInstance == null) {
             uniqueInstance = new QueueManagerThread();
         }
@@ -133,11 +136,8 @@ public class QueueManagerThread extends Thread {
                 Trigger trig = queue.poll();
                 assert trig != null;
 
-                int retryCounter = 0;
-                while (gateway.callTillConfirm(trig, defaultWarningMessage) == null && retryCounter < retry) {
-                    EarlyWarning.appLogger.info("Server response : null. Retrying for the " + retryCounter + " time.");
-                    retryCounter++;
-                }
+                gateway.callTillConfirm(trig);
+
                 if (useMail) {
                     try {
                         mailerThread.sendNotification("[EarlyWarning] Alert from " + trig.getApplication(), trig.mailTrigger());
@@ -154,7 +154,7 @@ public class QueueManagerThread extends Thread {
                     }
                 }
                 if (useSound) {
-                    audioSerialMessage.sendMessage(trig, resourcesPath, defaultWarningMessage);
+                    audioSerialMessage.sendMessage(trig, resourcesPath);
                     while (audioSerialMessage.isPlaying()) {
                         try {
                             Thread.sleep(1000);
@@ -226,16 +226,31 @@ public class QueueManagerThread extends Thread {
         }
     }
 
-    private void configureGateway()
-    {
+    private void configureGateway() {
         String active = EarlyWarning.configuration.getString("gateway.active");
-        if (active.equalsIgnoreCase("asterisk"))
+        if (active.equalsIgnoreCase("asterisk")) {
             configureAsteriskGateway();
-        else if (active.equalsIgnoreCase("voicent"))
-            configureVoicentGateway();
-        else
-        {
-            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: " + active + ", should be 'asterisk' or 'voicent'");
+        } else {
+            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: " + active + ", should be 'asterisk' (only available option at the moment).");
+            System.exit(-1);
+        }
+
+        // Verify that the default warning message is available for this gateway
+        try {
+            WarningMessageMapper.testDefaultMessage(gateway);
+        } catch (NoSuchMessageException ex) {
+            EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getCanonicalName());
+            System.exit(-1);
+        }
+
+        // Verify that the default ContactList is available for this gateway
+        try {
+            ContactListMapper.testDefaultList();
+        } catch (NoSuchListException ex) {
+            EarlyWarning.appLogger.fatal("No default contact list given.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            EarlyWarning.appLogger.fatal("Can't initialize default contact list for gateway.");
             System.exit(-1);
         }
     }
@@ -248,32 +263,11 @@ public class QueueManagerThread extends Thread {
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
 
             gateway = new AsteriskGateway(host, port, username, password);
-        }
-        catch (ConversionException e)
-        {
+        } catch (ConversionException e) {
             EarlyWarning.appLogger.fatal("Wrong value.");
             System.exit(-1);
-        }
-        catch (NoSuchElementException e)
-        {
+        } catch (NoSuchElementException e) {
             EarlyWarning.appLogger.fatal("Missing config.");
-            System.exit(-1);
-        }
-    }
-
-    private void configureVoicentGateway() {
-        try {
-            String host = EarlyWarning.configuration.getString("gateway.voicent.host");
-            int port = EarlyWarning.configuration.getInt("gateway.voicent.port");
-            String vcastexe = EarlyWarning.configuration.getString("gateway.voicent.vcastexe");
-            resourcesPath = EarlyWarning.configuration.getString("gateway.voicent.resources_path");
-            retry = EarlyWarning.configuration.getInt("gateway.voicent.retry");
-            gateway = VoicentGateway.getInstance(host, port, resourcesPath, vcastexe);
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("gateway has wrong values in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
-            System.exit(-1);
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.fatal("gataway values are missing in configuration file : check gateway section of earlywarning.xml configuration file. Exiting...");
             System.exit(-1);
         }
     }

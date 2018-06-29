@@ -7,6 +7,7 @@ package fr.ipgp.earlywarning.audio;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.controler.QueueManagerThread;
 import fr.ipgp.earlywarning.messages.AudioWarningMessage;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.apache.commons.configuration.ConversionException;
 
@@ -78,7 +79,7 @@ public class AudioSerialMessage {
      * It then waits for "delay" seconds and starts to play the audio message.<br/>
      * Finally the serial port is closed.
      */
-    public void sendMessage(Trigger trigger, String resourcesPath, AudioWarningMessage defaultWarningMessage) {
+    public void sendMessage(Trigger trigger, String resourcesPath) {
         try {
             serialPort = (SerialPort) comPortId.open("Envoi", 5000);
             EarlyWarning.appLogger.debug("Opening serial port");
@@ -96,15 +97,7 @@ public class AudioSerialMessage {
         String finalMessage = textMessage + " " + trigger.getApplication();
 
         String wavFile;
-        switch (trigger.getMessage().getType()) {
-            case AUDIO:
-                AudioWarningMessage audioWarningMessage = (AudioWarningMessage) trigger.getMessage();
-                wavFile = resourcesPath + "/" + audioWarningMessage.getFile();
-                break;
-            default:
-                wavFile = resourcesPath + "/" + defaultWarningMessage.getFile();
-                break;
-        }
+        wavFile = WarningMessageMapper.getInstance("Serial").getNameOrDefault(trigger.getMessage());
 
         try {
             outStream = serialPort.getOutputStream();

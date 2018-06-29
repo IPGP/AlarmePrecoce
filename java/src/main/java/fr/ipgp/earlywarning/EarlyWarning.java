@@ -6,10 +6,8 @@ package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
-import fr.ipgp.earlywarning.controler.FileCallListControler;
-import fr.ipgp.earlywarning.telephones.FileCallList;
-import fr.ipgp.earlywarning.telephones.FileCallLists;
-import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
+import fr.ipgp.earlywarning.telephones.ContactList;
+import fr.ipgp.earlywarning.telephones.ContactListBuilder;
 import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
@@ -19,10 +17,9 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import java.awt.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -39,8 +36,8 @@ public class EarlyWarning {
 
     public static XMLConfiguration configuration;
     public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-    private static FileCallList defaultCallList;
-    private static FileCallLists fileCallLists;
+    private static ContactList defaultContactList;
+    private static List<ContactList> contactsLists;
 
     public static void main(final String[] args) {
         setLogger();
@@ -82,17 +79,16 @@ public class EarlyWarning {
     private static void readConfiguration() {
         try {
             configuration = new XMLConfiguration("resources/earlywarning.xml");
-            defaultCallList = new FileCallList(configuration.getString("gateway.voicent.resources_path") + "/" + configuration.getString("gateway.defaults.call_list"));
-            fileCallLists = new FileCallLists(new File(configuration.getString("gateway.voicent.resources_path")));
+            defaultContactList = ContactListBuilder.build(configuration.getString("contacts.default"));
         } catch (ConfigurationException cex) {
             appLogger.fatal("Fatal error : configuration file not present or not readable. Exiting application");
-            System.exit(1);
-        } catch (InvalidFileNameException ifne) {
-            appLogger.fatal("An invalid call list : check hearbeat section of earlywarning.xml configuration file. Exiting.");
             System.exit(1);
         } catch (FileNotFoundException fnfe) {
             appLogger.fatal("Default file call list or resource path not found : " + fnfe.getMessage() + ". check gateway section of earlywarning.xml configuration file. Exiting.");
             System.exit(1);
+        } catch (IOException e) {
+            appLogger.fatal("Couldn't build default call list.");
+            System.exit(-1);
         }
     }
 
@@ -144,7 +140,7 @@ public class EarlyWarning {
      */
     private static void startEarlyWarningThread() {
         try {
-            Thread earlyWarningThread = EarlyWarningThread.getInstance(defaultCallList);
+            Thread earlyWarningThread = EarlyWarningThread.getInstance(defaultContactList);
             earlyWarningThread.start();
         } catch (ConversionException ce) {
             appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
@@ -178,12 +174,13 @@ public class EarlyWarning {
      * Create GUI
      */
     private static void createGui() {
-        try {
-            FileCallListControler fileCallListControler = new FileCallListControler(defaultCallList, fileCallLists);
-            fileCallListControler.displayView();
-        } catch (HeadlessException ignored)
-        {
-            appLogger.info("Running in headless mode.");
-        }
+    // TODO: fix this
+        //        try {
+//            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
+//            fileCallListControler.displayView();
+//        } catch (HeadlessException ignored)
+//        {
+//            appLogger.info("Running in headless mode.");
+//        }
     }
 }

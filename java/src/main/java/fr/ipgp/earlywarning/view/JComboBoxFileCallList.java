@@ -4,11 +4,7 @@
  */
 package fr.ipgp.earlywarning.view;
 
-import fr.ipgp.earlywarning.controler.FileCallListControler;
 import fr.ipgp.earlywarning.controler.FileCallListView;
-import fr.ipgp.earlywarning.telephones.FileCallList;
-import fr.ipgp.earlywarning.telephones.FileCallListChangedEvent;
-import fr.ipgp.earlywarning.telephones.FileCallLists;
 
 import javax.swing.*;
 import java.awt.*;

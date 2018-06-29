@@ -4,12 +4,9 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
-import fr.ipgp.earlywarning.messages.TextWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.telephones.ContactList;
+import fr.ipgp.earlywarning.telephones.ContactListMapper;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
-import fr.ipgp.earlywarning.telephones.TextCallList;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 
 import java.io.IOException;
@@ -27,21 +24,21 @@ public class DatagramTriggerConverter implements TriggerConverter {
     protected int senderPort;
     protected Trigger trigger;
     protected String packetContent;
-    protected FileCallList defaultCallList;
-    protected WarningMessage defaultWarningMessage;
+    protected ContactList defaultContactList;
+    protected String defaultWarningMessage;
     protected boolean defaultRepeat;
     protected String defaultConfirmCode;
     protected int defaultPriority;
 
-    public DatagramTriggerConverter(DatagramPacket packet, FileCallList defaultCallList, WarningMessage defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
+    public DatagramTriggerConverter(DatagramPacket packet, ContactList defaultContactList, String defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
         this.packet = packet;
         this.senderAddress = packet.getAddress();
         this.senderPort = packet.getPort();
         this.packetContent = new String(packet.getData(), 0, packet.getLength());
-        this.defaultCallList = defaultCallList;
-        this.defaultWarningMessage = defaultWarningMessage;
+        this.defaultContactList = defaultContactList;
         this.defaultRepeat = defaultRepeat;
         this.defaultConfirmCode = defaultConfirmCode;
+        this.defaultWarningMessage = defaultWarningMessage;
         this.defaultPriority = defaultPriority;
         this.trigger = new Trigger(CommonUtilities.getUniqueId(), defaultPriority);
         this.trigger.setInetAddress(senderAddress);
@@ -98,8 +95,8 @@ public class DatagramTriggerConverter implements TriggerConverter {
         if (packetContentElements.length < 4)
             throw new MissingTriggerFieldException("Not enough fields for a V1 trigger : " + this.packetContent);
         trigger.setApplication(packetContentElements[0]);
-        trigger.setCallList(defaultCallList);
-        trigger.setMessage(defaultWarningMessage);
+        trigger.setContactList(defaultContactList);
+        trigger.setMessage("default");
         trigger.setType("01");
         trigger.setDate(packetContentElements[1] + " " + packetContentElements[2]);
         trigger.setRepeat(defaultRepeat);
@@ -145,27 +142,13 @@ public class DatagramTriggerConverter implements TriggerConverter {
             throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid repeat " + packetContentElements[6]);
         if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
             throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
-        if (packetContentElements[5].matches("\\w+\\.txt")) {
-            trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
-        } else {
-            if (packetContentElements[5].matches("\\w+\\.voc")) {
-                trigger.setCallList(new FileCallList(defaultCallList.getFilePath() + "/" + packetContentElements[5]));
-            } else {
-                if (packetContentElements[5].matches("(\\d*)(,\\d*)*")) {
-                    String phoneNumbers = packetContentElements[5].replaceAll(",", " ");
-                    trigger.setCallList(new TextCallList(phoneNumbers));
-                } else
-                    throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
-            }
-        }
-        if (warningMessage.toString().matches("\\w+\\.wav"))
-            trigger.setMessage(new AudioWarningMessage(warningMessage.toString()));
-        else {
-            if (warningMessage.toString().matches("\\|[\\w\\s!\\?,\\.':\\(\\)\\u00C0-\\u00FF]*\\|"))
-                trigger.setMessage(new TextWarningMessage(warningMessage.toString()));
-            else
-                throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessage);
-        }
+        if (!packetContentElements[5].matches("\\w+"))
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
+        if (!warningMessage.toString().matches("\\w+"))
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessage);
+
+        trigger.setContactList(ContactListMapper.getInstance().getListOrDefault(packetContentElements[5]));
+        trigger.setMessage(warningMessage.toString());
         trigger.setApplication(packetContentElements[4]);
         trigger.setType(packetContentElements[0]);
         trigger.setPriority(Integer.parseInt(packetContentElements[1]));

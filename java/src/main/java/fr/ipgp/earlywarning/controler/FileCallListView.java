@@ -4,14 +4,12 @@
  */
 package fr.ipgp.earlywarning.controler;
 
-import fr.ipgp.earlywarning.telephones.FileCallListListener;
-
 /**
  * The file call list view (part of the Observer/MVC pattern)
  *
  * @author Patrice Boissier
  */
-public abstract class FileCallListView implements FileCallListListener {
+public abstract class FileCallListView {
     private FileCallListControler controler;
 
     public FileCallListView(FileCallListControler controler) {

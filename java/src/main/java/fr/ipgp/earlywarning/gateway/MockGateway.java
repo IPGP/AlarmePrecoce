@@ -4,8 +4,9 @@
  */
 package fr.ipgp.earlywarning.gateway;
 
+import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.messages.AudioWarningMessage;
-import fr.ipgp.earlywarning.telephones.FileCallList;
+import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.triggers.Trigger;
 
 import java.util.Random;
@@ -30,49 +31,18 @@ public class MockGateway implements Gateway {
         return uniqueInstance;
     }
 
-    /**
-     *
-     */
-    public String callText(String phoneno, String text, boolean selfdelete) {
-        return "";
+    @Override
+    public void callTillConfirm(Trigger trigger) {
+        EarlyWarning.appLogger.info("MockGateway calling till confirm for trigger " + trigger.toString());
     }
 
-    public String callAudio(String phoneno, String audiofile, boolean selfdelete) {
-        return "";
+    @Override
+    public void callTest(String number) {
+        EarlyWarning.appLogger.info("MockGateway emitting test call to " + number);
     }
 
-    public String callStatus(String reqID) {
-        Random generator = new Random();
-        int randomInt = generator.nextInt(4);
-        switch (randomInt) {
-            case 0:
-                return "Call Made";
-            case 1:
-                return "Call Failed";
-            case 2:
-                return "Call Will Retry";
-            default:
-                return "";
-        }
-    }
-
-    public String callRemove(String reqID) {
-        return "";
-    }
-
-    public String callTillConfirm(String vocfile, String wavfile, String ccode, String[] phoneNumbers) {
-        return "";
-    }
-
-    public String callTillConfirm(String vocfile, String wavfile, String ccode, FileCallList callList) {
-        return "";
-    }
-
-    public String callTillConfirm(String vocfile, String wavfile, String ccode) {
-        return "";
-    }
-
-    public String callTillConfirm(Trigger trigger, AudioWarningMessage defaultWarningMessage) {
-        return "";
+    @Override
+    public String getSettingsQualifier() {
+        return "mock";
     }
 }
