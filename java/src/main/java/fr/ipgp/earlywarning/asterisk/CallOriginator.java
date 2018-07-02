@@ -31,13 +31,13 @@ public class CallOriginator implements ManagerEventListener {
     @SuppressWarnings("unused")
     private static final int MINUTE = 60 * SECOND;
     /**
-     * The maximum amount of time to ring before giving up the call. It's not necessarily the real value: the call will be hung up when the <code>ringTimeout</code> is over AND the welcome audio file finished.
-     */
-    private static int ringTimeout;
-    /**
      * The timeout (in milliseconds) for the ManagerAction to be accepted by the server
      */
     private static final long TIMEOUT = 30000;
+    /**
+     * The maximum amount of time to ring before giving up the call. It's not necessarily the real value: the call will be hung up when the <code>ringTimeout</code> is over AND the welcome audio file finished.
+     */
+    private static int ringTimeout;
     private static String amiHostname = null;
     private static int amiPort = -1;
     private static String managerUsername = null;

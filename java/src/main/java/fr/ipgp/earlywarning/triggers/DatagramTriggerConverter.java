@@ -5,10 +5,8 @@
 package fr.ipgp.earlywarning.triggers;
 
 import fr.ipgp.earlywarning.telephones.ContactListMapper;
-import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
@@ -52,7 +50,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      *
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
-    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
+    public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException {
         System.out.println(packetContent);
         String[] packetContentSplit = this.packetContent.split(" ");
         int version;
@@ -111,7 +109,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
      *
      * @param packetContentElements the elements of the received message
      */
-    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
+    private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
         StringBuilder warningMessageBuilder = new StringBuilder();
         String warningMessage;
         if (packetContentElements.length > 8) {

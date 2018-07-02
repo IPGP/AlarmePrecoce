@@ -177,6 +177,7 @@ public class EarlyWarning {
     /**
      * Create GUI
      */
+    @SuppressWarnings("EmptyMethod")
     private static void createGui() {
         // TODO: fix this
         //        try {

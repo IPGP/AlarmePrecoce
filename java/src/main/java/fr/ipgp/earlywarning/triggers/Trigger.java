@@ -259,29 +259,27 @@ public class Trigger implements Comparable {
      * @return a String with the properties of the Trigger
      */
     public String showTrigger() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id : ");
-        sb.append(id);
-        sb.append(" - Priority : ");
-        sb.append(priority);
-        sb.append(" - Type : ");
-        sb.append(type);
-        sb.append(" From : ");
-        sb.append(inetAddress.toString());
-        sb.append(" - Application : ");
-        sb.append(application);
-        sb.append(" - Repeat : ");
-        sb.append(repeat);
-        sb.append(" - Date : ");
-        sb.append(date);
-        sb.append(" - Confirm Code : ");
-        sb.append(confirmCode);
-        sb.append(" - Contact List : ");
-        sb.append(contactList.toString());
-        sb.append(" - Warning Message ID : ");
-        sb.append(messageId);
 
-        return sb.toString();
+        return "Id : " +
+                id +
+                " - Priority : " +
+                priority +
+                " - Type : " +
+                type +
+                " From : " +
+                inetAddress.toString() +
+                " - Application : " +
+                application +
+                " - Repeat : " +
+                repeat +
+                " - Date : " +
+                date +
+                " - Confirm Code : " +
+                confirmCode +
+                " - Contact List : " +
+                contactList.toString() +
+                " - Warning Message ID : " +
+                messageId;
     }
 
     /**

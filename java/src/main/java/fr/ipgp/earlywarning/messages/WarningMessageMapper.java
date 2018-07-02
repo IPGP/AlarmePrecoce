@@ -9,14 +9,14 @@ import java.util.NoSuchElementException;
 
 /**
  * An utility that allows to map, for a given <code>Gateway</code> warning message names to file names to play.
+ *
  * @author Thomas Kowalski
  * // TODO: add Javadoc for class
  */
 public class WarningMessageMapper {
+    private static Map<String, WarningMessageMapper> mappers;
     private final Map<String, String> mappings;
     private final String gatewayQualifier;
-
-    private static Map<String, WarningMessageMapper> mappers;
 
     private WarningMessageMapper(String qualifier) throws NoSuchMessageException {
         // Initialize the mappings for this gateway type

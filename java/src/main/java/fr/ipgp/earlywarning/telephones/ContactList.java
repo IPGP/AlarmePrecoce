@@ -56,24 +56,24 @@ public interface ContactList {
 
     /**
      * Updates the call list (people to be called and their order) so it reflects the names list.
+     *
      * @param names the names of the contacts who should be called, by call order (possibly multiple times each)
      */
     void updateCallList(List<String> names);
 
     /**
      * Returns the list of the contacts to call, in the right order.
+     *
      * @return the contacts to call, in the right order
      */
     List<Contact> getCallList();
 
     /**
-     *
      * @return the available contacts, in the form of a JSON Array
      */
     String getAvailableContactsAsJson();
 
     /**
-     *
      * @return the enabled contacts, in their call order, in the form of a JSON Array
      */
     String getEnabledContactsAsJson();

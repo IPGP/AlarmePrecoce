@@ -4,8 +4,6 @@ package fr.ipgp.earlywarning.triggers;
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.messages.TextWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
 import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.telephones.ContactListMapper;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
@@ -63,7 +61,7 @@ public class TestDatagramTriggerConverter {
             DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, true, "11", 1);
             Trigger trigger = datagram2Trigger.getTrigger();
             datagram2Trigger.decode();
-        } catch (UnknownTriggerFormatException | InvalidFileNameException | IOException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
+        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
             System.out.println(utfe.getMessage());
         }
     }
@@ -89,7 +87,7 @@ public class TestDatagramTriggerConverter {
             Assert.assertEquals("13/03/2008 13:22:04", trig.getDate());
             Assert.assertEquals("11", trig.getConfirmCode());
 
-        } catch (UnknownTriggerFormatException | InvalidFileNameException | IOException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
+        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
             System.out.println(utfe.getMessage());
         }
     }

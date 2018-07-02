@@ -3,7 +3,6 @@ package fr.ipgp.earlywarning.telephones;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class SingleContactList implements ContactList {
     @Override
     public List<Contact> getCallList() {
         if (shouldCall && contact != null)
-            return Arrays.asList(new Contact[]{contact});
+            return Collections.singletonList(contact);
         return new ArrayList<>();
     }
 
@@ -95,8 +94,7 @@ public class SingleContactList implements ContactList {
         return arr.toString();
     }
 
-    public void write()
-    {
+    public void write() {
 
     }
 }

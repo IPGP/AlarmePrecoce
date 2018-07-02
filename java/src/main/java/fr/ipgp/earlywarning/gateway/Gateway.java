@@ -4,7 +4,6 @@
  */
 package fr.ipgp.earlywarning.gateway;
 
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
 
 /**
@@ -15,6 +14,7 @@ import fr.ipgp.earlywarning.triggers.Trigger;
 public interface Gateway {
     /**
      * Calls the contacts from the trigger's contact list until one confirms the message.
+     *
      * @param trigger that triggered the call
      */
     void callTillConfirm(Trigger trigger);
@@ -25,6 +25,7 @@ public interface Gateway {
      * Returns the name that should be used to configure the sounds in the Settings.
      * For Asterisk, this method should return a descriptive name, like <code>asterisk</code>, and then the configuration
      * should provide a sounds configuration in the form of <code>sounds.soundId.asterisk</code>
+     *
      * @return the qualifier used for configuration
      */
     String getSettingsQualifier();

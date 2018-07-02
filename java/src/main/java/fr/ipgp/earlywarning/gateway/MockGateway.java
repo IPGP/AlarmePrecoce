@@ -5,11 +5,7 @@
 package fr.ipgp.earlywarning.gateway;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
-import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.triggers.Trigger;
-
-import java.util.Random;
 
 /**
  * Mock phone gateway for testing purpose.

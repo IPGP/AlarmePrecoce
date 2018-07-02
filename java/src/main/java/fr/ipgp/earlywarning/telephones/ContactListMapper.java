@@ -11,12 +11,11 @@ import java.util.*;
  * @author Thomas Kowalski
  */
 public class ContactListMapper {
+    private static ContactListMapper uniqueInstance;
     /**
      * A map between names (<code>String</code>) and instances of corresponding <code>ContactList</code>s
      */
     private final Map<String, ContactList> mappings;
-
-    private static ContactListMapper uniqueInstance;
 
     /**
      * Private constructor for the Mapper.
@@ -78,9 +77,7 @@ public class ContactListMapper {
             ContactList list = ContactListBuilder.build(fileName);
             mappings.put(name, list);
             return list;
-        } catch (NoSuchElementException e) {
-            throw new NoSuchListException(name);
-        } catch (IOException e) {
+        } catch (NoSuchElementException | IOException e) {
             throw new NoSuchListException(name);
         }
     }

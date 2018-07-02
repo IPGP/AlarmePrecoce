@@ -29,6 +29,7 @@ public class AlertCallScript extends BaseAgiScript {
     private static OnConnectedListener onConnectedListener;
     private static boolean hangupRequested = false;
     private static int maxCodeLength = 0;
+
     /**
      * Setter for the {@link OnCodeReceivedListener}
      *

@@ -29,7 +29,8 @@ public class TestJSONContactList {
     public void tearDown() {
         // Delete the test folder on exit
         File f = new File("tests");
-        f.delete();
+        if(!f.delete())
+            System.err.println("Couldn't delete /tests");
     }
 
     /**
@@ -39,7 +40,7 @@ public class TestJSONContactList {
     public void testCreateNewFile() {
         File f = new File("tests/contacts.json");
         if (f.exists())
-            Assert.assertEquals(f.delete(), true);
+            Assert.assertTrue(f.delete());
 
         try {
             JSONContactList list = new JSONContactList("tests/contacts.json");
@@ -74,7 +75,7 @@ public class TestJSONContactList {
      */
     @Test(expected = NullArgumentException.class)
     public void testAddNulContact() throws IOException {
-        JSONContactList contactList = null;
+        JSONContactList contactList;
         contactList = new JSONContactList("tests/contacts.json");
         contactList.addContact(null);
     }

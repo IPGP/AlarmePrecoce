@@ -93,9 +93,6 @@ public class EarlyWarningThread extends Thread {
                     //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
                     EarlyWarning.appLogger.info("A new trigger has been added to the queue");
                     EarlyWarning.appLogger.info("QueueManager : " + queueManagerThread.toString());
-                } catch (IOException ioe) {
-                    EarlyWarning.appLogger.error("Input Output error while decoding trigger : " + ioe.getMessage());
-                    addErrorTrigger("Input Output error while decoding trigger : " + ioe.getMessage());
                 } catch (UnknownTriggerFormatException utfe) {
                     //EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
                     //EarlyWarning.appLogger.debug("Unknown trigger format received");
@@ -108,10 +105,6 @@ public class EarlyWarningThread extends Thread {
                     //EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
                     EarlyWarning.appLogger.error("Missing field(s) in the received trigger");
                     addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
-                } catch (InvalidFileNameException ifne) {
-                    //EarlyWarning.appLogger.error("Invalid call list in the received trigger : " + ifne.getMessage());
-                    EarlyWarning.appLogger.error("Invalid call list in the received trigger");
-                    addErrorTrigger("Invalid call list in the received trigger : " + ifne.getMessage());
                 } finally {
                     System.out.println("Waiting for triggers");
                 }

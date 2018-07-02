@@ -14,7 +14,6 @@ import org.asteriskjava.manager.TimeoutException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,18 +21,11 @@ import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.CorrectCod
 import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.Initial;
 
 public class AsteriskGateway implements Gateway {
+    LocalAgiServer server;
     private String host;
     private int port;
     private String username;
     private String password;
-
-    LocalAgiServer server;
-
-    ManagerConnection buildManagerConnection() {
-        ManagerConnectionFactory factory = new ManagerConnectionFactory(host, port, username, password);
-        ManagerConnection managerConnection = factory.createManagerConnection();
-        return managerConnection;
-    }
 
     public AsteriskGateway(String host, int port, String username, String password) {
         this.host = host;
@@ -42,6 +34,11 @@ public class AsteriskGateway implements Gateway {
         this.password = password;
 
         server = new LocalAgiServer();
+    }
+
+    ManagerConnection buildManagerConnection() {
+        ManagerConnectionFactory factory = new ManagerConnectionFactory(host, port, username, password);
+        return factory.createManagerConnection();
     }
 
     public String callAudio(String phoneNumber, String audioFile, boolean selfDelete) {

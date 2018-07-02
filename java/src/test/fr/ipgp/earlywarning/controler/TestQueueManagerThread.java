@@ -4,15 +4,12 @@ package fr.ipgp.earlywarning.controler;
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * @author Patrice Boissier

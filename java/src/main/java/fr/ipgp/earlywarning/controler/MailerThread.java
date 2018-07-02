@@ -89,8 +89,10 @@ public class MailerThread extends Thread {
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
 
         // TODO: update Apache Commons Configuration lib. It should resolve this warning.
+        @SuppressWarnings("unchecked")
         List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
         List<InternetAddress> mails = new ArrayList<>();
+        //noinspection ForLoopReplaceableByForEach
         for (Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext(); ) {
             HierarchicalConfiguration sub = it.next();
             String mail = sub.getString("email");

@@ -12,8 +12,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A Web server used to maintain and update the call priority list for the Early Warning Alarm.
@@ -48,6 +53,17 @@ public class OrderUpdateServer {
         this(DEFAULT_PORT, home);
     }
 
+    private static Map<String, String> getQueryMap(String query) {
+        String[] params = query.split("&");
+        Map<String, String> map = new HashMap<>();
+        for (String param : params) {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+        }
+        return map;
+    }
+
     public int getPort() {
         return port;
     }
@@ -73,19 +89,6 @@ public class OrderUpdateServer {
 
         // Start the server
         httpServer.start();
-    }
-
-    private static Map<String, String> getQueryMap(String query)
-    {
-        String[] params = query.split("&");
-        Map<String, String> map = new HashMap<>();
-        for (String param : params)
-        {
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
-            map.put(name, value);
-        }
-        return map;
     }
 
     /**
@@ -153,7 +156,7 @@ public class OrderUpdateServer {
             head.appendChild(script);
 
             Element listsList = doc.getElementById("available-lists");
-            for(String s : ContactListMapper.getInstance().getAvailableLists()) {
+            for (String s : ContactListMapper.getInstance().getAvailableLists()) {
                 Element a = doc.createElement("a");
                 a.attr("href", "/index.html?list=" + s);
                 a.text(s);

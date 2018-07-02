@@ -59,17 +59,15 @@ public class Contact {
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (o.getClass() == this.getClass())
-            return equals((Contact)o);
-            else
-                return false;
+            return equals((Contact) o);
+        else
+            return false;
     }
 
     @SuppressWarnings("WeakerAccess")
-    public boolean equals(Contact c)
-    {
+    public boolean equals(Contact c) {
         return c.priority == this.priority
                 && c.name.equals(this.name)
                 && c.phone.equals(this.phone);

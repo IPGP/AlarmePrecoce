@@ -22,19 +22,9 @@ import java.util.*;
  */
 public class ConfigurationValidator {
     /**
-     * Describes the action to take if an invalid configuration entry is detected.
+     * The default behaviour on invalid configuration.
      */
-    public enum OnError {
-        /**
-         * Exit EarlyWarning (using <code>System.exit</code>
-         */
-        Exit,
-        /**
-         * Display a warning in the log.
-         */
-        Warn
-    }
-
+    private static final OnError defaultBehaviour = OnError.Exit;
     /**
      * A reference to the main <code>XMLConfiguration</code>
      */
@@ -46,15 +36,12 @@ public class ConfigurationValidator {
     private final OnError onError;
 
     /**
-     * The default behaviour on invalid configuration.
-     */
-    private static final OnError defaultBehaviour = OnError.Exit;
-
-    /**
      * Constructor with custom On Error behaviour.
+     *
      * @param configuration the configuration to validate
-     * @param behaviour the behaviour to adopt on error
+     * @param behaviour     the behaviour to adopt on error
      */
+    @SuppressWarnings("SameParameterValue")
     private ConfigurationValidator(XMLConfiguration configuration, OnError behaviour) {
         onError = behaviour;
         this.configuration = configuration;
@@ -62,6 +49,7 @@ public class ConfigurationValidator {
 
     /**
      * The simplest constructor that uses the class' default on error behaviour.
+     *
      * @param configuration the configuration to validate
      */
     public ConfigurationValidator(XMLConfiguration configuration) {
@@ -96,6 +84,7 @@ public class ConfigurationValidator {
 
     /**
      * Validates the main gateway settings (gateway type choice) and calls the adequate validation method for the gateway.
+     *
      * @throws ValidationException if a configuration error is detected
      */
     private void validateGatewaySettings() throws ValidationException {
@@ -121,6 +110,7 @@ public class ConfigurationValidator {
     /**
      * Validates the Asterisk settings. This should only be called by <code>validateGatewaySettings</code> once it has determined what gateway is being used.
      * Verifies that the given values are coherent and that a connection to Asterisk Manager Interface can be established.
+     *
      * @throws ValidationException if a configuration error is detected
      */
     private void validateAsteriskSettings() throws ValidationException {
@@ -176,7 +166,7 @@ public class ConfigurationValidator {
         } catch (IOException e) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface is unreachable: " +
                     ((e.getMessage() != null && !e.getMessage().equalsIgnoreCase("")) ?
-                    e.getMessage() : "(no info)"));
+                            e.getMessage() : "(no info)"));
         } catch (AuthenticationFailedException e) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface credentials are incorrect.");
         } catch (TimeoutException e) {
@@ -187,6 +177,7 @@ public class ConfigurationValidator {
 
     /**
      * Validates the <code>ContactServer</code> configuration, which means the <code>www-home</code>, the port to use and that the default contact list is defined and usable.
+     *
      * @throws ValidationException if a configuration error is detected
      */
     private void validateContactsServer() throws ValidationException {
@@ -223,6 +214,7 @@ public class ConfigurationValidator {
 
     /**
      * Returns all the configuration entries beginning with a prefix
+     *
      * @param prefix the prefix to use
      * @return a list of <code>String</code>
      */
@@ -237,6 +229,7 @@ public class ConfigurationValidator {
 
     /**
      * Finds the number of occurrences of a character in a <code>String</code>
+     *
      * @param s the <code>String</code> to search
      * @param c the character to count
      * @return the number of occurrences of <code>c</code> in <code>s</code>
@@ -251,6 +244,7 @@ public class ConfigurationValidator {
 
     /**
      * Finds the top level entries (which means the direct children of the prefix) in the configuration
+     *
      * @param prefix the prefix to find entries for
      * @return the direct children of the node corresponding to <code>prefix</code>
      */
@@ -290,20 +284,39 @@ public class ConfigurationValidator {
     }
 
     /**
+     * Describes the action to take if an invalid configuration entry is detected.
+     */
+    public enum OnError {
+        /**
+         * Exit EarlyWarning (using <code>System.exit</code>
+         */
+        Exit,
+        /**
+         * Display a warning in the log.
+         */
+        Warn
+    }
+
+    /**
      * The Exception used to express configuration mistakes.
      * It has a <code>parameter</code> field that corresponds to the field whose validation caused the error and a <code>problem</code> field that summarizes what the problem was.
      */
     class ValidationException extends Throwable {
-        /** The configuration entry that caused the problem */
+        /**
+         * The configuration entry that caused the problem
+         */
         final String parameter;
 
-        /** A summary of the problem */
+        /**
+         * A summary of the problem
+         */
         final String problem;
 
         /**
          * Constructor
+         *
          * @param parameter the parameter for which the Exception is raised
-         * @param problem the cause of the exception
+         * @param problem   the cause of the exception
          */
         ValidationException(String parameter, String problem) {
             this.parameter = parameter;
