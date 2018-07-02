@@ -139,7 +139,7 @@ public class OrderUpdateServer {
                 sb.append(line).append("\n");
 
             String content = sb.toString();
-            
+
             // Generate the HTML document from the template index.html
             Document doc = Jsoup.parse(content);
             // Create a new script element
