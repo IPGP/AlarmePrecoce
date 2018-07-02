@@ -12,11 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.*;
+import java.util.*;
 
 /**
  * A Web server used to maintain and update the call priority list for the Early Warning Alarm.
@@ -26,10 +23,7 @@ public class OrderUpdateServer {
      * The default port for the Web server
      */
     private static final int DEFAULT_PORT = 6001;
-    /**
-     * Contact list
-     */
-    private static JSONContactList JSONContactList;
+
     /**
      * The port used by the server
      */
@@ -39,11 +33,10 @@ public class OrderUpdateServer {
      */
     private final String home;
 
-    public OrderUpdateServer(int port, String home, String contactsFile) throws IOException {
+    @SuppressWarnings("WeakerAccess")
+    public OrderUpdateServer(int port, String home) {
         this.port = port;
         this.home = home;
-
-        JSONContactList = new JSONContactList(contactsFile);
     }
 
     /**
@@ -51,8 +44,8 @@ public class OrderUpdateServer {
      *
      * @param home the WWW home for the Web server
      */
-    public OrderUpdateServer(String home, String contactsFile) throws IOException {
-        this(DEFAULT_PORT, home, contactsFile);
+    public OrderUpdateServer(String home) {
+        this(DEFAULT_PORT, home);
     }
 
     public int getPort() {
@@ -76,6 +69,19 @@ public class OrderUpdateServer {
 
         // Start the server
         httpServer.start();
+    }
+
+    private static Map<String, String> getQueryMap(String query)
+    {
+        String[] params = query.split("&");
+        Map<String, String> map = new HashMap<>();
+        for (String param : params)
+        {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+        }
+        return map;
     }
 
     /**
@@ -119,7 +125,7 @@ public class OrderUpdateServer {
          * @param responseBody the OutputStream to write to
          * @throws IOException if index.html can't be read
          */
-        private void serveIndex(File file, OutputStream responseBody) throws IOException {
+        private void serveIndex(ContactList list, File file, OutputStream responseBody) throws IOException {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
             StringBuilder sb = new StringBuilder();
@@ -136,10 +142,19 @@ public class OrderUpdateServer {
             // Find the <head> element
             Element head = doc.getElementsByTag("head").first();
             // Manually set the <script> element content
-            script.html("var people = " + JSONContactList.getAvailableContactsAsJson() + ";");
-            script.html(script.html() + "var people_enabled = " + JSONContactList.getEnabledContactsAsJson() + ";");
+            script.html("var people = " + list.getAvailableContactsAsJson() + ";");
+            script.html(script.html() + "var people_enabled = " + list.getEnabledContactsAsJson() + ";");
             // Add the <script> to the <head>
             head.appendChild(script);
+
+            Element listsList = doc.getElementById("available-lists");
+            for(String s : ContactListMapper.getInstance().getAvailableLists()) {
+                Element a = doc.createElement("a");
+                a.attr("href", "/index.html?list=" + s);
+                a.text(s);
+                listsList.appendChild(a);
+            }
+
             // Write the completed template to the OutputStream
             responseBody.write(doc.toString().getBytes());
         }
@@ -155,26 +170,83 @@ public class OrderUpdateServer {
             URI uri = t.getRequestURI();
             uri = uri.normalize();
 
+            // Determine requested file
             String path = home + uri;
+            // Remove query string
+            path = path.split("\\?")[0].trim();
+            // If no index file has been given, add it
             if (path.endsWith("/"))
                 path = path + "index.html";
+
+            while (path.contains("//"))
+                path = path.replace("//", "/");
+
+            // If we are serving the index, try to determine the right ContactList
+            ContactList list = null;
+            if (path.endsWith("index.html")) {
+                try {
+                    list = getListForURI(uri);
+                } catch (Exception e) {
+                    EarlyWarning.appLogger.error("Exception: " + e.getMessage());
+                }
+                if (list == null) {
+                    serveEmpty(t, "No such list.");
+                    return;
+                }
+            }
+
 
             File f = new File(path);
             if (f.isFile()) {
                 t.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                if (path.endsWith("index.html"))
-                    serveIndex(f, t.getResponseBody());
-                else
+
+                if (path.endsWith("index.html")) {
+                    serveIndex(list, f, t.getResponseBody());
+                } else
                     sendFile(new FileInputStream(f), t.getResponseBody());
+
                 t.getResponseBody().close();
             } else {
                 EarlyWarning.appLogger.warn("File not found: '" + home + uri + "'");
 
-                t.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 3);
+                serveEmpty(t, "No such file: '" + f.getName() + "'");
+            }
+        }
+
+        private ContactList getListForURI(URI uri) {
+            if (!uri.toString().contains("?"))
+                return ContactListMapper.getInstance().getDefaultList();
+            else if (uri.toString().split("\\?")[1].trim().equals(""))
+                return ContactListMapper.getInstance().getDefaultList();
+
+            Map<String, String> parameters = getQueryMap(uri.getQuery());
+
+            if (parameters.containsKey("list")) {
+                String listName = parameters.get("list");
+                EarlyWarning.appLogger.info("Web server received request for list '" + listName + "'");
+
+                try {
+                    return ContactListMapper.getInstance().getList(listName);
+                } catch (NoSuchListException e) {
+                    EarlyWarning.appLogger.error("User requested to modify Contact List '" + listName + "', which does not exist.");
+                    return null;
+                }
+            } else {
+                return ContactListMapper.getInstance().getDefaultList();
+            }
+        }
+
+        private void serveEmpty(HttpExchange t, String result) {
+            EarlyWarning.appLogger.info("Sending empty response: '" + result + "'");
+
+            try {
+                t.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, result.length());
 
                 OutputStream os = t.getResponseBody();
-                os.write("404".getBytes());
+                os.write(result.getBytes());
                 os.close();
+            } catch (IOException e) {
+                EarlyWarning.appLogger.error("Can't write 404 response to client: " + e.getMessage());
             }
         }
     }
@@ -187,16 +259,24 @@ public class OrderUpdateServer {
             String phone = data.getString("phone");
             String name = data.getString("name");
             boolean priority = data.getBoolean("priority");
+            String listName = data.getString("list");
+
+            ContactList list;
+            try {
+                list = ContactListMapper.getInstance().getList(listName);
+            } catch (NoSuchListException e) {
+                EarlyWarning.appLogger.error("Used tried to add contact to list '" + listName + "', which does not exist.");
+                return;
+            }
 
             EarlyWarning.appLogger.debug("Adding contact " + name + " / " + phone);
-            JSONContactList.addContact(new Contact(name, phone, priority), true);
+            list.addContact(new Contact(name, phone, priority), true);
 
             try {
-                JSONContactList.write();
+                list.write();
             } catch (IOException e) {
                 EarlyWarning.appLogger.error("Can't write JSONContactList: " + e.getMessage());
             }
-
         }
 
         /**
@@ -208,20 +288,29 @@ public class OrderUpdateServer {
             EarlyWarning.appLogger.info("Updating orders.");
             JSONArray enabledNames = data.getJSONArray("enabled");
             JSONArray allNames = data.getJSONArray("available");
+            String listName = data.getString("list");
+            ContactList list;
+
+            try {
+                list = ContactListMapper.getInstance().getList(listName);
+            } catch (NoSuchListException e) {
+                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which does not exist.");
+                return;
+            }
 
             List<String> names = new ArrayList<>();
             for (int i = 0; i < enabledNames.length(); i++) {
                 names.add(enabledNames.getString(i));
             }
-            JSONContactList.updateCallList(names);
+            list.updateCallList(names);
 
             names.clear();
             for (int i = 0; i < allNames.length(); i++)
                 names.add(allNames.getString(i));
-            JSONContactList.clean(names);
+            list.clean(names);
 
             try {
-                JSONContactList.write();
+                list.write();
             } catch (IOException ex) {
                 EarlyWarning.appLogger.error("Can't write contact list.");
             }
@@ -250,12 +339,13 @@ public class OrderUpdateServer {
                     }
 
                     // The data we need is here
-                    System.out.println(new String(data));
+                    EarlyWarning.appLogger.info("Received JSON data: " + new String(data));
                     JSONObject json = new JSONObject(new String(data));
 
-                    if (uri.equalsIgnoreCase("/new"))
+                    uri = uri.replaceAll("/", "");
+                    if (uri.equalsIgnoreCase("new"))
                         handleNewContact(json);
-                    else if (uri.equalsIgnoreCase("/update"))
+                    else if (uri.equalsIgnoreCase("update"))
                         handleUpdate(json);
                     else {
                         byte[] response = "{\"status\" : \"error\"}".getBytes();

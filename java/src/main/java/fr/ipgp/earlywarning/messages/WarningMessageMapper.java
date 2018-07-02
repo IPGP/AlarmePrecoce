@@ -25,10 +25,10 @@ public class WarningMessageMapper {
 
         // Try and fetch the default warning message from the configuration
         try {
-            String defaultWarning = EarlyWarning.configuration.getString("sounds.default" + gatewayQualifier);
+            String defaultWarning = EarlyWarning.configuration.getString("sounds.default." + gatewayQualifier);
             mappings.put("default", defaultWarning);
         } catch (NoSuchElementException ex) {
-            throw new NoSuchMessageException("Default message doesn't exist for gateway " + gatewayQualifier);
+            throw new NoSuchMessageException("Default message doesn't exist for gateway '" + gatewayQualifier + "' (should be 'sounds.default." + gatewayQualifier + "')");
         }
     }
 

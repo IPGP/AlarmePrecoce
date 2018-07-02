@@ -84,6 +84,7 @@ public class JSONContactList implements ContactList {
         throw new NoSuchContactException("No contact found for name " + name);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Contact getContactByNumber(String number) throws NoSuchContactException {
         for (Contact c : contacts) {
             if (c.phone.equals(number))
@@ -103,6 +104,7 @@ public class JSONContactList implements ContactList {
         addContact(contact, true);
     }
 
+    @SuppressWarnings("unused")
     public List<Contact> getContacts() {
         return contacts;
     }
@@ -225,6 +227,7 @@ public class JSONContactList implements ContactList {
      *
      * @return the names of the contacts
      */
+    @SuppressWarnings("WeakerAccess")
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
         for (Contact c : contacts)

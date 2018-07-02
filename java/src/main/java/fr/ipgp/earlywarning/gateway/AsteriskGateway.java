@@ -124,6 +124,6 @@ public class AsteriskGateway implements Gateway {
 
     @Override
     public String getSettingsQualifier() {
-        return null;
+        return "asterisk";
     }
 }

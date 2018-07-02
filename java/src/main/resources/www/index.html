@@ -140,6 +140,30 @@
         input {
             margin-bottom: 5px;
         }
+
+        #available-lists-wrapper {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .inline-title {
+            display: inline;
+        }
+
+        #available-lists {
+            display: inline;
+        }
+
+        #available-lists a {
+            color: black;
+            text-decoration: none;
+        }
+
+        #available-lists a:hover {
+            text-decoration: underline;
+        }
     </style>
     <script>
         // Used only for code-writing purposes
@@ -156,6 +180,12 @@
 
 <body onLoad="fillList()">
 <h1>Liste d'appel de l'alarme précoce</h1>
+<div id="available-lists-wrapper">
+    <h3 class="inline-title">Liste à éditer:</h3>
+    <div id="available-lists">
+
+    </div>
+</div>
 <div class="container">
     <div id="callListSelectors" class="callLists-wrapper">
         <div class="callList">
@@ -187,6 +217,25 @@
         return document.getElementById(name);
     }
 
+    function getServerAddress() {
+        var host = window.location.hostname;
+        var port = window.location.port;
+        var protocol = window.location.protocol;
+        return protocol + "//" + host + ":" + port + "/";
+    }
+
+    function getParam(param) {
+        return new URLSearchParams(window.location.search).get(param);
+    }
+
+    function getListName() {
+        var name = getParam("list");
+        if (name == null)
+            return "default";
+        else
+            return name;
+    }
+
     function sendListsToServer() {
         console.log("Sending list.");
         var enabled = [];
@@ -203,7 +252,8 @@
 
         var result = {
             "available": available,
-            "enabled": enabled
+            "enabled": enabled,
+            "list": getListName()
         };
 
         var req = new XMLHttpRequest();
@@ -215,7 +265,7 @@
             }
         };
 
-        req.open("POST", "http://195.83.188.41:6001/update", true);
+        req.open("POST", getServerAddress() + "update", true);
         req.setRequestHeader("Content-Type", "application/json");
         req.send(JSON.stringify(result));
     }
@@ -272,13 +322,14 @@
         var data = {
             "name": fieldName.value,
             "phone": fieldPhone.value,
-            "priority": fieldPriority.checked
+            "priority": fieldPriority.checked,
+            "list": getListName()
         };
         if (data.priority)
             removePriority();
 
         var req = new XMLHttpRequest();
-        req.open("POST", "http://195.83.188.41:6001/new", true);
+        req.open("POST", getServerAddress() + "new", true);
         req.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 if (data.priority) {

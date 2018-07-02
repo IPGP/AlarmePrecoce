@@ -3,22 +3,24 @@ package fr.ipgp.earlywarning.telephones;
 import fr.ipgp.earlywarning.EarlyWarning;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * An utility that allows to map names to <code>ContactList</code> instances.
+ *
  * @author Thomas Kowalski
  */
 public class ContactListMapper {
-    /** A map between names (<code>String</code>) and instances of corresponding <code>ContactList</code>s */
+    /**
+     * A map between names (<code>String</code>) and instances of corresponding <code>ContactList</code>s
+     */
     private final Map<String, ContactList> mappings;
 
     private static ContactListMapper uniqueInstance;
 
     /**
      * Private constructor for the Mapper.
+     *
      * @throws NoSuchListException
      * @throws IOException
      */
@@ -27,27 +29,28 @@ public class ContactListMapper {
         mappings = new HashMap<>();
 
         try {
-            String defaultFileName = EarlyWarning.configuration.getString("contacts.list.default");
+            String defaultFileName = EarlyWarning.configuration.getString("contacts.lists.default");
             ContactList defaultContactList;
             defaultContactList = ContactListBuilder.build(defaultFileName);
             mappings.put("default", defaultContactList);
         } catch (NoSuchElementException ex) {
-            throw new NoSuchListException("Default list is not available.");
+            throw new NoSuchListException("Default list is not available ('contacts.lists.default' configuration entry).");
         }
     }
 
     /**
      * Constructs the ContactListMapper, which checks that the <code>default</code> list exists. If it doesn't, throws an exception.
+     *
      * @throws NoSuchListException if the <code>default</code> contact list doesn't exist
-     * @throws IOException if the file corresponding to the <code>default</code> contact list can't be read
+     * @throws IOException         if the file corresponding to the <code>default</code> contact list can't be read
      */
-    public static void testDefaultList() throws NoSuchListException, IOException
-    {
+    public static void testDefaultList() throws NoSuchListException, IOException {
         uniqueInstance = new ContactListMapper();
     }
 
     /**
      * Singleton getter
+     *
      * @return the ContactListMapper unique instance
      */
     public static ContactListMapper getInstance() {
@@ -61,6 +64,7 @@ public class ContactListMapper {
 
     /**
      * Finds and returns the list associated to a name
+     *
      * @param name the name of the list to get
      * @return the requested contact list
      * @throws NoSuchListException if no list with the given name exists
@@ -81,6 +85,7 @@ public class ContactListMapper {
 
     /**
      * Verifies that a list exist with the given name and returns it, otherwise returns the default list.
+     *
      * @param name the name of the list to get
      * @return the requested list or the default list if it doesn't exist
      */
@@ -94,6 +99,7 @@ public class ContactListMapper {
 
     /**
      * Gets the default ContactList, as given in the configuration file.
+     *
      * @return the default ContactList
      */
     public ContactList getDefaultList() {
@@ -104,6 +110,20 @@ public class ContactListMapper {
             // This can't happen: the default list is built upon object construction
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getAvailableLists() {
+        List<String> availableLists = new ArrayList<>();
+
+        Iterator<String> it = EarlyWarning.configuration.getKeys("contacts.lists");
+        for (; it.hasNext(); ) {
+            String name = it.next();
+            String[] split = name.split("\\.");
+            availableLists.add(split[split.length - 1]);
+        }
+
+        return availableLists;
     }
 
     /*

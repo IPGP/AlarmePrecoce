@@ -236,7 +236,7 @@ public class QueueManagerThread extends Thread {
         try {
             WarningMessageMapper.testDefaultMessage(gateway);
         } catch (NoSuchMessageException ex) {
-            EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getCanonicalName());
+            EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getName() + "'");
             System.exit(-1);
         }
 

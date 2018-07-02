@@ -1,5 +1,6 @@
 package fr.ipgp.earlywarning.telephones;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ContactList {
@@ -26,6 +27,11 @@ public interface ContactList {
      * @param writeAfter if <code>true</code>, the list will be written to the disk after.
      */
     void addContact(Contact contact, boolean writeAfter);
+
+    /**
+     * Saves the contacts file.
+     */
+    void write() throws IOException;
 
     /**
      * Returns all the contacts known by the list.
@@ -56,7 +62,7 @@ public interface ContactList {
 
     /**
      * Returns the list of the contacts to call, in the right order.
-     * @return
+     * @return the contacts to call, in the right order
      */
     List<Contact> getCallList();
 

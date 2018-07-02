@@ -6,7 +6,6 @@ package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
-import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
@@ -19,7 +18,6 @@ import org.apache.log4j.PropertyConfigurator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -36,7 +34,6 @@ public class EarlyWarning {
 
     public static XMLConfiguration configuration;
     public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-    private static List<ContactList> contactsLists;
 
     public static void main(final String[] args) {
         setLogger();
@@ -51,11 +48,8 @@ public class EarlyWarning {
 
         startDataBaseHeartBeatThread();
 
-        startContactsServer();
-
         Thread thread = new Thread() {
-            public void run()
-            {
+            public void run() {
                 try {
                     Thread.sleep(2500);
                 } catch (InterruptedException e) {
@@ -69,6 +63,7 @@ public class EarlyWarning {
 
         createGui();
 
+        startContactsServer();
     }
 
     /**
@@ -78,6 +73,7 @@ public class EarlyWarning {
     private static void readConfiguration() {
         try {
             configuration = new XMLConfiguration("resources/earlywarning.xml");
+            configuration.setThrowExceptionOnMissing(true);
             ConfigurationValidator validator = new ConfigurationValidator(configuration);
             validator.validate();
         } catch (ConfigurationException cex) {
@@ -110,15 +106,9 @@ public class EarlyWarning {
     }
 
     private static void startContactsServer() {
-        OrderUpdateServer server = null;
-        try {
-            String home = EarlyWarning.configuration.getString("contacts.home");
-            String file = EarlyWarning.configuration.getString("contacts.file");
-            server = new OrderUpdateServer(home, file);
-        } catch (IOException e) {
-            appLogger.fatal("Fatal error : contacts JSON file is not readable or writable.");
-            System.exit(1);
-        }
+        OrderUpdateServer server;
+        String home = EarlyWarning.configuration.getString("contacts.home");
+        server = new OrderUpdateServer(home);
 
         try {
             server.startServer();
@@ -168,7 +158,7 @@ public class EarlyWarning {
      * Create GUI
      */
     private static void createGui() {
-    // TODO: fix this
+        // TODO: fix this
         //        try {
 //            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
 //            fileCallListControler.displayView();

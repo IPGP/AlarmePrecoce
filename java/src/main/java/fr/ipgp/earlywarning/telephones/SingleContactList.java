@@ -4,6 +4,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SingleContactList implements ContactList {
@@ -15,6 +16,7 @@ public class SingleContactList implements ContactList {
         this(number, number);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public SingleContactList(String name, String number) {
         this.contact = new Contact(name, number, false);
     }
@@ -41,14 +43,14 @@ public class SingleContactList implements ContactList {
     @Override
     public List<Contact> getAvailableContacts() {
         if (contact != null)
-            return Arrays.asList(new Contact[]{contact});
+            return Collections.singletonList(contact);
         return new ArrayList<>();
     }
 
     @Override
     public List<Contact> getEnabledContacts() {
         if (contact != null)
-            return Arrays.asList(new Contact[]{contact});
+            return Collections.singletonList(contact);
         else
             return new ArrayList<>();
     }
@@ -91,5 +93,10 @@ public class SingleContactList implements ContactList {
         JSONArray arr = new JSONArray();
         arr.put(contact);
         return arr.toString();
+    }
+
+    public void write()
+    {
+
     }
 }

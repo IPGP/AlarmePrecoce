@@ -67,6 +67,7 @@ public class Contact {
                 return false;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean equals(Contact c)
     {
         return c.priority == this.priority
