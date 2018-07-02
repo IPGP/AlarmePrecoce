@@ -4,7 +4,6 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.telephones.ContactListMapper;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
@@ -54,17 +53,15 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
     public void decode() throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
+        System.out.println(packetContent);
         String[] packetContentSplit = this.packetContent.split(" ");
         int version;
         if (packetContentSplit[0].matches("\\d\\d"))
             version = Integer.parseInt(packetContentSplit[0]);
-        else {
-            if (packetContentSplit[0].equals("Sismo"))
-                version = 1;
-            else {
-                throw new UnknownTriggerFormatException("Unknown version : " + packetContentSplit[0]);
-            }
-        }
+        else if (packetContentSplit[0].equals("Sismo"))
+            version = 1;
+        else
+            throw new UnknownTriggerFormatException("Unknown version : " + packetContentSplit[0]);
 
         switch (version) {
             case 1:
@@ -76,6 +73,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
             default:
                 throw new UnknownTriggerFormatException("Unknown version : " + packetContentSplit[0]);
         }
+
     }
 
     /**
@@ -114,16 +112,12 @@ public class DatagramTriggerConverter implements TriggerConverter {
      * @param packetContentElements the elements of the received message
      */
     private void decodeV2(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException, IOException, InvalidFileNameException {
-        StringBuilder warningMessage = new StringBuilder();
-        boolean first = true;
+        StringBuilder warningMessageBuilder = new StringBuilder();
+        String warningMessage;
         if (packetContentElements.length > 8) {
-            for (int j = 8; j < packetContentElements.length; j++) {
-                if (first) {
-                    warningMessage = new StringBuilder(packetContentElements[j]);
-                    first = false;
-                } else
-                    warningMessage.append(" ").append(packetContentElements[j]);
-            }
+            for (int j = 8; j < packetContentElements.length; j++)
+                warningMessageBuilder.append(" ").append(packetContentElements[j]);
+            warningMessage = warningMessageBuilder.toString().replace("|", "").trim();
         } else
             throw new MissingTriggerFieldException("Not enough fields for a V2 trigger : " + this.packetContent);
 
@@ -139,11 +133,11 @@ public class DatagramTriggerConverter implements TriggerConverter {
             throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
         if (!packetContentElements[5].matches("\\w+"))
             throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
-        if (!warningMessage.toString().matches("\\w+"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessage);
+//        if (!warningMessage.matches("\\w+"))
+//            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessageBuilder);
 
         trigger.setContactList(ContactListMapper.getInstance().getListOrDefault(packetContentElements[5]));
-        trigger.setMessage(warningMessage.toString());
+        trigger.setMessage(warningMessage);
         trigger.setApplication(packetContentElements[4]);
         trigger.setType(packetContentElements[0]);
         trigger.setPriority(Integer.parseInt(packetContentElements[1]));

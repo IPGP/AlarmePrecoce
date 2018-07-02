@@ -59,7 +59,7 @@ public class EarlyWarning {
                 TriggerV2Sender3.main(args);
             }
         };
-        thread.start();
+        // thread.start();
 
         createGui();
 

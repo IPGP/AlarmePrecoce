@@ -78,6 +78,8 @@ public class ContactListMapper {
             ContactList list = ContactListBuilder.build(fileName);
             mappings.put(name, list);
             return list;
+        } catch (NoSuchElementException e) {
+            throw new NoSuchListException(name);
         } catch (IOException e) {
             throw new NoSuchListException(name);
         }

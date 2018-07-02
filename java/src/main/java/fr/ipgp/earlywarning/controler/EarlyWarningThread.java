@@ -102,7 +102,7 @@ public class EarlyWarningThread extends Thread {
                     addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
                 } catch (InvalidTriggerFieldException itfe) {
                     //EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                    EarlyWarning.appLogger.error("Invalid field(s) in the received trigger");
+                    EarlyWarning.appLogger.error("Invalid field(s) in the received trigger: " + itfe.getMessage());
                     addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
                 } catch (MissingTriggerFieldException mtfe) {
                     //EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());

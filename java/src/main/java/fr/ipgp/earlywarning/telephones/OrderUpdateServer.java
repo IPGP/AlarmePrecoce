@@ -56,7 +56,11 @@ public class OrderUpdateServer {
      * Starts the server.
      */
     public void startServer() throws IOException {
+        String currentName = Thread.currentThread().getName();
+        Thread.currentThread().setName("ContactServer");
         EarlyWarning.appLogger.debug("Starting contact list Web server on port " + String.valueOf(port));
+        Thread.currentThread().setName(currentName);
+
         // Create a server and bind it to localhost:port
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
 
@@ -99,6 +103,7 @@ public class OrderUpdateServer {
          * @param home the WWW home of the handler
          */
         GeneralHandler(String home) {
+            Thread.currentThread().setName("ContactServer");
             this.home = home;
         }
 
@@ -126,7 +131,7 @@ public class OrderUpdateServer {
          * @throws IOException if index.html can't be read
          */
         private void serveIndex(ContactList list, File file, OutputStream responseBody) throws IOException {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
 
             StringBuilder sb = new StringBuilder();
             String line;
@@ -134,7 +139,7 @@ public class OrderUpdateServer {
                 sb.append(line).append("\n");
 
             String content = sb.toString();
-
+            
             // Generate the HTML document from the template index.html
             Document doc = Jsoup.parse(content);
             // Create a new script element
@@ -156,7 +161,7 @@ public class OrderUpdateServer {
             }
 
             // Write the completed template to the OutputStream
-            responseBody.write(doc.toString().getBytes());
+            responseBody.write(doc.toString().getBytes("UTF-8"));
         }
 
         /**
@@ -323,6 +328,7 @@ public class OrderUpdateServer {
          * @throws IOException if the index.html template can't be read
          */
         public void handle(HttpExchange he) throws IOException {
+            Thread.currentThread().setName("ContactServer");
             if (he.getRequestMethod().equalsIgnoreCase("POST")) {
                 try {
                     Headers requestHeaders = he.getRequestHeaders();

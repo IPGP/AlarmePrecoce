@@ -4,9 +4,8 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessageType;
 import fr.ipgp.earlywarning.telephones.ContactList;
+import fr.ipgp.earlywarning.telephones.ContactListMapper;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ public class Trigger implements Comparable {
             throw new NullPointerException();
         this.id = id;
         this.priority = priority;
+        contactList = ContactListMapper.getInstance().getDefaultList();
     }
 
     /**
@@ -259,9 +259,29 @@ public class Trigger implements Comparable {
      * @return a String with the properties of the Trigger
      */
     public String showTrigger() {
-        return "Id : " + id + " - Priority : " + priority + " - Type : " + type + " From : " + inetAddress.toString() +
-                " - Application : " + application + " - Repeat : " + repeat + " - Date : " + date + " - Confirm Code : " + confirmCode +
-                " - Contact List : " + contactList.toString() + " - Warning Message ID : " + messageId;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Id : ");
+        sb.append(id);
+        sb.append(" - Priority : ");
+        sb.append(priority);
+        sb.append(" - Type : ");
+        sb.append(type);
+        sb.append(" From : ");
+        sb.append(inetAddress.toString());
+        sb.append(" - Application : ");
+        sb.append(application);
+        sb.append(" - Repeat : ");
+        sb.append(repeat);
+        sb.append(" - Date : ");
+        sb.append(date);
+        sb.append(" - Confirm Code : ");
+        sb.append(confirmCode);
+        sb.append(" - Contact List : ");
+        sb.append(contactList.toString());
+        sb.append(" - Warning Message ID : ");
+        sb.append(messageId);
+
+        return sb.toString();
     }
 
     /**
