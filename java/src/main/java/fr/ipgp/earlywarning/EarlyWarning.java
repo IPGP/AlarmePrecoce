@@ -7,6 +7,7 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
+import fr.ipgp.earlywarning.test.TriggerV2Sender2;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
@@ -48,22 +49,41 @@ public class EarlyWarning {
 
         startDataBaseHeartBeatThread();
 
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    Thread.sleep(2500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Sending data");
-                TriggerV2Sender3.main(args);
-            }
-        };
-        // thread.start();
-
         createGui();
 
         startContactsServer();
+
+        parseArgs(args);
+    }
+
+    private static void parseArgs(final String[] args) {
+        boolean testCalls = false;
+        for (String arg : args)
+            if (arg.equalsIgnoreCase("--testcalls"))
+                testCalls = true;
+
+        if (testCalls) {
+            appLogger.info("--testcalls was passed: two triggers will be emitted.");
+            Thread thread = new Thread() {
+                public void run() {
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    appLogger.info("Sending first trigger");
+                    TriggerV2Sender3.main(args);
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    appLogger.info("Sending second trigger");
+                    TriggerV2Sender2.main(args);
+                }
+            };
+            thread.start();
+        }
     }
 
     /**

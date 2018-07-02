@@ -7,12 +7,14 @@ package fr.ipgp.earlywarning.controler;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.Mailer;
 import org.apache.commons.configuration.ConversionException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -87,13 +89,13 @@ public class MailerThread extends Thread {
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
 
         // TODO: update Apache Commons Configuration lib. It should resolve this warning.
-        @SuppressWarnings("unchecked")
         List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
         List<InternetAddress> mails = new ArrayList<>();
-        for (XMLConfiguration sub : fields) {
+        for (Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext(); ) {
+            HierarchicalConfiguration sub = it.next();
             String mail = sub.getString("email");
             try {
-                InternetAddress internetAddress = new javax.mail.internet.InternetAddress(mail);
+                InternetAddress internetAddress = new InternetAddress(mail);
                 internetAddress.validate();
                 mails.add(internetAddress);
             } catch (AddressException ae) {

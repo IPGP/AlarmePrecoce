@@ -81,7 +81,7 @@ public class CallOriginator implements ManagerEventListener {
     private final OnHangupListener onHangupListener = new OnHangupListener() {
         @Override
         public void onHangup() {
-            System.out.println("Received hangup signal");
+            EarlyWarning.appLogger.debug("Received hangup signal");
             hungUp = true;
         }
     };
@@ -102,7 +102,7 @@ public class CallOriginator implements ManagerEventListener {
      */
     private final OnCodeReceivedListener onCodeReceivedListener = new OnCodeReceivedListener() {
         public CallAction onCodeReceived(String code) {
-            System.out.println("Received code : " + code);
+            EarlyWarning.appLogger.debug("Received code : " + code);
 
             if (code.equalsIgnoreCase(confirmCode))
                 // If the code is correct, return a Correct state
@@ -142,7 +142,7 @@ public class CallOriginator implements ManagerEventListener {
 
         this.confirmCode = code;
 
-        EarlyWarning.appLogger.info("Confirmation code: " + code);
+        EarlyWarning.appLogger.debug("Confirmation code: " + code);
     }
 
     /**
@@ -291,7 +291,7 @@ public class CallOriginator implements ManagerEventListener {
         while (!connected) {
             if (System.currentTimeMillis() - callBeginTime > ringTimeout) {
                 // If the ringing timeout is over
-                System.err.println("Requesting hangup");
+                EarlyWarning.appLogger.warn("No response from callee: requesting hangup");
                 AlertCallScript.requestHangup();
 
                 // Wait for the call to be hung up before returning
@@ -334,7 +334,7 @@ public class CallOriginator implements ManagerEventListener {
         while (!hungUp)
             sleep(100);
 
-        System.out.println("Hung up!");
+        EarlyWarning.appLogger.info("Call was hung up.");
 
         switch (callAction) {
             case Correct:

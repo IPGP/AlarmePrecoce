@@ -84,20 +84,18 @@ public class AlertCallScript extends BaseAgiScript {
      * @throws AgiException if something unexpected - but not a {@link AgiHangupException} - happens.
      */
     public void service(AgiRequest request, AgiChannel channel) throws AgiException {
-        EarlyWarning.appLogger.info("-------------------------------------");
-
         // Rest the hangup request state
         hangupRequested = false;
 
-        EarlyWarning.appLogger.info("Handling new call.");
+        EarlyWarning.appLogger.debug("Handling new call.");
 
         try {
             // Answer the call
-            EarlyWarning.appLogger.info("Answering.");
+            EarlyWarning.appLogger.debug("Answering.");
             answer();
 
             // Stream the welcome file
-            EarlyWarning.appLogger.info("Waiting for input");
+            EarlyWarning.appLogger.debug("Waiting for input");
             while (true) {
                 String data = getData("accueilovpf", 0, 2);
 
@@ -115,7 +113,7 @@ public class AlertCallScript extends BaseAgiScript {
                     break;
             }
 
-            EarlyWarning.appLogger.info("Code confirmation");
+            EarlyWarning.appLogger.debug("Waiting for code confirmation");
 
             // action will be our loop variable for the retry-give up mechanism.
             CallOriginator.CallAction action = CallOriginator.CallAction.Retry;
@@ -125,13 +123,13 @@ public class AlertCallScript extends BaseAgiScript {
 
             // The action is determined by either its initial value or the return value of OnCodeReceivedListener.onCodeReceived
             while (action == CallOriginator.CallAction.Retry) {
-                EarlyWarning.appLogger.info("Callee entered code: " + code);
+                EarlyWarning.appLogger.debug("Callee entered code: " + code);
 
                 // Wait to hang up before sending the code
                 action = onCodeReceivedListener.onCodeReceived(code);
 
                 // Print the string equivalent of callAction
-                System.out.println(CallOriginator.CallAction.values()[action.ordinal()]);
+                EarlyWarning.appLogger.debug("Action to take: " + CallOriginator.CallAction.values()[action.ordinal()]);
 
                 switch (action) {
                     case Correct:
@@ -149,13 +147,13 @@ public class AlertCallScript extends BaseAgiScript {
             }
 
             // Hang up
-            EarlyWarning.appLogger.info("Hanging up.");
+            EarlyWarning.appLogger.debug("Hanging up.");
             hangup();
 
         } catch (AgiHangupException ex) {
             // If the call is hung up (by the user or the script), notify the listeners.
             onHangupListener.onHangup();
-            EarlyWarning.appLogger.info("Call was hung up. Terminating.");
+            EarlyWarning.appLogger.debug("Call was hung up. Terminating.");
         }
     }
 }

@@ -88,10 +88,10 @@ public class QueueManagerThread extends Thread {
     }
 
     /**
-     * @return a string representing the queue manager
+     * @return a <code>String</code> representing the <code>QueueManager</code>
      */
     public String toString() {
-        return queue.size() + " Triggers : " + queue.toString();
+        return queue.size() + " Trigger" + (queue.size() > 1 ? 's' : '\0') + ": " + queue.toString();
     }
 
     /**
@@ -147,7 +147,7 @@ public class QueueManagerThread extends Thread {
                     try {
                         smsThread.sendSMS(trig.mailTrigger());
                     } catch (Exception e) {
-                        EarlyWarning.appLogger.error("Error while sending notification SMS : " + e.getMessage());
+                        EarlyWarning.appLogger.error("Error while sending SMS notification: " + e.getMessage());
                     }
                 }
                 if (useSound) {
@@ -156,20 +156,20 @@ public class QueueManagerThread extends Thread {
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException ie) {
-                            EarlyWarning.appLogger.error("Error while sleeping!");
+                            EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                         }
                     }
                 }
                 try {
                     Thread.sleep(30000);
                 } catch (InterruptedException ie) {
-                    EarlyWarning.appLogger.error("Error while sleeping!");
+                    EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
             } else {
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException ie) {
-                    EarlyWarning.appLogger.error("Error while sleeping!");
+                    EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
             }
         }

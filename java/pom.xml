@@ -214,6 +214,11 @@
             <artifactId>postgresql</artifactId>
             <version>8.3-603.jdbc3</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.0</version>
+        </dependency>
 
         <!-- These two dependencies are installed to the local repository when running mvn validate -->
         <dependency>
