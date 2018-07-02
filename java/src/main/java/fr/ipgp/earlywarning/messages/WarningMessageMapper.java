@@ -7,9 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+/**
+ * An utility that allows to map, for a given <code>Gateway</code> warning message names to file names to play.
+ * @author Thomas Kowalski
+ * // TODO: add Javadoc for class
+ */
 public class WarningMessageMapper {
-    private Map<String, String> mappings;
-    private String gatewayQualifier;
+    private final Map<String, String> mappings;
+    private final String gatewayQualifier;
 
     private static Map<String, WarningMessageMapper> mappers;
 
@@ -32,6 +37,7 @@ public class WarningMessageMapper {
             mappers = new HashMap<>();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void testDefaultMessage(String qualifier) throws NoSuchMessageException {
         initMappers();
         mappers.put(qualifier, new WarningMessageMapper(qualifier));
@@ -54,6 +60,7 @@ public class WarningMessageMapper {
         return getInstance(gateway.getSettingsQualifier());
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getName(String id) throws NoSuchMessageException {
         if (mappings.containsKey(id))
             return mappings.get(id);
@@ -67,6 +74,7 @@ public class WarningMessageMapper {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getDefault() {
         return mappings.get("default");
     }

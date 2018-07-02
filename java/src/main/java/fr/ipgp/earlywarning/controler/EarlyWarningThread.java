@@ -5,11 +5,6 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
-import fr.ipgp.earlywarning.messages.TextWarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessage;
-import fr.ipgp.earlywarning.messages.WarningMessageMapper;
-import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
@@ -40,8 +35,6 @@ public class EarlyWarningThread extends Thread {
     protected int port;
     protected boolean triggerOnError;
     private QueueManagerThread queueManagerThread;
-    private ContactList defaultContactList;
-    private String defaultWarningMessage = null;
     private boolean defaultRepeat = true;
     private String defaultConfirmCode = null;
     private int defaultPriority = 1;
@@ -59,11 +52,10 @@ public class EarlyWarningThread extends Thread {
         packet = new DatagramPacket(buffer, buffer.length);
     }
 
-    public static synchronized EarlyWarningThread getInstance(ContactList defaultContactList) throws IOException, ConversionException, NoSuchElementException {
-        if (uniqueInstance == null) {
+    public static synchronized EarlyWarningThread getInstance() throws IOException, ConversionException, NoSuchElementException {
+        if (uniqueInstance == null)
             uniqueInstance = new EarlyWarningThread();
-        }
-        uniqueInstance.defaultContactList = defaultContactList;
+
         return uniqueInstance;
     }
 
@@ -72,7 +64,7 @@ public class EarlyWarningThread extends Thread {
 
         configureThread();
 
-        queueManagerThread = QueueManagerThread.getInstance(defaultWarningMessage);
+        queueManagerThread = QueueManagerThread.getInstance();
         queueManagerThread.start();
 
         EarlyWarning.appLogger.debug("Waiting for triggers on UDP port " + port);
@@ -93,7 +85,7 @@ public class EarlyWarningThread extends Thread {
             if (received) {
                 try {
                     EarlyWarning.appLogger.info("Received a packet");
-                    DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultContactList, defaultWarningMessage, defaultRepeat, defaultConfirmCode, defaultPriority);
+                    DatagramTriggerConverter datagramTriggerConverter = new DatagramTriggerConverter(packet, defaultRepeat, defaultConfirmCode, defaultPriority);
                     datagramTriggerConverter.decode();
                     Trigger trigger = datagramTriggerConverter.getTrigger();
                     queueManagerThread.addTrigger(trigger);
@@ -151,7 +143,6 @@ public class EarlyWarningThread extends Thread {
             String confirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
             Trigger trig = new Trigger(id, priority);
             trig.setApplication(application);
-            trig.setContactList(defaultContactList);
             InetAddress inetAddress = InetAddress.getByName("localhost");
             trig.setInetAddress(inetAddress);
             trig.setMessage(errorMessage);
@@ -193,7 +184,6 @@ public class EarlyWarningThread extends Thread {
      */
     private void configureThread() {
         try {
-            defaultWarningMessage = WarningMessageMapper.getInstance("Text").getDefault();
             defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
             defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
             defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");

@@ -261,7 +261,7 @@ public class Trigger implements Comparable {
     public String showTrigger() {
         return "Id : " + id + " - Priority : " + priority + " - Type : " + type + " From : " + inetAddress.toString() +
                 " - Application : " + application + " - Repeat : " + repeat + " - Date : " + date + " - Confirm Code : " + confirmCode +
-                " - Contact List : " + contactList.toString() + " - Warning Message ID : " + messageId.toString();
+                " - Contact List : " + contactList.toString() + " - Warning Message ID : " + messageId;
     }
 
     /**
@@ -275,7 +275,7 @@ public class Trigger implements Comparable {
         body += "From application : " + application + "\n";
         body += "Confirmation code : " + confirmCode + "\n";
         body += "Contact list : " + contactList.toString() + "\n";
-        body += "Warning message ID : " + messageId.toString() + "\n";
+        body += "Warning message ID : " + messageId + "\n";
         return body;
     }
 }

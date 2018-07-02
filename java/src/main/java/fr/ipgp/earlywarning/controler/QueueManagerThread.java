@@ -8,7 +8,6 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.AudioSerialMessage;
 import fr.ipgp.earlywarning.gateway.AsteriskGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
-import fr.ipgp.earlywarning.messages.AudioWarningMessage;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.telephones.ContactListMapper;
@@ -29,7 +28,6 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class QueueManagerThread extends Thread {
     private static QueueManagerThread uniqueInstance;
-    private static String defaultWarningMessage;
     protected boolean moreTriggers = true;
     private PriorityBlockingQueue<Trigger> queue;
     private Gateway gateway;
@@ -52,11 +50,10 @@ public class QueueManagerThread extends Thread {
         queue = new PriorityBlockingQueue<>();
     }
 
-    public static synchronized QueueManagerThread getInstance(String warningMessage) {
+    public static synchronized QueueManagerThread getInstance() {
         if (uniqueInstance == null) {
             uniqueInstance = new QueueManagerThread();
         }
-        defaultWarningMessage = warningMessage;
         return uniqueInstance;
     }
 

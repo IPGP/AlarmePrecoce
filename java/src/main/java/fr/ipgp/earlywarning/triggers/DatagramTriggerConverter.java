@@ -24,21 +24,17 @@ public class DatagramTriggerConverter implements TriggerConverter {
     protected int senderPort;
     protected Trigger trigger;
     protected String packetContent;
-    protected ContactList defaultContactList;
-    protected String defaultWarningMessage;
     protected boolean defaultRepeat;
     protected String defaultConfirmCode;
     protected int defaultPriority;
 
-    public DatagramTriggerConverter(DatagramPacket packet, ContactList defaultContactList, String defaultWarningMessage, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
+    public DatagramTriggerConverter(DatagramPacket packet, boolean defaultRepeat, String defaultConfirmCode, int defaultPriority) {
         this.packet = packet;
         this.senderAddress = packet.getAddress();
         this.senderPort = packet.getPort();
         this.packetContent = new String(packet.getData(), 0, packet.getLength());
-        this.defaultContactList = defaultContactList;
         this.defaultRepeat = defaultRepeat;
         this.defaultConfirmCode = defaultConfirmCode;
-        this.defaultWarningMessage = defaultWarningMessage;
         this.defaultPriority = defaultPriority;
         this.trigger = new Trigger(CommonUtilities.getUniqueId(), defaultPriority);
         this.trigger.setInetAddress(senderAddress);
@@ -95,7 +91,6 @@ public class DatagramTriggerConverter implements TriggerConverter {
         if (packetContentElements.length < 4)
             throw new MissingTriggerFieldException("Not enough fields for a V1 trigger : " + this.packetContent);
         trigger.setApplication(packetContentElements[0]);
-        trigger.setContactList(defaultContactList);
         trigger.setMessage("default");
         trigger.setType("01");
         trigger.setDate(packetContentElements[1] + " " + packetContentElements[2]);

@@ -7,10 +7,10 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.telephones.ContactList;
-import fr.ipgp.earlywarning.telephones.ContactListBuilder;
 import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
+import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -36,13 +36,12 @@ public class EarlyWarning {
 
     public static XMLConfiguration configuration;
     public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-    private static ContactList defaultContactList;
     private static List<ContactList> contactsLists;
 
     public static void main(final String[] args) {
         setLogger();
 
-        checkUnicity();
+        checkUniqueness();
 
         readConfiguration();
 
@@ -79,16 +78,11 @@ public class EarlyWarning {
     private static void readConfiguration() {
         try {
             configuration = new XMLConfiguration("resources/earlywarning.xml");
-            defaultContactList = ContactListBuilder.build(configuration.getString("contacts.default"));
+            ConfigurationValidator validator = new ConfigurationValidator(configuration);
+            validator.validate();
         } catch (ConfigurationException cex) {
             appLogger.fatal("Fatal error : configuration file not present or not readable. Exiting application");
             System.exit(1);
-        } catch (FileNotFoundException fnfe) {
-            appLogger.fatal("Default file call list or resource path not found : " + fnfe.getMessage() + ". check gateway section of earlywarning.xml configuration file. Exiting.");
-            System.exit(1);
-        } catch (IOException e) {
-            appLogger.fatal("Couldn't build default call list.");
-            System.exit(-1);
         }
     }
 
@@ -102,7 +96,7 @@ public class EarlyWarning {
     /**
      * Check uniqueness of the application
      */
-    private static void checkUnicity() {
+    private static void checkUniqueness() {
         try {
             if (!CommonUtilities.appIsUnique("EarlyWarning")) {
                 appLogger.fatal("Application already running : exiting");
@@ -140,7 +134,7 @@ public class EarlyWarning {
      */
     private static void startEarlyWarningThread() {
         try {
-            Thread earlyWarningThread = EarlyWarningThread.getInstance(defaultContactList);
+            Thread earlyWarningThread = EarlyWarningThread.getInstance();
             earlyWarningThread.start();
         } catch (ConversionException ce) {
             appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
