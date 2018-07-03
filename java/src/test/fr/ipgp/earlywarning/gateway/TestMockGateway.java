@@ -29,6 +29,5 @@ public class TestMockGateway {
     @Test
     public void testCreateMockGateway() {
         MockGateway mockGateway = MockGateway.getInstance();
-        // TODO?
     }
 }

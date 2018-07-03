@@ -30,7 +30,7 @@ public class ContactListBuilder {
     }
 
     private static String getExtension(String filename) {
-        String[] split = filename.split(".");
+        String[] split = filename.split("\\.");
         return split[split.length - 1];
     }
 }

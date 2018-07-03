@@ -49,7 +49,7 @@ public class WarningMessageMapper {
 
     public static WarningMessageMapper getInstance(String qualifier) {
         if (!mappers.containsKey(qualifier)) {
-            EarlyWarning.appLogger.fatal("Default warning message has not been tested for " + qualifier + ". Please verify that you do it with WarningMessageMapper.testDefaultMessage(gateway).");
+            EarlyWarning.appLogger.fatal("Default warning message has not been tested for '" + qualifier + "'. Please verify that you do it with WarningMessageMapper.testDefaultMessage(gateway).");
             System.exit(-1);
         }
 
@@ -66,7 +66,7 @@ public class WarningMessageMapper {
             return mappings.get(id);
 
         try {
-            String name = EarlyWarning.configuration.getString("sounds.default" + gatewayQualifier);
+            String name = EarlyWarning.configuration.getString("sounds." + id + "." + gatewayQualifier);
             mappings.put(id, name);
             return name;
         } catch (NoSuchElementException ex) {

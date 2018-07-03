@@ -13,9 +13,9 @@ import org.asteriskjava.fastagi.*;
  * The (to this day) only AGI script we have.
  * <b>What does it do?</b>
  * <ul>
- * <li>Immediatly answer the code (for now, we can't detect when the callee actually answers)</li>
+ * <li>Immediatly answer the call (for now, we can't detect when the callee actually answers)</li>
  * <li>Plays a "welcome" sound in a loop until the callee enters "11" on his dial pad</li>
- * <li>// TODO plays an adequate sound, depending on the situation</li>
+ * <li>Plays an adequate sound, depending on the situation</li>
  * <li>Asks for a confirmation code</li>
  * <li>While the confirmation code is incorrect and the CallOriginator tells the script the user can carry on trying, it keeps asking for the code</li>
  * <li>Finally hangs up.</li>
@@ -29,6 +29,7 @@ public class AlertCallScript extends BaseAgiScript {
     private static OnConnectedListener onConnectedListener;
     private static boolean hangupRequested = false;
     private static int maxCodeLength = 0;
+    private static String warningMessage = null;
 
     /**
      * Setter for the {@link OnCodeReceivedListener}
@@ -58,6 +59,16 @@ public class AlertCallScript extends BaseAgiScript {
      */
     public static void setOnConnectedListener(OnConnectedListener listener) {
         onConnectedListener = listener;
+    }
+
+    /**
+     * Setter for the <code>warningMessage</code> to play in the call.
+     *
+     * @param newWarningMessage the name of the file to stream
+     */
+    public static void setWarningMessage(String newWarningMessage)
+    {
+        warningMessage = newWarningMessage;
     }
 
     /**
@@ -114,6 +125,10 @@ public class AlertCallScript extends BaseAgiScript {
                     break;
             }
 
+            EarlyWarning.appLogger.debug("Playing adequate sound.");
+            if (warningMessage != null)
+                streamFile(warningMessage);
+
             EarlyWarning.appLogger.debug("Waiting for code confirmation");
 
             // action will be our loop variable for the retry-give up mechanism.
@@ -154,6 +169,7 @@ public class AlertCallScript extends BaseAgiScript {
         } catch (AgiHangupException ex) {
             // If the call is hung up (by the user or the script), notify the listeners.
             onHangupListener.onHangup();
+            warningMessage = null;
             EarlyWarning.appLogger.debug("Call was hung up. Terminating.");
         }
     }

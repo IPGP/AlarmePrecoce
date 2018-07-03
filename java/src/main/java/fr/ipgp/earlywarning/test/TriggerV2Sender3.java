@@ -30,7 +30,7 @@ public class TriggerV2Sender3 {
 
         //Format V2 : vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
         //String messageString = "02 1 2008/03/18 13:22:04 appli_dataTaker01 0692703856 true 1 alerte.wav";
-        String messageString = "02 1 2008/03/21 11:00:33 nagios defaultCallList true 11 |Alerte, plus de place sur partage|";
+        String messageString = "02 1 2008/03/21 11:00:33 nagios default true 11 test_tone";
 
         message = new byte[messageString.length()];
         message = messageString.getBytes();

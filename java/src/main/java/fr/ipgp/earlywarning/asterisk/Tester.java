@@ -39,7 +39,7 @@ public class Tester {
         // The CallOriginator's task is to emit the call and then wait for data from the AGI script.
         // The AGI script doesn't do any choice (it doesn't know the confirmation code)
         // So the AGI script sends signals to the CallOriginator, the latter answers what it should do (retry, give up...)
-        CallOriginator originator = new CallOriginator(managerConnection, code);
+        CallOriginator originator = new CallOriginator(managerConnection, code, "demo-thanks");
 
         // CallOriginator.call gives us a CallResult. We'll use it as a loop variable and define it as Initial (first iteration)
         CallOriginator.CallResult result = CallOriginator.CallResult.Initial;

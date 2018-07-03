@@ -30,18 +30,27 @@ public class CallOriginator implements ManagerEventListener {
     private static final int SECOND = 1000;
     @SuppressWarnings("unused")
     private static final int MINUTE = 60 * SECOND;
+
     /**
      * The timeout (in milliseconds) for the ManagerAction to be accepted by the server
      */
     private static final long TIMEOUT = 30000;
+
     /**
      * The maximum amount of time to ring before giving up the call. It's not necessarily the real value: the call will be hung up when the <code>ringTimeout</code> is over AND the welcome audio file finished.
      */
     private static int ringTimeout;
+
+    /**
+     * The warning message to play when the callee answers
+     */
+    private String warningMessage;
+
     private static String amiHostname = null;
     private static int amiPort = -1;
     private static String managerUsername = null;
     private static String managerPassword = null;
+
     /**
      * The connection to AMI.
      */
@@ -130,7 +139,7 @@ public class CallOriginator implements ManagerEventListener {
      * @param password the AMI Manager's password
      * @param code     the confirmation code to be used ; can be changed later
      */
-    public CallOriginator(String host, int port, String user, String password, String code) {
+    public CallOriginator(String host, int port, String user, String password, String code, String warningMessage) {
         amiHostname = host;
         amiPort = port;
         managerUsername = user;
@@ -141,8 +150,10 @@ public class CallOriginator implements ManagerEventListener {
         this.localConnection = true;
 
         this.confirmCode = code;
+        this.warningMessage = warningMessage;
 
         EarlyWarning.appLogger.debug("Confirmation code: " + code);
+        EarlyWarning.appLogger.debug("Warning message: " + warningMessage);
     }
 
     /**
@@ -151,13 +162,17 @@ public class CallOriginator implements ManagerEventListener {
      * @param connection the ManagerConnection to use
      * @param code       the confirmation code
      */
-    public CallOriginator(ManagerConnection connection, String code) {
+    public CallOriginator(ManagerConnection connection, String code, String warningMessage) {
         // If we get a null ManagerConnection, we can't create a default one without credentials.
         assert connection != null;
 
         this.managerConnection = connection;
         this.localConnection = false;
         this.confirmCode = code;
+        this.warningMessage = warningMessage;
+
+        EarlyWarning.appLogger.debug("Confirmation code: " + code);
+        EarlyWarning.appLogger.debug("Warning message: " + warningMessage);
     }
 
     /**
@@ -165,7 +180,7 @@ public class CallOriginator implements ManagerEventListener {
      *
      * @param code the new confirmation code
      */
-    public CallOriginator(String code) {
+    public CallOriginator(String code, String warningMessage) {
         // Verify that none of the authentication fields is empty
         if (amiHostname == null || amiHostname.isEmpty()
                 || amiPort < 0
@@ -180,6 +195,7 @@ public class CallOriginator implements ManagerEventListener {
 
         // Set the confirmation code
         confirmCode = code;
+        this.warningMessage = warningMessage;
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -233,6 +249,7 @@ public class CallOriginator implements ManagerEventListener {
         AlertCallScript.setOnCodeReceivedListener(onCodeReceivedListener, confirmCode.length());
         AlertCallScript.setOnHangupListener(onHangupListener);
         AlertCallScript.setOnConnectedListener(onConnectedListener);
+        AlertCallScript.setWarningMessage(warningMessage);
 
         if (managerConnection.getState() != ManagerConnectionState.CONNECTED
                 && managerConnection.getState() != ManagerConnectionState.CONNECTING) {
