@@ -59,7 +59,7 @@ public class ContactListManagerServer {
     private static Map<String, String> getQueryMap(String query) {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<>();
-        for (String param : params) {
+        for (String param: params) {
             String name = param.split("=")[0];
             String value = param.split("=")[1];
             map.put(name, value);
@@ -124,8 +124,8 @@ public class ContactListManagerServer {
                 byte[] buffer = new byte[1000];
                 while (file.available() > 0)
                     out.write(buffer, 0, file.read(buffer));
-            } catch (IOException e) {
-                EarlyWarning.appLogger.error(e.getMessage());
+            } catch (IOException ex) {
+                EarlyWarning.appLogger.error(ex.getMessage());
             }
         }
 
@@ -159,7 +159,7 @@ public class ContactListManagerServer {
             head.appendChild(script);
 
             Element listsList = doc.getElementById("available-lists");
-            for (String s : ContactListMapper.getInstance().getAvailableLists()) {
+            for (String s: ContactListMapper.getInstance().getAvailableLists()) {
                 Element a = doc.createElement("a");
                 a.attr("href", "/index.html?list=" + s);
                 a.text(s);
@@ -197,8 +197,8 @@ public class ContactListManagerServer {
             if (path.endsWith("index.html")) {
                 try {
                     list = getListForURI(uri);
-                } catch (Exception e) {
-                    EarlyWarning.appLogger.error("Exception: " + e.getMessage());
+                } catch (Exception ex) {
+                    EarlyWarning.appLogger.error("Exception: " + ex.getMessage());
                 }
                 if (list == null) {
                     serveEmpty(t, "No such list.");
@@ -238,7 +238,7 @@ public class ContactListManagerServer {
 
                 try {
                     return ContactListMapper.getInstance().getList(listName);
-                } catch (NoSuchListException e) {
+                } catch (NoSuchListException ex) {
                     EarlyWarning.appLogger.error("User requested to modify Contact List '" + listName + "', which does not exist.");
                     return null;
                 }
@@ -256,8 +256,8 @@ public class ContactListManagerServer {
                 OutputStream os = t.getResponseBody();
                 os.write(result.getBytes());
                 os.close();
-            } catch (IOException e) {
-                EarlyWarning.appLogger.error("Can't write 404 response to client: " + e.getMessage());
+            } catch (IOException ex) {
+                EarlyWarning.appLogger.error("Can't write 404 response to client: " + ex.getMessage());
             }
         }
     }
@@ -275,7 +275,7 @@ public class ContactListManagerServer {
             ContactList list;
             try {
                 list = ContactListMapper.getInstance().getList(listName);
-            } catch (NoSuchListException e) {
+            } catch (NoSuchListException ex) {
                 EarlyWarning.appLogger.error("Used tried to add contact to list '" + listName + "', which does not exist.");
                 return;
             }
@@ -285,8 +285,8 @@ public class ContactListManagerServer {
 
             try {
                 list.write();
-            } catch (IOException e) {
-                EarlyWarning.appLogger.error("Can't write JSONContactList: " + e.getMessage());
+            } catch (IOException ex) {
+                EarlyWarning.appLogger.error("Can't write JSONContactList: " + ex.getMessage());
             }
         }
 
@@ -304,7 +304,7 @@ public class ContactListManagerServer {
 
             try {
                 list = ContactListMapper.getInstance().getList(listName);
-            } catch (NoSuchListException e) {
+            } catch (NoSuchListException ex) {
                 EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which does not exist.");
                 return;
             }
@@ -360,7 +360,7 @@ public class ContactListManagerServer {
                     else if (uri.equalsIgnoreCase("update"))
                         handleUpdate(json);
                     else {
-                        byte[] response = "{\"status\" : \"error\"}".getBytes();
+                        byte[] response = "{\"status\": \"error\"}".getBytes();
                         he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, response.length);
                         OutputStream os = he.getResponseBody();
                         os.write(response);
@@ -369,18 +369,18 @@ public class ContactListManagerServer {
                     }
 
                     // Send a confirmation that everything went well.
-                    byte[] response = "{\"status\" : \"success\"}".getBytes();
+                    byte[] response = "{\"status\": \"success\"}".getBytes();
                     he.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
                     OutputStream os = he.getResponseBody();
                     os.write(response);
                     he.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             } else {
                 // If we get a request that is not POST, send a BAD_METHOD status with a JSON content.
                 EarlyWarning.appLogger.warn("Wrong request on " + he.getRequestURI().toString() + " and method " + he.getRequestMethod());
-                byte[] response = "{\"status\" : \"Bad method\"}".getBytes();
+                byte[] response = "{\"status\": \"Bad method\"}".getBytes();
                 he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
                 he.getResponseBody().write(response);
                 he.close();

@@ -43,7 +43,7 @@ public class SMSThread extends Thread {
         EarlyWarning.appLogger.debug("SMS Thread creation");
         try {
             configureSMS();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             EarlyWarning.appLogger.error("check sms section of earlywarning.xml configuration file. SMS disabled.");
             queueManagerThread.setUseSMS(false);
         }

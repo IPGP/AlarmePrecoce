@@ -24,8 +24,8 @@ public class TriggerSender {
 
         try {
             address = InetAddress.getByName("localhost");
-        } catch (UnknownHostException uhe) {
-            uhe.printStackTrace();
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
         }
 
         message = new byte[256];
@@ -41,13 +41,13 @@ public class TriggerSender {
         try {
             packet = new DatagramPacket(message, message.length, address, port);
             socket = new DatagramSocket();
-        } catch (SocketException se) {
-            se.printStackTrace();
+        } catch (SocketException ex) {
+            ex.printStackTrace();
         }
         try {
             socket.send(packet);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         socket.close();
     }

@@ -96,6 +96,7 @@ public class AlertCallScript extends BaseAgiScript {
      * @throws AgiException if something unexpected - but not a {@link AgiHangupException} - happens.
      */
     public void service(AgiRequest request, AgiChannel channel) throws AgiException {
+        Thread.currentThread().setName("Alert AGI Script");
         // Rest the hangup request state
         hangupRequested = false;
 

@@ -58,7 +58,7 @@ public class EarlyWarning {
 
     private static void parseArgs(final String[] args) {
         boolean testCalls = false;
-        for (String arg : args)
+        for (String arg: args)
             if (arg.equalsIgnoreCase("--testcalls"))
                 testCalls = true;
 
@@ -68,8 +68,8 @@ public class EarlyWarning {
                 public void run() {
                     try {
                         Thread.sleep(2500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
                     }
                     appLogger.info("Sending first trigger");
                     TriggerV2Sender3.main(args);
@@ -97,7 +97,7 @@ public class EarlyWarning {
             ConfigurationValidator validator = new ConfigurationValidator(configuration);
             validator.validate();
         } catch (ConfigurationException cex) {
-            appLogger.fatal("Fatal error : configuration file not present or not readable. Exiting application");
+            appLogger.fatal("Fatal error: configuration file not present or not readable. Exiting application");
             System.exit(1);
         }
     }
@@ -115,13 +115,13 @@ public class EarlyWarning {
     private static void checkUniqueness() {
         try {
             if (!CommonUtilities.appIsUnique("EarlyWarning")) {
-                appLogger.fatal("Application already running : exiting");
+                appLogger.fatal("Application already running: exiting");
                 System.exit(1);
             }
-        } catch (FileNotFoundException fnfe) {
-            appLogger.warn("Unable to create lock file to ensure unicity of the application");
-        } catch (IOException ioe) {
-            appLogger.warn("Unable to set lock file to ensure unicity of the application");
+        } catch (FileNotFoundException ex) {
+            appLogger.warn("Unable to create lock file to ensure uniqueness of the application");
+        } catch (IOException ex) {
+            appLogger.warn("Unable to set lock file to ensure uniqueness of the application");
         }
     }
 
@@ -135,9 +135,9 @@ public class EarlyWarning {
 
         try {
             server.startServer();
-        } catch (IOException e) {
-            appLogger.fatal("Fatal error : cannot start server on port " + server.getPort());
-            e.printStackTrace();
+        } catch (IOException ex) {
+            appLogger.fatal("Fatal error: cannot start server on port " + server.getPort());
+            ex.printStackTrace();
             System.exit(1);
         }
     }
@@ -149,14 +149,14 @@ public class EarlyWarning {
         try {
             Thread earlyWarningThread = EarlyWarningThread.getInstance();
             earlyWarningThread.start();
-        } catch (ConversionException ce) {
-            appLogger.fatal("Fatal error : an element value has wrong type : check network section of earlywarning.xml configuration file. Exiting application.");
+        } catch (ConversionException ex) {
+            appLogger.fatal("Fatal error: an element value has wrong type: check network section of earlywarning.xml configuration file. Exiting application.");
             System.exit(1);
-        } catch (NoSuchElementException nsee) {
-            appLogger.fatal("Fatal error : An element value is undefined : check network section of earlywarning.xml configuration file. Exiting application.");
+        } catch (NoSuchElementException ex) {
+            appLogger.fatal("Fatal error: An element value is undefined: check network section of earlywarning.xml configuration file. Exiting application.");
             System.exit(1);
-        } catch (IOException ioe) {
-            appLogger.fatal("Fatal error : I/O exception : " + ioe.getMessage() + ". Exiting application.");
+        } catch (IOException ex) {
+            appLogger.fatal("Fatal error: I/O exception: " + ex.getMessage() + ". Exiting application.");
             System.exit(1);
         }
     }
@@ -170,10 +170,10 @@ public class EarlyWarning {
                 Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
                 dataBaseHeartBeatThread.start();
             }
-        } catch (ConversionException ce) {
-            appLogger.error("An element value has wrong type : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
-        } catch (NoSuchElementException nsee) {
-            appLogger.error("An element value is undefined : check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+        } catch (ConversionException ex) {
+            appLogger.error("An element value has wrong type: check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+        } catch (NoSuchElementException ex) {
+            appLogger.error("An element value is undefined: check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
         }
     }
 

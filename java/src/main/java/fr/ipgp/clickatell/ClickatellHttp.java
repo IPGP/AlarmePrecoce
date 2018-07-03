@@ -173,7 +173,7 @@ public class ClickatellHttp {
         // We don't throw an exception here, as maybe only part of your
         // messages failed:
         String lines[] = result.split("\n");
-        for (String l : lines) {
+        for (String l: lines) {
             String n[] = l.split(" To: ");
             Message message = new Message();
             message.number = n[1].trim();
@@ -350,7 +350,7 @@ public class ClickatellHttp {
             number.append(",").append(numbers[x]);
         }
         urlParameters.append("&to=").append(number);
-        for (Entry<String, String> entry : features.entrySet()) {
+        for (Entry<String, String> entry: features.entrySet()) {
             urlParameters.append("&").append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
 
@@ -365,7 +365,7 @@ public class ClickatellHttp {
         // This does some fancy swapping:
         String lines[] = result.split("\n");
         if (lines.length > 1) { // Sent more than one message
-            for (String l : lines) {
+            for (String l: lines) {
                 Message message = new Message();
                 String i[] = l.split(" To: ");
                 message.number = i[1];
@@ -434,9 +434,9 @@ public class ClickatellHttp {
             }
             rd.close();
             return response.toString();
-        } catch (UnknownHostException e) {
-            throw e;
-        } catch (Exception e) {
+        } catch (UnknownHostException ex) {
+            throw ex;
+        } catch (Exception ex) {
             return "";
         } finally {
             if (connection != null) {

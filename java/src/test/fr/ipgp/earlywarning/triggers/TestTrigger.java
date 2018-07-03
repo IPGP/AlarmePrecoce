@@ -44,7 +44,7 @@ public class TestTrigger {
         id = 1635132135;
         priority = 1;
         contactList = new SingleContactList("0692703856");
-        message = "Alerte : tout brule!!";
+        message = "Alerte: tout brule!!";
         inetAddress = InetAddress.getByName("localhost");
         application = "Sismo";
         type = "v1";
@@ -86,7 +86,7 @@ public class TestTrigger {
         Assert.assertEquals(repeat, trig.getRepeat());
         Assert.assertEquals(date, trig.getDate());
         Assert.assertEquals(confirmCode, trig.getConfirmCode());
-        Assert.assertEquals("Id : " + id + " - Priority : " + priority, trig.toString());
+        Assert.assertEquals("Id: " + id + " - Priority: " + priority, trig.toString());
         Long idLong = id;
         Integer priorityInteger = priority;
         Assert.assertEquals(idLong.hashCode() + priorityInteger.hashCode(), trig.hashCode());

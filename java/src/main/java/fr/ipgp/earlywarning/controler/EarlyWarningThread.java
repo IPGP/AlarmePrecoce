@@ -72,13 +72,13 @@ public class EarlyWarningThread extends Thread {
             boolean received = true;
             try {
                 socket.receive(packet);
-            } catch (IOException ioe) {
-                EarlyWarning.appLogger.error("Input Output error check the Firewall : " + ioe.getMessage());
+            } catch (IOException ex) {
+                EarlyWarning.appLogger.error("Input Output error check the Firewall: " + ex.getMessage());
                 received = false;
                 try {
                     Thread.sleep(2000);
-                } catch (InterruptedException ie) {
-                    EarlyWarning.appLogger.error("Error while sleeping!");
+                } catch (InterruptedException sleepEx) {
+                    EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
             }
             if (received) {
@@ -89,21 +89,21 @@ public class EarlyWarningThread extends Thread {
                     Trigger trigger = datagramTriggerConverter.getTrigger();
                     queueManagerThread.addTrigger(trigger);
 
-                    //EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trigger.showTrigger());
+                    //EarlyWarning.appLogger.info("A new trigger has been added to the queue: " + trigger.showTrigger());
                     EarlyWarning.appLogger.info("A new trigger has been added to the queue");
-                    EarlyWarning.appLogger.info("QueueManager : " + queueManagerThread.toString());
-                } catch (UnknownTriggerFormatException utfe) {
-                    //EarlyWarning.appLogger.error("Unknown trigger format received : " + utfe.getMessage());
+                    EarlyWarning.appLogger.info("QueueManager: " + queueManagerThread.toString());
+                } catch (UnknownTriggerFormatException ex) {
+                    //EarlyWarning.appLogger.error("Unknown trigger format received: " + utfex.getMessage());
                     //EarlyWarning.appLogger.debug("Unknown trigger format received");
-                    addErrorTrigger("Unknown trigger format received : " + utfe.getMessage());
-                } catch (InvalidTriggerFieldException itfe) {
-                    //EarlyWarning.appLogger.error("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                    EarlyWarning.appLogger.error("Invalid field(s) in the received trigger: " + itfe.getMessage());
-                    addErrorTrigger("Invalid field(s) in the received trigger : " + itfe.getMessage());
-                } catch (MissingTriggerFieldException mtfe) {
-                    //EarlyWarning.appLogger.error("Missing field(s) in the received trigger : " + mtfe.getMessage());
+                    addErrorTrigger("Unknown trigger format received: " + ex.getMessage());
+                } catch (InvalidTriggerFieldException ex) {
+                    //EarlyWarning.appLogger.error("Invalid field(s) in the received trigger: " + itfex.getMessage());
+                    EarlyWarning.appLogger.error("Invalid field(s) in the received trigger: " + ex.getMessage());
+                    addErrorTrigger("Invalid field(s) in the received trigger: " + ex.getMessage());
+                } catch (MissingTriggerFieldException ex) {
+                    //EarlyWarning.appLogger.error("Missing field(s) in the received trigger: " + mtfex.getMessage());
                     EarlyWarning.appLogger.error("Missing field(s) in the received trigger");
-                    addErrorTrigger("Missing field(s) in the received trigger : " + mtfe.getMessage());
+                    addErrorTrigger("Missing field(s) in the received trigger: " + ex.getMessage());
                 } finally {
                     System.out.println("Waiting for triggers");
                 }
@@ -144,14 +144,14 @@ public class EarlyWarningThread extends Thread {
             trig.setDate(date);
             trig.setConfirmCode(confirmCode);
             return trig;
-        } catch (UnknownHostException uh) {
-            EarlyWarning.appLogger.error("localhost unknown : check hosts file : " + uh.getMessage());
+        } catch (UnknownHostException ex) {
+            EarlyWarning.appLogger.error("localhost unknown: check hosts file: " + ex.getMessage());
             return null;
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.error("Error : an element value has wrong type : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.error("Error: an element value has wrong type: check trigger section of earlywarning.xml configuration file. Trigger not sent.");
             return null;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.error("Error : An element value is undefined : check trigger section of earlywarning.xml configuration file. Trigger not sent.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.error("Error: An element value is undefined: check trigger section of earlywarning.xml configuration file. Trigger not sent.");
             return null;
         }
     }
@@ -166,7 +166,7 @@ public class EarlyWarningThread extends Thread {
             Trigger trig = createErrorTrigger(errorMessage);
             if (!(trig == null)) {
                 queueManagerThread.addTrigger(trig);
-                EarlyWarning.appLogger.info("A new trigger has been added to the queue : " + trig.showTrigger());
+                EarlyWarning.appLogger.info("A new trigger has been added to the queue: " + trig.showTrigger());
             }
         }
     }
@@ -179,11 +179,11 @@ public class EarlyWarningThread extends Thread {
             defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
             defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
             defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file: check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
             System.exit(-1);
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file : check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file: check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
             System.exit(-1);
         }
     }

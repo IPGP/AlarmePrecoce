@@ -59,7 +59,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
         else if (packetContentSplit[0].equals("Sismo"))
             version = 1;
         else
-            throw new UnknownTriggerFormatException("Unknown version : " + packetContentSplit[0]);
+            throw new UnknownTriggerFormatException("Unknown version: " + packetContentSplit[0]);
 
         switch (version) {
             case 1:
@@ -69,13 +69,13 @@ public class DatagramTriggerConverter implements TriggerConverter {
                 decodeV2(packetContentSplit);
                 break;
             default:
-                throw new UnknownTriggerFormatException("Unknown version : " + packetContentSplit[0]);
+                throw new UnknownTriggerFormatException("Unknown version: " + packetContentSplit[0]);
         }
 
     }
 
     /**
-     * Decode the old OVPF format : type 01
+     * Decode the old OVPF format: type 01
      * Sismo dd/MM/yyyy HH:mm:ss Declenchement
      *
      * @param packetContentElements the elements of the received message
@@ -83,9 +83,9 @@ public class DatagramTriggerConverter implements TriggerConverter {
      */
     private void decodeV1(String[] packetContentElements) throws InvalidTriggerFieldException, MissingTriggerFieldException {
         if (!CommonUtilities.isDate(packetContentElements[1] + " " + packetContentElements[2], "dd/MM/yyyy HH:mm:ss"))
-            throw new InvalidTriggerFieldException("Invalid V1 trigger field(s) : invalid date " + packetContentElements[1] + " " + packetContentElements[2]);
+            throw new InvalidTriggerFieldException("Invalid V1 trigger field(s): invalid date " + packetContentElements[1] + " " + packetContentElements[2]);
         if (packetContentElements.length < 4)
-            throw new MissingTriggerFieldException("Not enough fields for a V1 trigger : " + this.packetContent);
+            throw new MissingTriggerFieldException("Not enough fields for a V1 trigger: " + this.packetContent);
         trigger.setApplication(packetContentElements[0]);
         trigger.setMessage("default");
         trigger.setType("01");
@@ -96,16 +96,16 @@ public class DatagramTriggerConverter implements TriggerConverter {
 
     /**
      * Decode version 2 messages.<br/>
-     * <b>Format : </b><br/>
+     * <b>Format: </b><br/>
      * vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
-     * vv : version, two digit<br/>
-     * p : priority, one digit<br/>
-     * yyyy/MM/dd HH:mm:ss : date, ISO format<br/>
-     * application : application name, [a-zA-Z_0-9]*<br/>
-     * calllist : call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
-     * repeat : true or false<br/>
-     * confirmcode : confirmation code, a digit sequence (1 to 6 digits)
-     * message : warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
+     * vv: version, two digit<br/>
+     * p: priority, one digit<br/>
+     * yyyy/MM/dd HH:mm:ss: date, ISO format<br/>
+     * application: application name, [a-zA-Z_0-9]*<br/>
+     * calllist: call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
+     * repeat: true or false<br/>
+     * confirmcode: confirmation code, a digit sequence (1 to 6 digits)
+     * message: warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
      *
      * @param packetContentElements the elements of the received message
      */
@@ -117,22 +117,22 @@ public class DatagramTriggerConverter implements TriggerConverter {
                 warningMessageBuilder.append(" ").append(packetContentElements[j]);
             warningMessage = warningMessageBuilder.toString().replace("|", "").trim();
         } else
-            throw new MissingTriggerFieldException("Not enough fields for a V2 trigger : " + this.packetContent);
+            throw new MissingTriggerFieldException("Not enough fields for a V2 trigger: " + this.packetContent);
 
         if (!packetContentElements[1].matches("\\d"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid priority " + packetContentElements[1]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid priority " + packetContentElements[1]);
         if (!CommonUtilities.isDate(packetContentElements[2] + " " + packetContentElements[3], "yyyy/MM/dd HH:mm:ss"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid date format " + packetContentElements[2] + " " + packetContentElements[3]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid date format " + packetContentElements[2] + " " + packetContentElements[3]);
         if (!packetContentElements[4].matches("\\w*"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid application name " + packetContentElements[4]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid application name " + packetContentElements[4]);
         if (!(packetContentElements[6].equals("true") || packetContentElements[6].equals("false")))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid repeat " + packetContentElements[6]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid repeat " + packetContentElements[6]);
         if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid confirm code " + packetContentElements[7]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid confirm code " + packetContentElements[7]);
         if (!packetContentElements[5].matches("\\w+"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid call list " + packetContentElements[5]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid call list " + packetContentElements[5]);
 //        if (!warningMessage.matches("\\w+"))
-//            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s) : invalid warning message " + warningMessageBuilder);
+//            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid warning message " + warningMessageBuilder);
 
         trigger.setContactList(ContactListMapper.getInstance().getListOrDefault(packetContentElements[5]));
         trigger.setMessage(warningMessage);

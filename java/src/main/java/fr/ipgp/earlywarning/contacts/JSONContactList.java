@@ -81,7 +81,7 @@ public class JSONContactList implements ContactList {
      * @throws NoSuchContactException if no corresponding Contact exists in the list
      */
     public Contact getContactByName(String name) throws NoSuchContactException {
-        for (Contact c : contacts) {
+        for (Contact c: contacts) {
             if (c.name.equals(name))
                 return c;
         }
@@ -91,7 +91,7 @@ public class JSONContactList implements ContactList {
 
     @SuppressWarnings("WeakerAccess")
     public Contact getContactByNumber(String number) throws NoSuchContactException {
-        for (Contact c : contacts) {
+        for (Contact c: contacts) {
             if (c.phone.equals(number))
                 return c;
         }
@@ -127,7 +127,7 @@ public class JSONContactList implements ContactList {
         contacts.add(contact);
 
         if (contact.priority)
-            for (Contact oldContact : contacts)
+            for (Contact oldContact: contacts)
                 if (oldContact != contact)
                     oldContact.priority = false;
 
@@ -149,11 +149,11 @@ public class JSONContactList implements ContactList {
         JSONObject obj = new JSONObject();
 
         JSONArray available = new JSONArray();
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             available.put(c.jsonSerialize());
 
         JSONArray enabled = new JSONArray();
-        for (String phone : callList)
+        for (String phone: callList)
             enabled.put(phone);
 
         obj.put("enabled", enabled);
@@ -204,7 +204,7 @@ public class JSONContactList implements ContactList {
     public List<Contact> getEnabledContacts() {
         List<Contact> result = new ArrayList<>();
 
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             if (callList.indexOf(c.phone) > -1)
                 result.add(c);
 
@@ -214,7 +214,7 @@ public class JSONContactList implements ContactList {
     public List<Contact> getCallList() {
         List<Contact> result = new ArrayList<>();
 
-        for (String number : callList)
+        for (String number: callList)
             try {
                 result.add(getContactByNumber(number));
             } catch (NoSuchContactException ignored) {
@@ -235,7 +235,7 @@ public class JSONContactList implements ContactList {
     @SuppressWarnings("WeakerAccess")
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             names.add(c.name);
 
         return names;
@@ -249,18 +249,18 @@ public class JSONContactList implements ContactList {
     public void clean(List<String> names) {
         List<Contact> newContacts = new ArrayList<>();
 
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             if (names.indexOf(c.name) > -1)
                 newContacts.add(c);
 
         contacts = newContacts;
 
         List<String> existingNumbers = new ArrayList<>();
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             existingNumbers.add(c.phone);
 
         List<String> newCallList = new ArrayList<>();
-        for (String number : callList)
+        for (String number: callList)
             if (existingNumbers.indexOf(number) > -1)
                 newCallList.add(number);
 
@@ -274,7 +274,7 @@ public class JSONContactList implements ContactList {
      */
     public String getAvailableContactsAsJson() {
         JSONArray arr = new JSONArray();
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             arr.put(c.jsonSerialize());
 
         return arr.toString();
@@ -287,7 +287,7 @@ public class JSONContactList implements ContactList {
      */
     public void updateCallList(List<String> names) {
         callList.clear();
-        for (String name : names) {
+        for (String name: names) {
             try {
                 assert getNames().indexOf(name) > -1;
                 callList.add(getContactByName(name).phone);
@@ -305,7 +305,7 @@ public class JSONContactList implements ContactList {
      */
     public String getEnabledContactsAsJson() {
         JSONArray arr = new JSONArray();
-        for (String phone : callList)
+        for (String phone: callList)
             arr.put(phone);
 
         return arr.toString();

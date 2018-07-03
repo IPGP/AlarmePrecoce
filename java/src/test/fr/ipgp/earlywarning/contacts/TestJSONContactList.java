@@ -90,7 +90,7 @@ public class TestJSONContactList {
         JSONContactList contactList = null;
         try {
             contactList = new JSONContactList("tests/contacts.json");
-        } catch (IOException e) {
+        } catch (IOException ex) {
             Assert.fail("Couldn't create the contacts.json file.");
         }
 
@@ -117,7 +117,7 @@ public class TestJSONContactList {
         JSONContactList contactList = null;
         try {
             contactList = new JSONContactList("tests/contacts.json");
-        } catch (IOException e) {
+        } catch (IOException ex) {
             Assert.fail("Couldn't create the contacts.json file.");
         }
 
@@ -126,7 +126,7 @@ public class TestJSONContactList {
 
         try {
             contactList = new JSONContactList("tests/contacts.json");
-        } catch (IOException e) {
+        } catch (IOException ex) {
             Assert.fail("Couldn't create the contacts.json file.");
         }
 
@@ -146,7 +146,7 @@ public class TestJSONContactList {
         JSONContactList contactList = null;
         try {
             contactList = new JSONContactList("tests/contacts.json");
-        } catch (IOException e) {
+        } catch (IOException ex) {
             Assert.fail("Couldn't create the contacts.json file.");
         }
 

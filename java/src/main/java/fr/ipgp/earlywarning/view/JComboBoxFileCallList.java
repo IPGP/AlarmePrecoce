@@ -68,7 +68,7 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
 
         panelSelectedCallList = new JPanel();
         panelSelectedCallList.setLayout(layout);
-        labelSelectedCallList = new JLabel("Liste d'appel selectionnee : " + fileCallList.getFileName());
+        labelSelectedCallList = new JLabel("Liste d'appel selectionnee: " + fileCallList.getFileName());
         panelSelectedCallList.add(labelSelectedCallList);
 
         panelCallList.add(panelSelectedCallList);
@@ -88,7 +88,7 @@ public class JComboBoxFileCallList extends FileCallListView implements ActionLis
     }
 
     public void fileReferenceCallListChanged(FileCallListChangedEvent event) {
-        labelSelectedCallList.setText("Liste d'appel par defaut : " + event.getNewFileReferenceCallList());
+        labelSelectedCallList.setText("Liste d'appel par defaut: " + event.getNewFileReferenceCallList());
         //callListList.setSelectedItem(event.getNewFileReferenceCallList());
     }
 

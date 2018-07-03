@@ -91,7 +91,7 @@ public class QueueManagerThread extends Thread {
      * @return a <code>String</code> representing the <code>QueueManager</code>
      */
     public String toString() {
-        return queue.size() + " Trigger" + (queue.size() > 1 ? 's' : '\0') + ": " + queue.toString();
+        return queue.size() + " Trigger" + (queue.size() > 1 ? 's': '\0') + ": " + queue.toString();
     }
 
     /**
@@ -139,15 +139,15 @@ public class QueueManagerThread extends Thread {
                     try {
                         mailerThread.sendNotification("[EarlyWarning] Alert from " + trig.getApplication(), trig.mailTrigger());
                         EarlyWarning.appLogger.info("Alert from " + trig.getApplication());
-                    } catch (MessagingException me) {
-                        EarlyWarning.appLogger.error("Error while sending notification emails : " + me.getMessage());
+                    } catch (MessagingException ex) {
+                        EarlyWarning.appLogger.error("Error while sending notification emails: " + ex.getMessage());
                     }
                 }
                 if (useSMS) {
                     try {
                         smsThread.sendSMS(trig.mailTrigger());
-                    } catch (Exception e) {
-                        EarlyWarning.appLogger.error("Error while sending SMS notification: " + e.getMessage());
+                    } catch (Exception ex) {
+                        EarlyWarning.appLogger.error("Error while sending SMS notification: " + ex.getMessage());
                     }
                 }
                 if (useSound) {
@@ -155,20 +155,20 @@ public class QueueManagerThread extends Thread {
                     while (audioSerialMessage.isPlaying()) {
                         try {
                             Thread.sleep(1000);
-                        } catch (InterruptedException ie) {
+                        } catch (InterruptedException ex) {
                             EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                         }
                     }
                 }
                 try {
                     Thread.sleep(30000);
-                } catch (InterruptedException ie) {
+                } catch (InterruptedException ex) {
                     EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
             } else {
                 try {
                     Thread.sleep(5000);
-                } catch (InterruptedException ie) {
+                } catch (InterruptedException ex) {
                     EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
             }
@@ -178,11 +178,11 @@ public class QueueManagerThread extends Thread {
     private void configureMailerThread() {
         try {
             useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file: check mail section of earlywarning.xml configuration file. Mail support disabled.");
             useMail = false;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mail support disabled.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file: check mail section of earlywarning.xml configuration file. Mail support disabled.");
             useMail = false;
         }
         if (useMail) {
@@ -194,11 +194,11 @@ public class QueueManagerThread extends Thread {
     private void configureSMSThread() {
         try {
             useSMS = EarlyWarning.configuration.getBoolean("sms.use_sms");
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("sms.use_sms has a wrong value in configuration file : check sms section of earlywarning.xml configuration file. SMS support disabled.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.fatal("sms.use_sms has a wrong value in configuration file: check sms section of earlywarning.xml configuration file. SMS support disabled.");
             useSMS = false;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.fatal("sms.use_sms is missing in configuration file : check sms section of earlywarning.xml configuration file. SMS support disabled.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.fatal("sms.use_sms is missing in configuration file: check sms section of earlywarning.xml configuration file. SMS support disabled.");
             useSMS = false;
         }
         if (useSMS) {
@@ -212,10 +212,10 @@ public class QueueManagerThread extends Thread {
         try {
             useSound = EarlyWarning.configuration.getBoolean("audioserial.use_audioserial");
         } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("audioserial.use_audioserial has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
+            EarlyWarning.appLogger.fatal("audioserial.use_audioserial has a wrong value in configuration file: check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
             useSound = false;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.fatal("audioserial.use_audioserial is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.fatal("audioserial.use_audioserial is missing in configuration file: check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
             useSound = false;
         }
         if (useSound) {
@@ -260,10 +260,10 @@ public class QueueManagerThread extends Thread {
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
 
             gateway = new AsteriskGateway(host, port, username, password);
-        } catch (ConversionException e) {
+        } catch (ConversionException ex) {
             EarlyWarning.appLogger.fatal("Wrong value.");
             System.exit(-1);
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException ex) {
             EarlyWarning.appLogger.fatal("Missing config.");
             System.exit(-1);
         }

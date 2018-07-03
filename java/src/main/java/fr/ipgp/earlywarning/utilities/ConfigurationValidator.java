@@ -122,7 +122,7 @@ public class ConfigurationValidator {
         } catch (NoSuchElementException ex) {
             throw new ValidationException("gateway.asterisk.retries", "Key does not exist.");
         } catch (ConversionException ex) {
-            throw new ValidationException("gateway.asterisk.retries", "Value cannot be converted to Integer : '" + configuration.getString("gateway.asterisk.retries") + "'");
+            throw new ValidationException("gateway.asterisk.retries", "Value cannot be converted to Integer: '" + configuration.getString("gateway.asterisk.retries") + "'");
         }
 
         int ringTimeout;
@@ -132,7 +132,7 @@ public class ConfigurationValidator {
         } catch (NoSuchElementException ex) {
             throw new ValidationException("gateway.asterisk.ring_timeout", "Key does not exist.");
         } catch (ConversionException ex) {
-            throw new ValidationException("gateway.asterisk.ring_timeout", "Value cannot be converted to Integer : '" + configuration.getString("gateway.asterisk.ring_timeout") + "'");
+            throw new ValidationException("gateway.asterisk.ring_timeout", "Value cannot be converted to Integer: '" + configuration.getString("gateway.asterisk.ring_timeout") + "'");
         }
 
         String agiHost;
@@ -145,7 +145,7 @@ public class ConfigurationValidator {
 
         String[] params = {"ami_host", "ami_port", "ami_user", "ami_password"};
         Map<String, String> values = new HashMap<>();
-        for (String paramName : params) {
+        for (String paramName: params) {
             try {
                 values.put(paramName, configuration.getString("gateway.asterisk.settings." + paramName));
             } catch (NoSuchElementException ex) {
@@ -164,13 +164,13 @@ public class ConfigurationValidator {
         ManagerConnection connection = factory.createManagerConnection();
         try {
             connection.login();
-        } catch (IOException e) {
+        } catch (IOException ex) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface is unreachable: " +
-                    ((e.getMessage() != null && !e.getMessage().equalsIgnoreCase("")) ?
-                            e.getMessage() : "(no info)"));
-        } catch (AuthenticationFailedException e) {
+                    ((ex.getMessage() != null && !ex.getMessage().equalsIgnoreCase("")) ?
+                            ex.getMessage(): "(no info)"));
+        } catch (AuthenticationFailedException ex) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface credentials are incorrect.");
-        } catch (TimeoutException e) {
+        } catch (TimeoutException ex) {
             throw new ValidationException("gateway.asterisk.settings", "Login timed out.");
         }
         connection.logoff();
@@ -208,7 +208,7 @@ public class ConfigurationValidator {
                 EarlyWarning.appLogger.warn("Your default contact list ('" + defaultPath + "') currently does not have anyone on the call list. You should fix this or no call will be emitted.");
         } catch (NoSuchElementException ex) {
             throw new ValidationException("contacts.lists.default", "Key does not exist.");
-        } catch (IOException e) {
+        } catch (IOException ex) {
             throw new ValidationException("contacts.lists.default", "File cannot be read or written.");
         }
     }
@@ -237,7 +237,7 @@ public class ConfigurationValidator {
      */
     private int occurrences(String s, char c) {
         int count = 0;
-        for (char c2 : s.toCharArray())
+        for (char c2: s.toCharArray())
             if (c2 == c)
                 count++;
         return count;
@@ -252,7 +252,7 @@ public class ConfigurationValidator {
     private Set<String> getTopLevelEntries(String prefix) {
         List<String> all = getEntries(prefix);
         Set<String> result = new HashSet<>();
-        for (String entry : all) {
+        for (String entry: all) {
             String[] split = entry.split("\\.");
             result.add(split[occurrences(prefix, '.') + 1]);
         }
@@ -269,17 +269,17 @@ public class ConfigurationValidator {
         Set<String> gateways = new HashSet<>();
         Map<String, Set<String>> availableGateways = new HashMap<>();
 
-        for (String sound : soundNames) {
+        for (String sound: soundNames) {
             availableGateways.put(sound, new HashSet<String>());
 
-            for (String gateway : getTopLevelEntries("sounds." + sound + "")) {
+            for (String gateway: getTopLevelEntries("sounds." + sound + "")) {
                 gateways.add(gateway);
                 availableGateways.get(sound).add(gateway);
             }
         }
 
-        for (String gateway : gateways)
-            for (String sound : soundNames)
+        for (String gateway: gateways)
+            for (String sound: soundNames)
                 if (!availableGateways.get(sound).contains(gateway))
                     EarlyWarning.appLogger.warn("Sound '" + sound + "' has no mapping for gateway '" + gateway + "'");
     }

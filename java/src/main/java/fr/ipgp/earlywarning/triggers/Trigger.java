@@ -222,7 +222,7 @@ public class Trigger implements Comparable {
 
     /**
      * Indicates whether some other object is "equal to" this Comparator. This method must obey the general contract of Object.equals(Object)
-     * Overrides : equals in class Object
+     * Overrides: equals in class Object
      *
      * @param o the Object to compare to the Trigger
      * @return true only if the specified object is also a comparator and it imposes the same ordering as this comparator
@@ -236,7 +236,7 @@ public class Trigger implements Comparable {
 
     /**
      * Returns a hash code value for the object. This method is supported for the benefit of hashtables such as those provided by java.util.Hashtable.
-     * Overrides : hashCode in class Object
+     * Overrides: hashCode in class Object
      *
      * @return the hash code value for the object
      */
@@ -250,7 +250,7 @@ public class Trigger implements Comparable {
      * @return a String with the id and priority of the Trigger
      */
     public String toString() {
-        return "Id : " + id + " - Priority : " + priority;
+        return "Id: " + id + " - Priority: " + priority;
     }
 
     /**
@@ -260,25 +260,25 @@ public class Trigger implements Comparable {
      */
     public String showTrigger() {
 
-        return "Id : " +
+        return "Id: " +
                 id +
-                " - Priority : " +
+                " - Priority: " +
                 priority +
-                " - Type : " +
+                " - Type: " +
                 type +
-                " From : " +
+                " From: " +
                 inetAddress.toString() +
-                " - Application : " +
+                " - Application: " +
                 application +
-                " - Repeat : " +
+                " - Repeat: " +
                 repeat +
-                " - Date : " +
+                " - Date: " +
                 date +
-                " - Confirm Code : " +
+                " - Confirm Code: " +
                 confirmCode +
-                " - Contact List : " +
+                " - Contact List: " +
                 contactList.toString() +
-                " - Warning Message ID : " +
+                " - Warning Message ID: " +
                 messageId;
     }
 
@@ -287,13 +287,13 @@ public class Trigger implements Comparable {
      */
     public String mailTrigger() {
         String body = "Trigger " + id + " received on " + date + "\n";
-        body += "Priority : " + priority + "\n";
-        body += "Type : " + type + "\n";
-        body += "From host : " + inetAddress.toString() + "\n";
-        body += "From application : " + application + "\n";
-        body += "Confirmation code : " + confirmCode + "\n";
-        body += "Contact list : " + contactList.toString() + "\n";
-        body += "Warning message ID : " + messageId + "\n";
+        body += "Priority: " + priority + "\n";
+        body += "Type: " + type + "\n";
+        body += "From host: " + inetAddress.toString() + "\n";
+        body += "From application: " + application + "\n";
+        body += "Confirmation code: " + confirmCode + "\n";
+        body += "Contact list: " + contactList.toString() + "\n";
+        body += "Warning message ID: " + messageId + "\n";
         return body;
     }
 }

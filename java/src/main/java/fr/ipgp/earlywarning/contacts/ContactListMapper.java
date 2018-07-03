@@ -77,7 +77,7 @@ public class ContactListMapper {
             ContactList list = ContactListBuilder.build(fileName);
             mappings.put(name, list);
             return list;
-        } catch (NoSuchElementException | IOException e) {
+        } catch (NoSuchElementException | IOException ex) {
             throw new NoSuchListException(name);
         }
     }
@@ -91,7 +91,7 @@ public class ContactListMapper {
     public ContactList getListOrDefault(String name) {
         try {
             return getList(name);
-        } catch (NoSuchListException e) {
+        } catch (NoSuchListException ex) {
             return getDefaultList();
         }
     }
@@ -131,7 +131,7 @@ public class ContactListMapper {
         if (mappings.keySet().contains(name))
             return getList(name);
 
-        for(String key : mappings.keySet())
+        for(String key: mappings.keySet())
             if (key.equalsIgnoreCase(name))
                 return mappings.get(key);
 

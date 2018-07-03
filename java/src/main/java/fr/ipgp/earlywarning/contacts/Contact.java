@@ -47,7 +47,7 @@ public class Contact {
 
     @Override
     public String toString() {
-        return (priority ? "P " : "") + name + " (" + phone + ")";
+        return (priority ? "P ": "") + name + " (" + phone + ")";
     }
 
     /**

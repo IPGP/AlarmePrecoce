@@ -57,22 +57,22 @@ public class MailerThread extends Thread {
         EarlyWarning.appLogger.debug("Mailer Thread creation");
         try {
             emails = configureMailer();
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.error("mail or use_mail has a wrong value in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.error("mail or use_mail has a wrong value in configuration file: check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
             return;
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.error("mail or use_mail is missing in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.error("mail or use_mail is missing in configuration file: check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
             return;
         }
         if (emails == null) {
-            EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+            EarlyWarning.appLogger.error("No valid mails found in configuration file: check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
             return;
         }
         if (emails.size() == 0) {
-            EarlyWarning.appLogger.error("No valid mails found in configuration file : check mail section of earlywarning.xml configuration file. Mailer disabled.");
+            EarlyWarning.appLogger.error("No valid mails found in configuration file: check mail section of earlywarning.xml configuration file. Mailer disabled.");
             queueManagerThread.setUseMail(false);
         }
     }
@@ -100,8 +100,8 @@ public class MailerThread extends Thread {
                 InternetAddress internetAddress = new InternetAddress(mail);
                 internetAddress.validate();
                 mails.add(internetAddress);
-            } catch (AddressException ae) {
-                EarlyWarning.appLogger.error("Invalid E-mail address in configuration file : " + mail + " check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
+            } catch (AddressException ex) {
+                EarlyWarning.appLogger.error("Invalid E-mail address in configuration file: " + mail + " check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
             }
         }
         if (mails.size() == 0) {

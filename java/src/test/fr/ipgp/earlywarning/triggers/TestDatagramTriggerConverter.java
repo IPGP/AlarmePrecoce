@@ -39,10 +39,10 @@ public class TestDatagramTriggerConverter {
 
         try {
             ContactListMapper.testDefaultList();
-        } catch (NoSuchListException e) {
+        } catch (NoSuchListException ex) {
             Assert.fail("Test can't be ran: no default contact list set.");
-        } catch (IOException e) {
-            Assert.fail("Test can't be ran: default contact list can't be initialized: " + e.getMessage());
+        } catch (IOException ex) {
+            Assert.fail("Test can't be ran: default contact list can't be initialized: " + ex.getMessage());
         }
     }
 
@@ -60,8 +60,8 @@ public class TestDatagramTriggerConverter {
             DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, true, "11", 1);
             Trigger trigger = datagram2Trigger.getTrigger();
             datagram2Trigger.decode();
-        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
-            System.out.println(utfe.getMessage());
+        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -86,8 +86,8 @@ public class TestDatagramTriggerConverter {
             Assert.assertEquals("13/03/2008 13:22:04", trig.getDate());
             Assert.assertEquals("11", trig.getConfirmCode());
 
-        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException utfe) {
-            System.out.println(utfe.getMessage());
+        } catch (UnknownTriggerFormatException | MissingTriggerFieldException | InvalidTriggerFieldException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 

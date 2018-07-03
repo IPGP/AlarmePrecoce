@@ -51,16 +51,16 @@ public class DataBaseHeartBeatThread extends Thread {
         // Loading the driver
         try {
             dataBaseHeartBeat = new DataBaseHeartBeat(EarlyWarning.configuration);
-        } catch (ClassNotFoundException cnfe) {
+        } catch (ClassNotFoundException ex) {
             EarlyWarning.appLogger.error("Database driver not found. Database support disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.error("An element value has wrong type : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.error("An element value has wrong type: check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
-        } catch (NoSuchElementException | NullPointerException nsee) {
-            EarlyWarning.appLogger.error("An element value is undefined : check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
+        } catch (NoSuchElementException | NullPointerException ex) {
+            EarlyWarning.appLogger.error("An element value is undefined: check hearbeat or dbms section of earlywarning.xml configuration file. HearBeat notification disabled.");
             EarlyWarning.appLogger.debug("Thread is stopping");
             return;
         }
@@ -69,10 +69,10 @@ public class DataBaseHeartBeatThread extends Thread {
         try {
             int result = dataBaseHeartBeat.sendHeartBeat(startMessage, CommonUtilities.dateToISO());
             if (result == 0)
-                EarlyWarning.appLogger.error("Start message not sent to the database : update returned 0");
+                EarlyWarning.appLogger.error("Start message not sent to the database: update returned 0");
             else
                 EarlyWarning.appLogger.debug("Start message sent. Database updated");
-        } catch (SQLException sqle) {
+        } catch (SQLException ex) {
             EarlyWarning.appLogger.error("Database connection problem. This could be a network problem or a configuration problem in dbms section of earlywarning.xml. HeartBeat not sent.");
         }
 
@@ -82,15 +82,15 @@ public class DataBaseHeartBeatThread extends Thread {
             try {
                 int result = dataBaseHeartBeat.sendHeartBeat(aliveMessage, CommonUtilities.dateToISO());
                 if (result == 0)
-                    EarlyWarning.appLogger.error("HeartBeat not sent : update returned 0");
-            } catch (SQLException sqle) {
+                    EarlyWarning.appLogger.error("HeartBeat not sent: update returned 0");
+            } catch (SQLException ex) {
                 EarlyWarning.appLogger.error("Database connection problem. This could be a network problem or a configuration problem in dbms section of earlywarning.xml. HeartBeat not sent.");
             }
             // Sleeping for delay seconds
             try {
                 Thread.sleep(1000 * delay);
-            } catch (InterruptedException ie) {
-                EarlyWarning.appLogger.error("Error while sleeping!");
+            } catch (InterruptedException ex) {
+                EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
             }
         }
     }

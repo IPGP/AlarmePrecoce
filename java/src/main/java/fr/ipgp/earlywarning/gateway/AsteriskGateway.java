@@ -111,7 +111,7 @@ public class AsteriskGateway implements Gateway {
             } catch (org.asteriskjava.manager.AuthenticationFailedException ignored) {
                 // We can ignore this exception since we test at launch time that the credentials are correct.
                 EarlyWarning.appLogger.error("Wrong authentication.");
-            } catch (org.asteriskjava.manager.TimeoutException e) {
+            } catch (org.asteriskjava.manager.TimeoutException ex) {
                 EarlyWarning.appLogger.error("Origination request timed out for number " + toCall);
             } catch (IOException ex) {
                 EarlyWarning.appLogger.error(ex.getMessage());
@@ -131,7 +131,7 @@ public class AsteriskGateway implements Gateway {
         List<Contact> contacts = list.getCallList();
 
         List<String> numbers = new ArrayList<>();
-        for (Contact c : contacts)
+        for (Contact c: contacts)
             numbers.add(c.phone);
 
         callTillConfirm(numbers, warningMessageFile, confirmCode);

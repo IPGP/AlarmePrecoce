@@ -28,12 +28,12 @@ public class TestAudio {
                 System.out.println("playing sound...");
             }
             System.out.println("End");
-        } catch (UnsupportedAudioFileException uafe) {
-            System.out.println("Unsupported audio file exception : " + uafe.getMessage());
-        } catch (LineUnavailableException lue) {
-            System.out.println("Line anavailable exception : " + lue.getMessage());
-        } catch (IOException ioe) {
-            System.out.println("I/O exception : " + ioe.getMessage());
+        } catch (UnsupportedAudioFileException ex) {
+            System.out.println("Unsupported audio file exception: " + ex.getMessage());
+        } catch (LineUnavailableException ex) {
+            System.out.println("Line anavailable exception: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("I/O exception: " + ex.getMessage());
         } catch (InterruptedException ignored) {
 
         }

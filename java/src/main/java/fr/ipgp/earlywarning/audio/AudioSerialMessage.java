@@ -40,13 +40,13 @@ public class AudioSerialMessage {
         EarlyWarning.appLogger.debug("Audio/Serial Message Thread creation");
         try {
             configureAudioSerial();
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.error("Audio Serial speed or port has a wrong value in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.error("Audio Serial speed or port has a wrong value in configuration file: check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-        } catch (NoSuchElementException nsee) {
-            EarlyWarning.appLogger.error("Audio Serial speed or port is missing in configuration file : check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.error("Audio Serial speed or port is missing in configuration file: check audioserial section of earlywarning.xml configuration file. Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
-        } catch (NoSuchPortException nspe) {
+        } catch (NoSuchPortException ex) {
             EarlyWarning.appLogger.error("No such port " + comPort + ". Audio Serial disabled.");
             queueManagerThread.setUseSound(false);
         }
@@ -82,7 +82,7 @@ public class AudioSerialMessage {
         try {
             serialPort = (SerialPort) comPortId.open("Envoi", 5000);
             EarlyWarning.appLogger.debug("Opening serial port");
-        } catch (PortInUseException piue) {
+        } catch (PortInUseException ex) {
             EarlyWarning.appLogger.error("Serial port already " + comPort + " in use");
         }
         try {
@@ -90,7 +90,7 @@ public class AudioSerialMessage {
             serialPort.setDTR(true);
             serialPort.setSerialPortParams(comSpeed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             EarlyWarning.appLogger.debug("Configuring serial port");
-        } catch (UnsupportedCommOperationException ucoe) {
+        } catch (UnsupportedCommOperationException ex) {
             EarlyWarning.appLogger.error("Error while configuring the serial port " + comPort);
         }
         String finalMessage = textMessage + " " + trigger.getApplication();
@@ -104,7 +104,7 @@ public class AudioSerialMessage {
             byte[] data = finalMessage.getBytes();
             outStream.write(data);
             copy(endCommands, outStream);
-            EarlyWarning.appLogger.debug("Sending message to serial port : " + finalMessage);
+            EarlyWarning.appLogger.debug("Sending message to serial port: " + finalMessage);
 
             Thread.sleep(1000 * delay);
             EarlyWarning.appLogger.debug("Sleeping for " + delay + " seconds");
@@ -115,16 +115,16 @@ public class AudioSerialMessage {
                 Thread.sleep(1000);
             }
 
-        } catch (InterruptedException ie) {
-            EarlyWarning.appLogger.error("Error while sleeping!");
-        } catch (FileNotFoundException fnfe) {
-            EarlyWarning.appLogger.error("Error while opening beginCMD or endCMD : " + fnfe.getMessage());
-        } catch (IOException ioe) {
+        } catch (InterruptedException ex) {
+            EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
+        } catch (FileNotFoundException ex) {
+            EarlyWarning.appLogger.error("Error while opening beginCMD or endCMD: " + ex.getMessage());
+        } catch (IOException ex) {
             EarlyWarning.appLogger.error("Error while sending data to the serial port");
-        } catch (UnsupportedAudioFileException uafe) {
-            EarlyWarning.appLogger.error("Unsupported audio file exception : " + uafe.getMessage());
-        } catch (LineUnavailableException lue) {
-            EarlyWarning.appLogger.error("Line anavailable exception : " + lue.getMessage());
+        } catch (UnsupportedAudioFileException ex) {
+            EarlyWarning.appLogger.error("Unsupported audio file exception: " + ex.getMessage());
+        } catch (LineUnavailableException ex) {
+            EarlyWarning.appLogger.error("Line anavailable exception: " + ex.getMessage());
         } finally {
             if (outStream != null) {
                 try {

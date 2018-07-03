@@ -82,7 +82,7 @@ public class WarningMessageMapper {
     public String getNameOrDefault(String id) {
         try {
             return getName(id);
-        } catch (NoSuchMessageException e) {
+        } catch (NoSuchMessageException ex) {
             return getDefault();
         }
     }

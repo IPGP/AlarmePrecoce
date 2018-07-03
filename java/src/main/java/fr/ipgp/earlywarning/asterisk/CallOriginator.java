@@ -111,7 +111,7 @@ public class CallOriginator implements ManagerEventListener {
      */
     private final OnCodeReceivedListener onCodeReceivedListener = new OnCodeReceivedListener() {
         public CallAction onCodeReceived(String code) {
-            EarlyWarning.appLogger.debug("Received code : " + code);
+            EarlyWarning.appLogger.debug("Received code: " + code);
 
             if (code.equalsIgnoreCase(confirmCode))
                 // If the code is correct, return a Correct state
