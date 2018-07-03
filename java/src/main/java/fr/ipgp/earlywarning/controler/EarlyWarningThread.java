@@ -5,7 +5,6 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.triggers.*;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.apache.commons.configuration.ConversionException;

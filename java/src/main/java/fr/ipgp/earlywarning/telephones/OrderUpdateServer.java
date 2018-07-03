@@ -21,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A Web server used to maintain and update the call priority list for the Early Warning Alarm.
+ * A basic Web server used to maintain and update the call priority list for the Early Warning Alarm.<br />
+ * It uses a {@link HttpServer}
+ *
+ * @author Thomas Kowalski
  */
 public class OrderUpdateServer {
     /**
@@ -325,7 +328,7 @@ public class OrderUpdateServer {
         }
 
         /**
-         * Handles a POST request.
+         * Handles a <code>POST</code> request.
          *
          * @param he the exchange to handle
          * @throws IOException if the index.html template can't be read

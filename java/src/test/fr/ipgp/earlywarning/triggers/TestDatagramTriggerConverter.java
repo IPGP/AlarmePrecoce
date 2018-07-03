@@ -6,7 +6,6 @@ package fr.ipgp.earlywarning.triggers;
 
 import fr.ipgp.earlywarning.telephones.ContactList;
 import fr.ipgp.earlywarning.telephones.ContactListMapper;
-import fr.ipgp.earlywarning.telephones.InvalidFileNameException;
 import fr.ipgp.earlywarning.telephones.NoSuchListException;
 import org.junit.After;
 import org.junit.Assert;

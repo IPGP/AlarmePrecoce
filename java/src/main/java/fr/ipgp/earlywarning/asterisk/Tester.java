@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class allows us to test the CallOriginator / AGI script interactions (and inherently, Asterisk originate feature).
+ * This class allows us to test the {@link CallOriginator} / {@link AlertCallScript} AGI script interactions (and inherently, Asterisk originate feature).
  * Also, it's (a little bit too) well explained, so if anyone is picking up the project from here, it should be a good starting point for understanding the system.
  *
  * @author Thomas Kowalski

@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * An utility that allows to map names to <code>ContactList</code> instances.
+ * An utility that allows to map names to {@link ContactList} instances.
  *
  * @author Thomas Kowalski
  */
 public class ContactListMapper {
     private static ContactListMapper uniqueInstance;
     /**
-     * A map between names (<code>String</code>) and instances of corresponding <code>ContactList</code>s
+     * A map between names (<code>String</code>) and instances of corresponding {@link ContactList}s
      */
     private final Map<String, ContactList> mappings;
 
@@ -97,9 +97,9 @@ public class ContactListMapper {
     }
 
     /**
-     * Gets the default ContactList, as given in the configuration file.
+     * Gets the default {@link ContactList}, as given in the configuration file.
      *
-     * @return the default ContactList
+     * @return the default <code>ContactList</code>
      */
     public ContactList getDefaultList() {
         assert mappings.keySet().contains("default");

@@ -53,9 +53,7 @@ public class CommonUtilities {
      * @return the date in ISO format
      */
     public static String dateToISO() {
-        Date date = new Date();
-        SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return (simpleFormat.format(date));
+        return dateToISO(new Date());
     }
 
     /**

@@ -9,6 +9,11 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An implementation of the {@link ContactList} interface, using a JSON file.
+ *
+ * @author Thomas Kowalski
+ */
 public class JSONContactList implements ContactList {
     /**
      * The (JSON) file containing the data

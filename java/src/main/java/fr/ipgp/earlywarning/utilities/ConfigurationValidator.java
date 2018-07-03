@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * Configuration validator.
- * Reads a given <code>XMLConfiguration</code> and verifies everything it has to contain exists and is correct.
+ * Reads a given {@link XMLConfiguration} and verifies everything it has to contain exists and is correct.
  * All the tests that can be made are made (file existence for adequate fields, etc.) and in case of doubt, warnings are emitted.
  *
  * @author Thomas Kowalski
@@ -25,8 +25,9 @@ public class ConfigurationValidator {
      * The default behaviour on invalid configuration.
      */
     private static final OnError defaultBehaviour = OnError.Exit;
+
     /**
-     * A reference to the main <code>XMLConfiguration</code>
+     * A reference to the main {@link XMLConfiguration}
      */
     private final XMLConfiguration configuration;
 

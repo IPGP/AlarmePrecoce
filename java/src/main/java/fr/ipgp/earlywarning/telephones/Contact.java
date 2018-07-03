@@ -2,6 +2,11 @@ package fr.ipgp.earlywarning.telephones;
 
 import org.json.JSONObject;
 
+/**
+ * Simple "structure-like" class representing a Contact, which is a name, a phone number and whether or not it should always be on the top of the call list.
+ *
+ * @author Thomas Kowalski
+ */
 public class Contact {
     /**
      * Contact's name

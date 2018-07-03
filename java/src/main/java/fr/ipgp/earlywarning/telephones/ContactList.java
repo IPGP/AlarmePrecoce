@@ -3,6 +3,11 @@ package fr.ipgp.earlywarning.telephones;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Interface for managing a contact list. A class implementing this interface could use a file (JSON for example), a database, etc.
+ *
+ * @author Thomas Kowalski
+ */
 public interface ContactList {
     /**
      * Finds a contact by his / her name
