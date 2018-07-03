@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning.telephones;
+package fr.ipgp.earlywarning.contacts;
 
 import org.json.JSONArray;
 

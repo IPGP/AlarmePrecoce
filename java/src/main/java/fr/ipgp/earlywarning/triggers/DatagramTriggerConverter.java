@@ -4,7 +4,7 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.telephones.ContactListMapper;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 
 import java.net.DatagramPacket;

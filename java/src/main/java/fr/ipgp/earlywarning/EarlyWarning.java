@@ -6,7 +6,7 @@ package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
-import fr.ipgp.earlywarning.telephones.OrderUpdateServer;
+import fr.ipgp.earlywarning.contacts.ContactListManagerServer;
 import fr.ipgp.earlywarning.test.TriggerV2Sender2;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
@@ -125,10 +125,13 @@ public class EarlyWarning {
         }
     }
 
+    /**
+     * Starts the contact list manager Web server
+     */
     private static void startContactsServer() {
-        OrderUpdateServer server;
+        ContactListManagerServer server;
         String home = EarlyWarning.configuration.getString("contacts.home");
-        server = new OrderUpdateServer(home);
+        server = new ContactListManagerServer(home);
 
         try {
             server.startServer();

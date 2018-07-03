@@ -10,8 +10,8 @@ import fr.ipgp.earlywarning.gateway.AsteriskGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
-import fr.ipgp.earlywarning.telephones.ContactListMapper;
-import fr.ipgp.earlywarning.telephones.NoSuchListException;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
+import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.apache.commons.configuration.ConversionException;
 

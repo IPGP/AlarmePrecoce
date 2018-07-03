@@ -1,8 +1,8 @@
 package fr.ipgp.earlywarning.utilities;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.telephones.ContactList;
-import fr.ipgp.earlywarning.telephones.ContactListBuilder;
+import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.asteriskjava.manager.AuthenticationFailedException;

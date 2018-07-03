@@ -4,8 +4,8 @@
  */
 package fr.ipgp.earlywarning.triggers;
 
-import fr.ipgp.earlywarning.telephones.ContactList;
-import fr.ipgp.earlywarning.telephones.ContactListMapper;
+import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
 
 import java.net.InetAddress;
 import java.util.HashMap;

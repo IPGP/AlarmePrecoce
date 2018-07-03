@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning.telephones;
+package fr.ipgp.earlywarning.contacts;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author Thomas Kowalski
  */
-public class OrderUpdateServer {
+public class ContactListManagerServer {
     /**
      * The default port for the Web server
      */
@@ -42,17 +42,17 @@ public class OrderUpdateServer {
     private final String home;
 
     @SuppressWarnings("WeakerAccess")
-    public OrderUpdateServer(int port, String home) {
+    public ContactListManagerServer(int port, String home) {
         this.port = port;
         this.home = home;
     }
 
     /**
-     * Constructs the server with the default port (DEFAULT_PORT) {@link OrderUpdateServer}
+     * Constructs the server with the default port (DEFAULT_PORT) {@link ContactListManagerServer}
      *
      * @param home the WWW home for the Web server
      */
-    public OrderUpdateServer(String home) {
+    public ContactListManagerServer(String home) {
         this(DEFAULT_PORT, home);
     }
 

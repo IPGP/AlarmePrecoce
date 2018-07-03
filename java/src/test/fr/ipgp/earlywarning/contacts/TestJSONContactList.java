@@ -1,8 +1,5 @@
 package fr.ipgp.earlywarning.contacts;
 
-import fr.ipgp.earlywarning.telephones.Contact;
-import fr.ipgp.earlywarning.telephones.JSONContactList;
-import fr.ipgp.earlywarning.telephones.NoSuchContactException;
 import org.apache.commons.lang.NullArgumentException;
 import org.junit.After;
 import org.junit.Assert;

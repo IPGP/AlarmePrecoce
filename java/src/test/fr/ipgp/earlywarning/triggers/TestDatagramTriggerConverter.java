@@ -4,9 +4,9 @@ package fr.ipgp.earlywarning.triggers;
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.telephones.ContactList;
-import fr.ipgp.earlywarning.telephones.ContactListMapper;
-import fr.ipgp.earlywarning.telephones.NoSuchListException;
+import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
+import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

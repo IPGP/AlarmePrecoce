@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning.telephones;
+package fr.ipgp.earlywarning.contacts;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 

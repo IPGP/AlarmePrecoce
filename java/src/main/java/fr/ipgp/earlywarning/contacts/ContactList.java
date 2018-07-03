@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning.telephones;
+package fr.ipgp.earlywarning.contacts;
 
 import java.io.IOException;
 import java.util.List;

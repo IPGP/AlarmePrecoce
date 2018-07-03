@@ -1,4 +1,4 @@
-package fr.ipgp.earlywarning.telephones;
+package fr.ipgp.earlywarning.contacts;
 
 /**
  * The exception to throw when no list can be matched to a requested name in the {@link ContactListMapper}
