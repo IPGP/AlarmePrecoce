@@ -134,6 +134,21 @@
                         </goals>
                         <phase>validate</phase>
                     </execution>
+                    <execution>
+                        <id>install-ipgp-commons</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <groupId>fr.ipgp</groupId>
+                            <artifactId>common</artifactId>
+                            <version>1.0.0</version>
+                            <packaging>jar</packaging>
+                            <file>${basedir}/lib/ipgp-commons.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -237,6 +252,11 @@
             <groupId>javax.mail</groupId>
             <artifactId>javax.mail-api</artifactId>
             <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.ipgp</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>

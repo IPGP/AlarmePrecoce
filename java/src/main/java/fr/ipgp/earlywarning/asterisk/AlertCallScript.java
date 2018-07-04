@@ -110,7 +110,7 @@ public class AlertCallScript extends BaseAgiScript {
             // Stream the welcome file
             EarlyWarning.appLogger.debug("Waiting for input");
             while (true) {
-                String data = getData("accueilovpf", 0, 2);
+                String data = getData("accueil", 0, 2);
 
                 // Check if hangup as been requested
                 if (hangupRequested)
@@ -136,7 +136,7 @@ public class AlertCallScript extends BaseAgiScript {
             CallOriginator.CallAction action = CallOriginator.CallAction.Retry;
 
             // Asks for a confirmation code (that ends with #)
-            String code = getData("agent-user", 3500, maxCodeLength);
+            String code = getData("demandecode", 3500, maxCodeLength);
 
             // The action is determined by either its initial value or the return value of OnCodeReceivedListener.onCodeReceived
             while (action == CallOriginator.CallAction.Retry) {
@@ -150,13 +150,13 @@ public class AlertCallScript extends BaseAgiScript {
 
                 switch (action) {
                     case Correct:
-                        streamFile("agent-loginok");
+                        streamFile("merci");
                         break;
                     case Retry:
-                        code = getData("agent-incorrect", 3500, maxCodeLength);
+                        code = getData("incorrect", 3500, maxCodeLength);
                         break;
                     case GiveUp:
-                        streamFile("bye");
+                        streamFile("incorrect2");
                         break;
                     default:
                         System.err.println("Unknown CallAction value returned: " + action);
