@@ -14,24 +14,26 @@ import java.util.regex.Pattern;
 import static fr.ipgp.charon.CharonI.CharonCode.*;
 
 /**
- * Cette classe represente le module Charon I.<br/>
- * Pour plus d'infos sur les modules charon : http://www.hw-group.com/products/charon1/index_en.html<br/><br/>
+ * <h2>Presentation</h2>
  * <p>
- * Le protocole utilise est le protocole NVT (http://www.hw-group.com/support/nvt/index_en.html).<br/>
- * Every NVT command is prefixed by character "0xFF".<br/>
- * Les commandes NVT commencent par ({@code <IAC><SB>} = 0xFF 0xFA) et finissent par ({@code <IAC><SE>} = 0xFF 0xF0).<br/>
- * Il y a aussi des commandes basiques sur 2 characteres hexa mais elles ne nous interessent pas.<br/>
- * Il existe un certain nombre de commandes fonctionnant qui sont definies dans la RFC2217. Celles qui nous interessent sont les
- * fonctions GPIO (General Purpose Input Output) et plus precisement la commande COM-PORT-OPTION ({@code <COM_PORT_OPTION>} = 0x2C).<br/>
- * Les sous-commandes utiles sont : CAS_OPT_GPIO ({@code <>} = 0x32) et CAS_SET_GPIO ({@code <CAS_SET_GPIO>} = 0x33) qui permettent respectivement
- * de lire l'etat des LEDs et de les affecter.<br/>
- * <p>
- * Plus precisemment, {@code <IAC><SB><COM_PORT_OPTION><CAS_OPT_GPIO>0x00<IAC><SE>} (0xFF 0xFA 0x2C 0x32 0x00 0xFF 0xF0) est la commande
- * qui demande l'etat des LEDs.<br/>
- * La reponse sera de la forme {@code <IAC><SB><COM_PORT_OPTION><ASC_OPT_GPIO><Valeur des LEDs><IAC><SE>}(0xFF 0xFA 0x2C 0x96 0xXX 0xFF 0xF0).<br/>
- * <p>
- * L'affectation des LEDs se fait de la maniere suivante : {@code <IAC><SB><COM_PORT_OPTION><CAS_SET_GPIO><byte to output)><IAC><SE>}
- * (0xFF 0xFA 0x2C 0x33 0xXX 0xFF 0xF0).<br/>
+ * This class can be used to interface the Charon I module.<br />
+ * Technical documentation here: <a href="https://elmicro.com/files/hwgroup/charon1_en.pdf">latest link</a>.<br />
+ * It uses the NVT protocol. <br />
+ * NVT commands begin with <code>OxFF 0xFA</code> and end with <code>0xFF 0xF0</code> (which is {@code <IAC><SB>} and {@code <IAC><SE>} respectively.<br />
+ * RFC2217 defines many commands but the only ones we'll be using here are the GPIO ones and the <code>COM_PORT_OPTION</code> one :
+ * <ul>
+ * <li><code>0x2C</code> (<code>COM_PORT_OPTION</code>)</li>
+ * <li><code>0x32</code> (<code>CAS_OPT_GPIO</code>) : used to get the current GPIO state</li>
+ * <li><code>0x33</code> (<code>CAS_SET_GPIO</code>) : used to set the GPIO state (<code>HIGH</code> or <code>LOW</code>)</li>
+ * </ul>
+ * </p>
+ * <h2>Examples</h2>
+ * <h3>Command to send to get the current LED state</h3>
+ * {@code <IAC><SB><COM_PORT_OPTION><CAS_OPT_GPIO>0x00<IAC><SE>} which is (<code>0xFF 0xFA 0x2C 0x32 0x00 0xFF 0xF0</code>)<br /><br />
+ * <b>The response will be</b><br />
+ * {@code <IAC><SB><COM_PORT_OPTION><ASC_OPT_GPIO><LED State><IAC><SE>} which is (<code>0xFF 0xFA 0x2C 0x96 <i><b>0xXX</b></i> 0xFF 0xF0</code>)<br /><br />
+ * <h3>Command to send to set the current LED state</h3>
+ * {@code <IAC><SB><COM_PORT_OPTION><CAS_SET_GPIO><New LED State><IAC><SE>} which is (<code>0xFF 0xFA 0x2C 0x33 0xXX 0xFF 0xF0</code>)
  *
  * @author Jean-Pierre Coudray
  * @author Patrice Boissier
@@ -294,7 +296,9 @@ public class CharonI {
         if (matcher.find()) {
             // Affect the LED values in the LED states array
             for (int i = 0; i < ledNumber; i++)
-                ledsArray[ledNumber - 1 - i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
+                // TODO: verify this
+                ledsArray[i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
+            // ledsArray[ledNumber - 1 - i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
 
             // Apply the new LED state on the module
             applyLedState();
@@ -363,7 +367,9 @@ public class CharonI {
 
                 // And then we fill our array
                 for (int i = 0; i < ledValues.length(); i++)
+                    // TODO: verify this
                     ledsArray[i] = ledValues.charAt(i) == '1' ? 1 : 0;
+                // ledsArray[ledNumber - 1 - i] = ledValues.charAt(i) == '1' ? 1 : 0;
 
             } else
                 // If no match for the result has been found (which probably can't happen)
@@ -382,17 +388,13 @@ public class CharonI {
      * @throws InvalidResponseException if the response from the module in invalid
      */
     public void applyLedState() throws IOException, InvalidResponseException {
-        StringBuilder ledValues = new StringBuilder();
-
-        // Build our representation String
-        for (int i = 0; i < ledNumber; i++)
-            ledValues.append(Integer.toString(ledsArray[7 - i]));
+        String ledValues = ledStatesToString();
 
         // Print it
         System.out.println("Affecting LED values: '" + ledValues + "'");
 
         // Convert the String (eg 00010010) to its integer counterpart
-        int decimalValue = Integer.parseInt(ledValues.toString(), 2);
+        int decimalValue = Integer.parseInt(ledValues, 2);
 
         // Convert the integer value to its hexadecimal counterpart
         String hexadecimalState = Integer.toString(decimalValue, 16);

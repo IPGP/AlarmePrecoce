@@ -235,22 +235,23 @@ public class QueueManagerThread extends Thread {
             System.exit(-1);
         }
 
-        // Verify that the default warning message is available for this gateway
-        try {
-            WarningMessageMapper.testDefaultMessage(gateway);
-        } catch (NoSuchMessageException ex) {
-            EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getName() + "'");
-            System.exit(-1);
-        }
+        if (gateway.getClass() != CharonGateway.class)
+            // Verify that the default warning message is available for this gateway
+            try {
+                WarningMessageMapper.testDefaultMessage(gateway);
+            } catch (NoSuchMessageException ex) {
+                EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getName() + "'");
+                System.exit(-1);
+            }
 
-        // Verify that the default ContactList is available for this gateway
+        // Verify that the default ContactList is available
         try {
             ContactListMapper.testDefaultList();
         } catch (NoSuchListException ex) {
             EarlyWarning.appLogger.fatal("No default contact list given.");
             System.exit(-1);
         } catch (IOException ex) {
-            EarlyWarning.appLogger.fatal("Can't initialize default contact list for gateway.");
+            EarlyWarning.appLogger.fatal("Cannot initialize default contact list.");
             System.exit(-1);
         }
     }
