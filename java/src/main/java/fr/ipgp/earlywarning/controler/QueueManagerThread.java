@@ -6,12 +6,13 @@ package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.AudioSerialMessage;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
+import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import fr.ipgp.earlywarning.gateway.AsteriskGateway;
+import fr.ipgp.earlywarning.gateway.CharonGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
-import fr.ipgp.earlywarning.contacts.ContactListMapper;
-import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.apache.commons.configuration.ConversionException;
 
@@ -91,7 +92,7 @@ public class QueueManagerThread extends Thread {
      * @return a <code>String</code> representing the <code>QueueManager</code>
      */
     public String toString() {
-        return queue.size() + " Trigger" + (queue.size() > 1 ? 's': '\0') + ": " + queue.toString();
+        return queue.size() + " Trigger" + (queue.size() > 1 ? 's' : '\0') + ": " + queue.toString();
     }
 
     /**
@@ -227,6 +228,8 @@ public class QueueManagerThread extends Thread {
         String active = EarlyWarning.configuration.getString("gateway.active");
         if (active.equalsIgnoreCase("asterisk")) {
             configureAsteriskGateway();
+        } else if (active.equalsIgnoreCase("charon")) {
+            configureCharonGateway();
         } else {
             EarlyWarning.appLogger.fatal("Unknown gateway in configuration: " + active + ", should be 'asterisk' (only available option at the moment).");
             System.exit(-1);
@@ -261,10 +264,26 @@ public class QueueManagerThread extends Thread {
 
             gateway = new AsteriskGateway(host, port, username, password);
         } catch (ConversionException ex) {
-            EarlyWarning.appLogger.fatal("Wrong value.");
+            EarlyWarning.appLogger.fatal("Wrong value in Asterisk Gateway configuration: can't convert to int.");
             System.exit(-1);
         } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("Missing config.");
+            EarlyWarning.appLogger.fatal("Missing field in Asterisk Gateway configuration: verify that settings.ami_host, settings.ami_port, settings.ami_user and settings.ami_password are set.");
+            System.exit(-1);
+        }
+    }
+
+    private void configureCharonGateway() {
+        try {
+            String host = EarlyWarning.configuration.getString("gateway.charon.host");
+            int port = EarlyWarning.configuration.getInt("gateway.charon.port");
+            int timeout = EarlyWarning.configuration.getInt("gateway.charon.timeout");
+
+            gateway = CharonGateway.getInstance(host, port, timeout);
+        } catch (ConversionException ex) {
+            EarlyWarning.appLogger.fatal("Wrong value in Charon Gateway configuration: can't convert to int.");
+            System.exit(-1);
+        } catch (NoSuchElementException ex) {
+            EarlyWarning.appLogger.fatal("Missing field in Charon Gateway configuration: verify that host, ip and timeout are set.");
             System.exit(-1);
         }
     }

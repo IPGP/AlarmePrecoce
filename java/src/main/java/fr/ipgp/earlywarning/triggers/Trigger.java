@@ -274,7 +274,7 @@ public class Trigger implements Comparable {
                 repeat +
                 " - Date: " +
                 date +
-                " - Confirm Code: " +
+                " - Confirm CharonCode: " +
                 confirmCode +
                 " - Contact List: " +
                 contactList.toString() +

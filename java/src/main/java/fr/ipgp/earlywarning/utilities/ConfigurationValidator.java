@@ -99,13 +99,20 @@ public class ConfigurationValidator {
         /* All the gateways that can be used */
         Set<String> availableGateways = new HashSet<>();
         availableGateways.add("asterisk");
+        availableGateways.add("charon");
 
         if (!availableGateways.contains(activeGateway.toLowerCase()))
             throw new ValidationException("gateway.active", "Unknown active Gateway");
 
         if (activeGateway.equalsIgnoreCase("asterisk"))
             validateAsteriskSettings();
+        else if (activeGateway.equalsIgnoreCase("charon"))
+            validateCharonSettings();
+    }
 
+    private void validateCharonSettings()
+    {
+        // TODO: validateCharonSettings()
     }
 
     /**
