@@ -17,7 +17,7 @@ public interface Gateway {
      *
      * @param trigger that triggered the call
      */
-    void callTillConfirm(Trigger trigger);
+    CallLoopResult callTillConfirm(Trigger trigger);
 
     void callTest(String number);
 

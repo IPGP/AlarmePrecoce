@@ -28,8 +28,9 @@ public class MockGateway implements Gateway {
     }
 
     @Override
-    public void callTillConfirm(Trigger trigger) {
+    public CallLoopResult callTillConfirm(Trigger trigger) {
         EarlyWarning.appLogger.info("MockGateway calling till confirm for trigger " + trigger.toString());
+        return null;
     }
 
     @Override

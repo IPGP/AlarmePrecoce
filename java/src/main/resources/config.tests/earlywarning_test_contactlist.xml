@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<earlywarning>
+    <contacts>
+        <home>resources/www/</home>
+        <port>6001</port>
+        <lists>
+            <tech>resources/contacts/tech.json</tech>
+            <default>resources/contacts/default.json</default>
+        </lists>
+    </contacts>
+</earlywarning>

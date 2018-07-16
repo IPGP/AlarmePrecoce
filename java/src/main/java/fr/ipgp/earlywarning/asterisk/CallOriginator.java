@@ -156,6 +156,11 @@ public class CallOriginator implements ManagerEventListener {
         EarlyWarning.appLogger.debug("Warning message: " + warningMessage);
     }
 
+    public void testCredentials() throws AuthenticationFailedException, TimeoutException, IOException {
+            managerConnection.login();
+            managerConnection.logoff();
+    }
+
     /**
      * External ManagerConnection constructor. Allows us to keep the same ManagerConnection for multiple calls.
      *

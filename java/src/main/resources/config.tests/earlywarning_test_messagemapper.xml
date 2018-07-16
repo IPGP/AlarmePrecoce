@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<earlywarning>
+    <sounds>
+        <welcome>
+            <configured>accueil</configured>
+            <unconfigured>some_sound</unconfigured>
+        </welcome>
+        <login>
+            <configured>demandecode</configured>
+        </login>
+        <default>
+            <configured>hello-world</configured>
+        </default>
+        <test_tone>
+            <configured>ascending-2tone</configured>
+        </test_tone>
+        <sismicite>
+            <configured>sismicite</configured>
+        </sismicite>
+    </sounds>
+</earlywarning>

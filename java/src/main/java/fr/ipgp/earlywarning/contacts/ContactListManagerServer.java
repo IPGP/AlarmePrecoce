@@ -59,7 +59,7 @@ public class ContactListManagerServer {
     private static Map<String, String> getQueryMap(String query) {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<>();
-        for (String param: params) {
+        for (String param : params) {
             String name = param.split("=")[0];
             String value = param.split("=")[1];
             map.put(name, value);
@@ -159,7 +159,7 @@ public class ContactListManagerServer {
             head.appendChild(script);
 
             Element listsList = doc.getElementById("available-lists");
-            for (String s: ContactListMapper.getInstance().getAvailableLists()) {
+            for (String s : ContactListMapper.getInstance().getAvailableLists()) {
                 Element a = doc.createElement("a");
                 a.attr("href", "/index.html?list=" + s);
                 a.text(s);
@@ -241,6 +241,9 @@ public class ContactListManagerServer {
                 } catch (NoSuchListException ex) {
                     EarlyWarning.appLogger.error("User requested to modify Contact List '" + listName + "', which does not exist.");
                     return null;
+                } catch (ContactListBuilder.UnimplementedContactListTypeException ignored) {
+                    EarlyWarning.appLogger.error("User requested to modify Contact List '" + listName + "', which has an incorrect format.");
+                    return null;
                 }
             } else {
                 return ContactListMapper.getInstance().getDefaultList();
@@ -278,6 +281,9 @@ public class ContactListManagerServer {
             } catch (NoSuchListException ex) {
                 EarlyWarning.appLogger.error("Used tried to add contact to list '" + listName + "', which does not exist.");
                 return;
+            } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+                EarlyWarning.appLogger.error("Used tried to add contact to list '" + listName + "', which has an invalid format.");
+                return;
             }
 
             EarlyWarning.appLogger.debug("Adding contact " + name + " / " + phone);
@@ -306,6 +312,9 @@ public class ContactListManagerServer {
                 list = ContactListMapper.getInstance().getList(listName);
             } catch (NoSuchListException ex) {
                 EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which does not exist.");
+                return;
+            } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which has an invalid format.");
                 return;
             }
 

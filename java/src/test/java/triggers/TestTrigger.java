@@ -1,22 +1,22 @@
-package fr.ipgp.earlywarning.triggers;
+package triggers;
 
 /*
   Created Mar 12, 2008 10:06:05 AM
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
-import fr.ipgp.earlywarning.contacts.ContactList;
-import fr.ipgp.earlywarning.contacts.SingleContactList;
+import fr.ipgp.earlywarning.contacts.*;
+import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.apache.commons.configuration.ConfigurationException;
+import org.junit.*;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static commons.TestCommons.setUpEnvironment;
 
 /**
  * @author Patrice Boissier
@@ -39,8 +39,14 @@ public class TestTrigger {
         return new junit.framework.JUnit4TestAdapter(TestTrigger.class);
     }
 
+    @BeforeClass
+    public static void setUpSuite() throws IOException, ConfigurationException, NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
+        setUpEnvironment();
+        ContactListMapper.testDefaultList();
+    }
+
     @Before
-    public void setUp() throws UnknownHostException {
+    public void setUp() throws IOException {
         id = 1635132135;
         priority = 1;
         contactList = new SingleContactList("0692703856");

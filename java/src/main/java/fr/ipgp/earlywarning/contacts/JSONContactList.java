@@ -310,4 +310,19 @@ public class JSONContactList implements ContactList {
 
         return arr.toString();
     }
+
+    public boolean equals(Object o)
+    {
+        if (o == null)
+            return false;
+        if (o.getClass() != this.getClass())
+            return false;
+        else
+            return equals((JSONContactList)o);
+    }
+
+    public boolean equals(JSONContactList o)
+    {
+        return o.file.equals(file);
+    }
 }

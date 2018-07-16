@@ -1,21 +1,22 @@
-package fr.ipgp.earlywarning.triggers;
+package triggers;
 /*
   Created Mar 13, 2008 11:09:14 AM
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
 import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.contacts.NoSuchListException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import fr.ipgp.earlywarning.triggers.*;
+import org.apache.commons.configuration.ConfigurationException;
+import org.junit.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+
+import static commons.TestCommons.setUpEnvironment;
 
 /**
  * @author Patrice Boissier
@@ -30,8 +31,13 @@ public class TestDatagramTriggerConverter {
         return new junit.framework.JUnit4TestAdapter(TestDatagramTriggerConverter.class);
     }
 
+    @BeforeClass
+    public static void setUpSuite() throws IOException, ConfigurationException {
+        setUpEnvironment();
+    }
+
     @Before
-    public void setUp() throws UnknownHostException {
+    public void setUp() throws IOException {
         packet = new DatagramPacket(buffer, buffer.length);
         address = InetAddress.getByName("localhost");
         packet.setPort(4445);
@@ -41,6 +47,8 @@ public class TestDatagramTriggerConverter {
             ContactListMapper.testDefaultList();
         } catch (NoSuchListException ex) {
             Assert.fail("Test can't be ran: no default contact list set.");
+        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+            Assert.fail("Test can't be ran: default contact list has an invalid format.");
         } catch (IOException ex) {
             Assert.fail("Test can't be ran: default contact list can't be initialized: " + ex.getMessage());
         }
@@ -68,14 +76,16 @@ public class TestDatagramTriggerConverter {
     @Test
     public void testCreateV1Trigger() {
         try {
-            String warningMessage = "Declenchement";
+            String warningMessage = "default";
             ContactList callList = ContactListMapper.getInstance().getDefaultList();
             String message = "Sismo 13/03/2008 13:22:04 Declenchement";
             packet.setData(message.getBytes());
             packet.setLength(message.length());
+
             DatagramTriggerConverter datagram2Trigger = new DatagramTriggerConverter(packet, true, "11", 1);
             Trigger trig = datagram2Trigger.getTrigger();
             datagram2Trigger.decode();
+
             Assert.assertEquals("Sismo", trig.getApplication());
             Assert.assertEquals(callList, trig.getContactList());
             Assert.assertEquals(address, trig.getInetAddress());
@@ -96,7 +106,6 @@ public class TestDatagramTriggerConverter {
         testDecodeTrigger("Sismo 13/03/2008 13:22:04 Declenchement");
         testDecodeTrigger("Sismo 13/03/2008 13:22:04 blalbla");
         testDecodeTrigger("Sismo 13/03/2008 13:22:04 blalbla blablabla blabla");
-
     }
 
     @Test

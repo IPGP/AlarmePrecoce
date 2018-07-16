@@ -36,10 +36,11 @@ public class CharonGateway implements Gateway {
         return uniqueInstance;
     }
 
-    public void callTillConfirm(Trigger trigger) {
+    public CallLoopResult callTillConfirm(Trigger trigger) {
         EarlyWarning.appLogger.info("CharonGateway: calling.");
         String phoneToCall = trigger.getContactList().getCallList().get(0).phone;
         callTillConfirm(phoneToCall);
+        return null;
     }
 
     public void callTillConfirm(String phone) {

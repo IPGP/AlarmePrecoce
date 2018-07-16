@@ -215,6 +215,8 @@ public class ConfigurationValidator {
                 EarlyWarning.appLogger.warn("Your default contact list ('" + defaultPath + "') currently does not have anyone on the call list. You should fix this or no call will be emitted.");
         } catch (NoSuchElementException ex) {
             throw new ValidationException("contacts.lists.default", "Key does not exist.");
+        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+            throw new ValidationException("contacts.lists.default", "Unsupported file format for default list.");
         } catch (IOException ex) {
             throw new ValidationException("contacts.lists.default", "File cannot be read or written.");
         }

@@ -1,7 +1,6 @@
-/*
+package audio;
 
- */
-package fr.ipgp.earlywarning.audio;
+import fr.ipgp.earlywarning.audio.MessagePlayback;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -10,7 +9,7 @@ import java.io.IOException;
 /**
  * @author patriceboissier
  */
-public class TestAudio {
+public class ValidationTestAudio {
 
     /**
      * @param args command line arguments

@@ -83,4 +83,7 @@ public interface ContactList {
      */
     String getEnabledContactsAsJson();
 
+    @Override
+    boolean equals(Object o);
+
 }

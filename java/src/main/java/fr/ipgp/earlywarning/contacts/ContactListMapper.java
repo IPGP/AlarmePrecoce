@@ -24,16 +24,19 @@ public class ContactListMapper {
      * @throws IOException
      */
     @SuppressWarnings("JavaDoc")
-    private ContactListMapper() throws NoSuchListException, IOException {
+    private ContactListMapper() throws NoSuchListException, IOException, ContactListBuilder.UnimplementedContactListTypeException {
         mappings = new HashMap<>();
 
+        String defaultFileName = "";
         try {
-            String defaultFileName = EarlyWarning.configuration.getString("contacts.lists.default");
+            defaultFileName = EarlyWarning.configuration.getString("contacts.lists.default");
             ContactList defaultContactList;
             defaultContactList = ContactListBuilder.build(defaultFileName);
             mappings.put("default", defaultContactList);
         } catch (NoSuchElementException ex) {
             throw new NoSuchListException("Default list is not available ('contacts.lists.default' configuration entry).");
+        } catch (ContactListBuilder.UnimplementedContactListTypeException e) {
+            throw new ContactListBuilder.UnimplementedContactListTypeException("Default list has an invalid extension (" + defaultFileName + ")");
         }
     }
 
@@ -43,7 +46,7 @@ public class ContactListMapper {
      * @throws NoSuchListException if the <code>default</code> contact list doesn't exist
      * @throws IOException         if the file corresponding to the <code>default</code> contact list can't be read
      */
-    public static void testDefaultList() throws NoSuchListException, IOException {
+    public static void testDefaultList() throws NoSuchListException, IOException, ContactListBuilder.UnimplementedContactListTypeException {
         uniqueInstance = new ContactListMapper();
     }
 
@@ -68,17 +71,20 @@ public class ContactListMapper {
      * @return the requested contact list
      * @throws NoSuchListException if no list with the given name exists
      */
-    public ContactList getList(String name) throws NoSuchListException {
+    public ContactList getList(String name) throws NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
         if (mappings.keySet().contains(name))
             return mappings.get(name);
 
+        String fileName = "";
         try {
-            String fileName = EarlyWarning.configuration.getString("contacts.lists." + name);
+            fileName = EarlyWarning.configuration.getString("contacts.lists." + name);
             ContactList list = ContactListBuilder.build(fileName);
             mappings.put(name, list);
             return list;
         } catch (NoSuchElementException | IOException ex) {
             throw new NoSuchListException(name);
+        } catch (ContactListBuilder.UnimplementedContactListTypeException e) {
+            throw new ContactListBuilder.UnimplementedContactListTypeException("Requested call list has an invalid extension (" + fileName + ")");
         }
     }
 
@@ -91,7 +97,7 @@ public class ContactListMapper {
     public ContactList getListOrDefault(String name) {
         try {
             return getList(name);
-        } catch (NoSuchListException ex) {
+        } catch (NoSuchListException | ContactListBuilder.UnimplementedContactListTypeException ex) {
             return getDefaultList();
         }
     }
@@ -105,7 +111,7 @@ public class ContactListMapper {
         assert mappings.keySet().contains("default");
         try {
             return getList("default");
-        } catch (NoSuchListException ignored) {
+        } catch (NoSuchListException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
             // This can't happen: the default list is built upon object construction
             return null;
         }

@@ -57,13 +57,28 @@ public class AsteriskGateway implements Gateway {
      * @param username the AMI manager's name
      * @param password the AMI manager's password
      */
-    public AsteriskGateway(String host, int port, String username, String password) {
+    private AsteriskGateway(String host, int port, String username, String password) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
 
         server = new LocalAgiServer();
+    }
+
+    private static AsteriskGateway uniqueInstance;
+
+    /**
+     * @param host     the AMI host
+     * @param port     the AMI port
+     * @param username the AMI manager's name
+     * @param password the AMI manager's password
+     */
+    public static AsteriskGateway getInstance(String host, int port, String username, String password) {
+        if (uniqueInstance == null)
+            uniqueInstance = new AsteriskGateway(host, port, username, password);
+
+        return uniqueInstance;
     }
 
     /**
@@ -83,7 +98,7 @@ public class AsteriskGateway implements Gateway {
      * @param warningMessageFile the warning message file to play
      * @param confirmCode        the confirmation code to use
      */
-    private void callTillConfirm(List<String> numbers, String warningMessageFile, String confirmCode) {
+    private CallLoopResult callTillConfirm(List<String> numbers, String warningMessageFile, String confirmCode) {
         CallOriginator originator = new CallOriginator(buildManagerConnection(), confirmCode, warningMessageFile);
 
         Iterator<String> iterator = numbers.iterator();
@@ -91,9 +106,15 @@ public class AsteriskGateway implements Gateway {
         // Assert: there is at least one enabled contact
         assert iterator.hasNext();
 
+        int retries = 0;
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
+                if (retries >= numbers.size())
+                {
+                    EarlyWarning.appLogger.error("Couldn't originate call after " + retries + " retries. Using failover system.");
+                    return CallLoopResult.Error;
+                }
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException ignored) {
@@ -117,7 +138,11 @@ public class AsteriskGateway implements Gateway {
                 EarlyWarning.appLogger.error(ex.getMessage());
             }
 
+            if (result == CallOriginator.CallResult.Error)
+                EarlyWarning.appLogger.error("Error while originating call. Retrying.");
         } while (result != CorrectCode);
+
+        return CallLoopResult.Confirmed;
     }
 
     /**
@@ -143,11 +168,12 @@ public class AsteriskGateway implements Gateway {
      * @param trigger that triggered the call
      */
     @Override
-    public void callTillConfirm(Trigger trigger) {
+    public CallLoopResult callTillConfirm(Trigger trigger) {
         String confirmCode = trigger.getConfirmCode();
         String warningMessageFile = WarningMessageMapper.getInstance(this).getNameOrDefault(trigger.getMessage());
 
         callTillConfirm(trigger.getContactList(), warningMessageFile, confirmCode);
+        return null;
     }
 
     @Override

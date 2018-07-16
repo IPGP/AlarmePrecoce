@@ -1,11 +1,14 @@
-/*
+package gateway;
 
- */
-package fr.ipgp.earlywarning.gateway;
-
+import fr.ipgp.earlywarning.gateway.MockGateway;
+import org.apache.commons.configuration.ConfigurationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static commons.TestCommons.setUpEnvironment;
 
 /**
  * @author patriceboissier
@@ -17,8 +20,8 @@ public class TestMockGateway {
     }
 
     @Before
-    public void setUp() {
-
+    public void setUp() throws IOException, ConfigurationException {
+        setUpEnvironment();
     }
 
     @After

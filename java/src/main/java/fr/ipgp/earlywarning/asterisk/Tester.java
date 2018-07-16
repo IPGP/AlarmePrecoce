@@ -14,21 +14,13 @@ import java.util.List;
  * @author Thomas Kowalski
  */
 public class Tester {
-    public static void main(String[] args) throws Exception {
+    public static void run(List<String> callList, String code) throws Exception
+    {
         // Start the AGI server.
         // It will handle the AGI request from Asterisk and will tell it what to do
         // What is great for us is that at the same time, it will communicate with the CallOriginator
         // For example, it'll tell it when the call is picked up, what code was entered...
         @SuppressWarnings("unused") LocalAgiServer server = new LocalAgiServer();
-
-        // The phone list
-        List<String> callList = new ArrayList<>();
-        callList.add("0262275596");
-        callList.add("0262275621");
-        callList.add("0783841930");
-
-        // The confirmation code
-        String code = "1256";
 
         // Create a ManagerFactory.
         // Creating one here allows us to use the same for multiple calls with the CallOriginator
@@ -81,5 +73,18 @@ public class Tester {
         // It's not necessary in this case (because it's the end of the program anyway)
         // But in a real-world case, we don't want to keep a useless open connection.
         managerConnection.logoff();
+    }
+
+    public static void main(String[] args) throws Exception {
+        // The phone list
+        List<String> callList = new ArrayList<>();
+        callList.add("0262275596");
+        callList.add("0262275621");
+        callList.add("0783841930");
+
+        // The confirmation code
+        String code = "1256";
+
+        run(callList, code);
     }
 }

@@ -6,9 +6,11 @@ package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.audio.AudioSerialMessage;
+import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import fr.ipgp.earlywarning.gateway.AsteriskGateway;
+import fr.ipgp.earlywarning.gateway.CallLoopResult;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
@@ -134,7 +136,13 @@ public class QueueManagerThread extends Thread {
                 Trigger trig = queue.poll();
                 assert trig != null;
 
-                gateway.callTillConfirm(trig);
+                CallLoopResult result = gateway.callTillConfirm(trig);
+                if (result == CallLoopResult.Error) {
+                    configureCharonGateway();
+                    result = gateway.callTillConfirm(trig);
+                    if (result == CallLoopResult.Error)
+                        EarlyWarning.appLogger.fatal("SEVERE: Failover gateway could not originate call.");
+                }
 
                 if (useMail) {
                     try {
@@ -250,6 +258,9 @@ public class QueueManagerThread extends Thread {
         } catch (NoSuchListException ex) {
             EarlyWarning.appLogger.fatal("No default contact list given.");
             System.exit(-1);
+        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+            EarlyWarning.appLogger.fatal("Unsupported format for default list.");
+            System.exit(-1);
         } catch (IOException ex) {
             EarlyWarning.appLogger.fatal("Cannot initialize default contact list.");
             System.exit(-1);
@@ -263,7 +274,7 @@ public class QueueManagerThread extends Thread {
             String username = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_user");
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
 
-            gateway = new AsteriskGateway(host, port, username, password);
+            gateway = AsteriskGateway.getInstance(host, port, username, password);
         } catch (ConversionException ex) {
             EarlyWarning.appLogger.fatal("Wrong value in Asterisk Gateway configuration: can't convert to int.");
             System.exit(-1);

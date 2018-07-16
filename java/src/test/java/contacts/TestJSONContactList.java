@@ -1,10 +1,11 @@
-package fr.ipgp.earlywarning.contacts;
+package contacts;
 
+import fr.ipgp.earlywarning.contacts.Contact;
+import fr.ipgp.earlywarning.contacts.JSONContactList;
+import fr.ipgp.earlywarning.contacts.NoSuchContactException;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.NullArgumentException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,26 +13,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static commons.TestCommons.setUpEnvironment;
+
 public class TestJSONContactList {
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestJSONContactList.class);
     }
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() throws IOException, ConfigurationException {
+        setUpEnvironment();
 
+        File testsRoot = new File("./tests/contacts");
+        testsRoot.mkdirs();
     }
 
-    @After
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
         // Delete the test folder on exit
         File f = new File("tests");
-        if(!f.delete())
-            System.err.println("Couldn't delete /tests");
+        f.deleteOnExit();
     }
 
     /**
-     * Verify that, if the target file doesn't exist, the <code>JSONContactList</code> creates the necessary folders and the JSON file.
+     * Verify that, if the target file doesn't exist, the {@link JSONContactList} creates the necessary folders and the JSON file.
      */
     @Test
     public void testCreateNewFile() {
@@ -71,7 +76,7 @@ public class TestJSONContactList {
      * Verify that adding a null Contact throws an exception.
      */
     @Test(expected = NullArgumentException.class)
-    public void testAddNulContact() throws IOException {
+    public void testAddNullContact() throws IOException {
         JSONContactList contactList;
         contactList = new JSONContactList("tests/contacts.json");
         contactList.addContact(null);

@@ -66,8 +66,7 @@ public class AlertCallScript extends BaseAgiScript {
      *
      * @param newWarningMessage the name of the file to stream
      */
-    public static void setWarningMessage(String newWarningMessage)
-    {
+    public static void setWarningMessage(String newWarningMessage) {
         warningMessage = newWarningMessage;
     }
 
@@ -110,7 +109,10 @@ public class AlertCallScript extends BaseAgiScript {
             // Stream the welcome file
             EarlyWarning.appLogger.debug("Waiting for input");
             while (true) {
-                String data = getData("accueil", 0, 2);
+                String data = getData("accueil", 1, 2);
+
+                if (data == null || data.isEmpty())
+                    continue;
 
                 // Check if hangup as been requested
                 if (hangupRequested)

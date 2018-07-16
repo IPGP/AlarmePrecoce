@@ -274,37 +274,37 @@ public class CharonI {
         return "CharonI " + ip + ":" + tcpPort + " : " + ledStatesToString();
     }
 
-    /**
-     * Updates the LED state using the provided String. <br />
-     * <b>Example :</b> <code>setLedState("01001100");</code><br />
-     * The provided String should always be of length the number of LEDs on the module.
-     *
-     * @param newLedState the new LED state byte in the form of a String
-     */
-    private void setLedState(String newLedState) throws InvalidLedStateException, IOException, InvalidResponseException {
-        // Complete the String in case it's not already the right size
-        StringBuilder newLedStateBuilder = new StringBuilder(newLedState);
-        while (newLedStateBuilder.length() < ledNumber)
-            newLedStateBuilder.insert(0, "0");
-
-        newLedState = newLedStateBuilder.toString();
-
-        // Validate the given String using a regular expression (ledNumber times 0 or 1)
-        @SuppressWarnings("Annotator")
-        Pattern pattern = Pattern.compile("^[0-1]{" + ledNumber + "}$");
-        Matcher matcher = pattern.matcher(newLedState);
-        if (matcher.find()) {
-            // Affect the LED values in the LED states array
-            for (int i = 0; i < ledNumber; i++)
-                // TODO: verify this
-                ledsArray[i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
-            // ledsArray[ledNumber - 1 - i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
-
-            // Apply the new LED state on the module
-            applyLedState();
-        } else
-            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
-    }
+//    /**
+//     * Updates the LED state using the provided String. <br />
+//     * <b>Example :</b> <code>setLedState("01001100");</code><br />
+//     * The provided String should always be of length the number of LEDs on the module.
+//     *
+//     * @param newLedState the new LED state byte in the form of a String
+//     */
+//    private void setLedState(String newLedState) throws InvalidLedStateException, IOException, InvalidResponseException {
+//        // Complete the String in case it's not already the right size
+//        StringBuilder newLedStateBuilder = new StringBuilder(newLedState);
+//        while (newLedStateBuilder.length() < ledNumber)
+//            newLedStateBuilder.insert(0, "0");
+//
+//        newLedState = newLedStateBuilder.toString();
+//
+//        // Validate the given String using a regular expression (ledNumber times 0 or 1)
+//        @SuppressWarnings("Annotator")
+//        Pattern pattern = Pattern.compile("^[0-1]{" + ledNumber + "}$");
+//        Matcher matcher = pattern.matcher(newLedState);
+//        if (matcher.find()) {
+//            // Affect the LED values in the LED states array
+//            for (int i = 0; i < ledNumber; i++)
+//                // TODO: verify this
+//                ledsArray[i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
+//            // ledsArray[ledNumber - 1 - i] = Integer.parseInt(Character.toString(newLedState.charAt(i)));
+//
+//            // Apply the new LED state on the module
+//            applyLedState();
+//        } else
+//            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
+//    }
 
     /**
      * Returns the current LED state in the form of a "byte String"
