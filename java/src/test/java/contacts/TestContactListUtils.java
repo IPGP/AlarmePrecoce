@@ -14,8 +14,8 @@ import static commons.TestCommons.setUpEnvironment;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
 public class TestContactListUtils {
-    static File testsRoot;
-    static String defaultContactListFile;
+    private static File testsRoot;
+    private static String defaultContactListFile;
 
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestContactListUtils.class);
@@ -26,8 +26,11 @@ public class TestContactListUtils {
         String workingDir = setUpEnvironment();
 
         testsRoot = new File(workingDir + "/tests");
-        File configurationFile = searchForFile(new File(workingDir), "earlywarning_test_contactlist.xml");
+        if (!testsRoot.isDirectory())
+            if (!testsRoot.mkdirs())
+                throw new IOException("Test files directory cannot be created '" + testsRoot.getCanonicalPath() + "'");
 
+        File configurationFile = searchForFile(new File(workingDir), "earlywarning_test_contactlist.xml");
         EarlyWarning.configuration = new XMLConfiguration(configurationFile.getCanonicalPath());
         EarlyWarning.configuration.setThrowExceptionOnMissing(true);
 
@@ -38,7 +41,8 @@ public class TestContactListUtils {
 
     @AfterClass
     public static void tearDown() {
-        new File(testsRoot + "/tests").delete();
+        File testsDir = new File(testsRoot + "/tests");
+        testsDir.deleteOnExit();
     }
 
     @Test

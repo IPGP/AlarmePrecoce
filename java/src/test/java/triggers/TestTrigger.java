@@ -23,16 +23,16 @@ import static commons.TestCommons.setUpEnvironment;
  */
 public class TestTrigger {
 
-    public long id;
-    public int priority;
-    public ContactList contactList;
-    public String message;
-    public InetAddress inetAddress;
-    public String application;
-    public String type;
-    public boolean repeat;
-    public String date;
-    public String confirmCode;
+    private long id;
+    private int priority;
+    private ContactList contactList;
+    private String message;
+    private InetAddress inetAddress;
+    private String application;
+    private String type;
+    private boolean repeat;
+    private String date;
+    private String confirmCode;
     private Map<String, String> properties;
 
     public static junit.framework.Test suite() {

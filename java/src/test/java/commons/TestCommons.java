@@ -13,10 +13,14 @@ public class TestCommons {
     public static String setUpEnvironment() throws IOException, ConfigurationException {
         String root = "../";
 
-        String workingDir = searchForFile(root,"earlywarning.xml").getParentFile().getCanonicalPath();
+        File configurationFile = searchForFile(root,"earlywarning.xml");
+        File workingDirFile = configurationFile.getParentFile().getParentFile().getCanonicalFile();
+        String workingDir = workingDirFile.getCanonicalPath();
         System.setProperty("user.dir", workingDir);
 
-        File configurationFile = searchForFile(new File(workingDir), "earlywarning.xml");
+        System.out.println("Working directory used for this test: '" + System.getProperty("user.dir") + "'");
+
+        configurationFile = searchForFile(new File(workingDir), "earlywarning.xml");
 
         EarlyWarning.configuration = new XMLConfiguration(configurationFile.getCanonicalPath());
         EarlyWarning.configuration.setThrowExceptionOnMissing(true);

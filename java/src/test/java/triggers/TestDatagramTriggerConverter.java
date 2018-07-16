@@ -23,17 +23,19 @@ import static commons.TestCommons.setUpEnvironment;
  */
 public class TestDatagramTriggerConverter {
 
-    protected DatagramPacket packet = null;
-    protected byte[] buffer = new byte[65535];
-    protected InetAddress address = null;
+    private DatagramPacket packet = null;
+    private final byte[] buffer = new byte[65535];
+    private InetAddress address = null;
 
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestDatagramTriggerConverter.class);
     }
 
     @BeforeClass
-    public static void setUpSuite() throws IOException, ConfigurationException {
+    public static void setUpSuite() throws IOException, ConfigurationException, NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
         setUpEnvironment();
+
+        ContactListMapper.testDefaultList();
     }
 
     @Before
@@ -42,16 +44,6 @@ public class TestDatagramTriggerConverter {
         address = InetAddress.getByName("localhost");
         packet.setPort(4445);
         packet.setAddress(address);
-
-        try {
-            ContactListMapper.testDefaultList();
-        } catch (NoSuchListException ex) {
-            Assert.fail("Test can't be ran: no default contact list set.");
-        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
-            Assert.fail("Test can't be ran: default contact list has an invalid format.");
-        } catch (IOException ex) {
-            Assert.fail("Test can't be ran: default contact list can't be initialized: " + ex.getMessage());
-        }
     }
 
     @After
@@ -59,7 +51,7 @@ public class TestDatagramTriggerConverter {
 
     }
 
-    public void testDecodeTrigger(String message) {
+    private void testDecodeTrigger(String message) {
         try {
             String warningMessage = "Declenchement";
             ContactList callList = ContactListMapper.getInstance().getDefaultList();

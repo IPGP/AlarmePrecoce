@@ -5,7 +5,10 @@ import fr.ipgp.earlywarning.contacts.JSONContactList;
 import fr.ipgp.earlywarning.contacts.NoSuchContactException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.NullArgumentException;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,27 +23,30 @@ public class TestJSONContactList {
         return new junit.framework.JUnit4TestAdapter(TestJSONContactList.class);
     }
 
+    private static File testsRoot;
     @BeforeClass
     public static void setUp() throws IOException, ConfigurationException {
         setUpEnvironment();
 
-        File testsRoot = new File("./tests/contacts");
-        testsRoot.mkdirs();
+        testsRoot = new File("tests").getCanonicalFile();
+
+        File contactsRoot = new File(testsRoot.getCanonicalPath() + "/contacts");
+        if(!contactsRoot.isDirectory())
+            if (!contactsRoot.mkdirs())
+                throw new IOException("Can't create tests folder '" + contactsRoot.getCanonicalPath() + "'");
     }
 
     @AfterClass
     public static void tearDown() {
-        // Delete the test folder on exit
-        File f = new File("tests");
-        f.deleteOnExit();
+        testsRoot.deleteOnExit();
     }
 
     /**
      * Verify that, if the target file doesn't exist, the {@link JSONContactList} creates the necessary folders and the JSON file.
      */
     @Test
-    public void testCreateNewFile() {
-        File f = new File("tests/contacts.json");
+    public void testCreateNewFile() throws IOException {
+        File f = new File("tests/contacts.json").getCanonicalFile();
         if (f.exists())
             Assert.assertTrue(f.delete());
 
@@ -59,14 +65,14 @@ public class TestJSONContactList {
      */
     @Test(expected = NoSuchContactException.class)
     public void testGetNonExistentContact() throws NoSuchContactException, IOException {
-        Contact c = new Contact("Zébulon", "0692123456", false);
+        Contact c = new Contact("Zebulon", "0692123456", false);
 
         JSONContactList list = new JSONContactList("tests/contacts.json");
 
         list.addContact(c);
 
         // Try to get an existing contact
-        Assert.assertEquals(list.getContactByName("Zébulon"), c);
+        Assert.assertEquals(list.getContactByName("Zebulon"), c);
 
         // This should throw an exception
         list.getContactByName("NonExistent");
