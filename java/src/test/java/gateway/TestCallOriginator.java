@@ -30,8 +30,7 @@ public class TestCallOriginator {
         EarlyWarning.configuration = new XMLConfiguration(configurationFile.getCanonicalPath());
         EarlyWarning.configuration.setThrowExceptionOnMissing(true);
 
-        // correctHost = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_host");
-        correctHost = "195.83.188.41";
+        correctHost = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_host");
         correctPort = EarlyWarning.configuration.getInt("gateway.asterisk.settings.ami_port");
         correctUsername = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_user");
         correctPassword = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
@@ -42,12 +41,11 @@ public class TestCallOriginator {
 
     }
 
-// TODO
-//    @Test(expected = AuthenticationFailedException.class)
-//    public void testWrongCredentials() throws AuthenticationFailedException, IOException, TimeoutException {
-//        CallOriginator originator = new CallOriginator(correctHost, correctPort, "wrong", "user", "1234", "default");
-//        originator.testCredentials();
-//    }
+    @Test(expected = AuthenticationFailedException.class)
+    public void testWrongCredentials() throws AuthenticationFailedException, IOException, TimeoutException {
+        CallOriginator originator = new CallOriginator(correctHost, correctPort, "wrong", "user", "1234", "default");
+        originator.testCredentials();
+    }
 
     @Test(expected = IOException.class)
     public void testWrongInetAddress() throws AuthenticationFailedException, IOException, TimeoutException {

@@ -34,9 +34,11 @@ public class ValidationTestAsterisk {
     public void validationTest() throws Exception {
         List<String> callList = new ArrayList<>();
         callList.add("0692877305");
-        String code = "1256";
 
-        Tester.run(callList, code);
+        String code = "1256";
+        String message = "demo-thanks";
+
+        Tester.run(callList, code, message);
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * @author Thomas Kowalski
  */
 public class Tester {
-    public static void run(List<String> callList, String code) throws Exception
+    public static void run(List<String> callList, String code, String warningMessage) throws Exception
     {
         // Start the AGI server.
         // It will handle the AGI request from Asterisk and will tell it what to do
@@ -31,7 +31,7 @@ public class Tester {
         // The CallOriginator's task is to emit the call and then wait for data from the AGI script.
         // The AGI script doesn't do any choice (it doesn't know the confirmation code)
         // So the AGI script sends signals to the CallOriginator, the latter answers what it should do (retry, give up...)
-        CallOriginator originator = new CallOriginator(managerConnection, code, "demo-thanks");
+        CallOriginator originator = new CallOriginator(managerConnection, code, warningMessage);
 
         // CallOriginator.call gives us a CallResult. We'll use it as a loop variable and define it as Initial (first iteration)
         CallOriginator.CallResult result = CallOriginator.CallResult.Initial;
@@ -85,6 +85,8 @@ public class Tester {
         // The confirmation code
         String code = "1256";
 
-        run(callList, code);
+        String warningMessage = "demo-thanks";
+
+        run(callList, code, warningMessage);
     }
 }
