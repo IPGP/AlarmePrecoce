@@ -31,6 +31,12 @@
     </repositories>
 
     <build>
+        <finalName>EarlyWarning</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -40,7 +46,8 @@
                     <forkCount>0</forkCount>
                     <testFailureIgnore>true</testFailureIgnore>
                     <additionalClasspathElements>
-                        <additionalClasspathElement>/home/kowalski/Takamaka/Alarme/java/target/classes/</additionalClasspathElement>
+                        <additionalClasspathElement>/home/kowalski/Takamaka/Alarme/java/target/classes/
+                        </additionalClasspathElement>
                     </additionalClasspathElements>
                     <argLine>-Xmx1024m</argLine>
                     <skipTests>false</skipTests>
@@ -151,6 +158,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-resources-plugin</artifactId>-->
+                <!--<version>3.1.0</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>copy-resources</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${basedir}/target/resources</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>src/resources</directory>-->
+                                    <!--<filtering>true</filtering>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
 
     </build>

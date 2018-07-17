@@ -37,11 +37,13 @@ public class EarlyWarning {
     public static Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
 
     public static void main(final String[] args) {
+        PreInitOptions options = parseArgsPreInit(args);
+
         setLogger();
 
         checkUniqueness();
 
-        readConfiguration();
+        readConfiguration(options.validateConfiguration);
 
         appLogger.debug("Entering application.");
 
@@ -53,16 +55,37 @@ public class EarlyWarning {
 
         startContactsServer();
 
-        parseArgs(args);
+        parseArgsPostInit(args);
     }
 
-    private static void parseArgs(final String[] args) {
-        boolean testCalls = false;
-        for (String arg: args)
-            if (arg.equalsIgnoreCase("--testcalls"))
-                testCalls = true;
+    private static class PreInitOptions {
+        boolean validateConfiguration = true;
+    }
 
-        if (testCalls) {
+    private static class PostInitOptions {
+        boolean testCalls = false;
+    }
+
+    private static PreInitOptions parseArgsPreInit(final String[] args)
+    {
+        PreInitOptions options = new PreInitOptions();
+        for (String arg: args) {
+            if (arg.equalsIgnoreCase("--novalidation"))
+                options.validateConfiguration = false;
+        }
+
+        return options;
+    }
+
+    private static PostInitOptions parseArgsPostInit(final String[] args) {
+        PostInitOptions options = new PostInitOptions();
+
+        for (String arg: args) {
+            if (arg.equalsIgnoreCase("--testcalls"))
+                options.testCalls = true;
+        }
+
+        if (options.testCalls) {
             appLogger.info("--testcalls was passed: two triggers will be emitted.");
             Thread thread = new Thread() {
                 public void run() {
@@ -84,18 +107,24 @@ public class EarlyWarning {
             };
             thread.start();
         }
+
+        return options;
     }
 
     /**
      * Reads XML configuration file and creates a XMLConfiguration object
      * The application log a fatal error and exists if the configuration file is missing
      */
-    private static void readConfiguration() {
+    private static void readConfiguration(boolean validate) {
         try {
             configuration = new XMLConfiguration("resources/earlywarning.xml");
             configuration.setThrowExceptionOnMissing(true);
-            ConfigurationValidator validator = new ConfigurationValidator(configuration);
-            validator.validate();
+            if (validate) {
+                ConfigurationValidator validator = new ConfigurationValidator(configuration);
+                validator.validate();
+            }
+            else
+                appLogger.warn("No validation will be made on the configuration file. If it contains a mistake, it will only be noticeable at call time.");
         } catch (ConfigurationException cex) {
             appLogger.fatal("Fatal error: configuration file not present or not readable. Exiting application");
             System.exit(1);
