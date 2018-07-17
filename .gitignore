@@ -113,3 +113,5 @@ java/dependency-reduced-pom.xml
 java/tests
 
 java/src/main/resources/contacts/*
+
+java/src/main/tests/*
