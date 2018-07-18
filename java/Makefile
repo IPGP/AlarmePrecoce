@@ -1,9 +1,23 @@
-default: package
+default: help
+
+help:
+	@echo "Available targets "
+	@echo "    help     : Shows this message"
+	@echo "    test     : Executes unit tests and generates the HTML report"
+	@echo "    validate : Validates (or installs) dependencies"
+	@echo "    compile  : Compiles the project classes"
+	@echo "    javadoc  : Generates the Javadoc for the project"
+	@echo "    package  : Run the packaging routine and cleans the compiled, unpackaged files"
+	@echo "    clean    : Cleans the compiled files"
+	@echo ""
+
+test:
+	mvn clean test surefire-report:report
+	mv target/site/surefire-report.html target/tests-report.html
+	rm -rf target/site
 
 validate:
 	mvn validate
-
-build: compile
 
 compile:
 	mvn compile
@@ -24,7 +38,9 @@ package:
 	mv EarlyWarning.jar target
 	mv Javadoc target
 
-
-
 clean:
 	rm -rf target
+
+# Aliases
+
+build: compile

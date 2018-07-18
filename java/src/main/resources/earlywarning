@@ -1,0 +1,64 @@
+#! /bin/sh
+
+PATH=$PATH:/usr/sbin:/usr/bin:/sbin:/bin
+DESC="EarlyWarning main app"
+NAME=earlywarningd
+SCRIPTNAME=/etc/init.d/$NAME
+SCRIPTNAME="$( cd "$(dirname "$0")" ; pwd -P )/$(basename $0)"
+
+LOGFILE="/var/log/earlywarning.log"
+
+## Replace these with the values for your installation
+ALARMEPRECOCE_USER=root
+ALARMEPRECOCE_HOME=/root/thomas/Alarme/java/target/
+
+case "$1" in
+  start)
+	echo "Starting $NAME"
+
+	cd "$ALARMEPRECOCE_HOME"
+	su "$ALARMEPRECOCE_USER" -c "java -jar EarlyWarning.jar >> $LOGFILE 2>&1 &"
+
+	;;
+  stop)
+	echo "Stopping $NAME"
+
+
+	pid=$(ps -ef | grep "EarlyWarning.jar" | grep -v grep | awk '{print $2}')
+
+	if [ "$pid" != "" ]; then
+		kill -9 "$pid"
+	else
+		echo "$NAME is not running."
+	fi
+
+	;;
+  restart)
+    echo "Restarting $NAME"
+
+	pid=$(ps -ef | grep "EarlyWarning.jar" | grep -v grep | awk '{print $2}')
+
+	if [ "$pid" != "" ]; then
+		kill -9 "$pid"
+	fi
+
+	cd "$ALARMEPRECOCE_HOME"
+	su "$ALARMEPRECOCE_USER" -c "java -jar EarlyWarning.jar >> $LOGFILE 2>&1 &"
+    ;;
+  status)
+    echo "Status of $NAME"
+
+    pid=$(ps -ef | grep "EarlyWarning.jar" | grep -v grep | awk '{print $2}')
+
+	if [ "$pid" != "" ]; then
+		echo "Alive (PID = $pid)"
+	else
+		echo "Inactive"
+	fi
+
+    ;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|status}" >&2
+	exit 3
+	;;
+esac

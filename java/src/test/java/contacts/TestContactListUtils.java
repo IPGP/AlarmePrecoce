@@ -45,6 +45,10 @@ public class TestContactListUtils {
         testsDir.deleteOnExit();
     }
 
+    /**
+     * Tests that building a {@link ContactList} from a JSON file works.
+     * @throws IOException should not happen
+     */
     @Test
     public void testBuildJson() throws IOException {
         File jsonContactListFile = new File(testsRoot.getCanonicalPath() + "/test.json");
@@ -59,6 +63,11 @@ public class TestContactListUtils {
         Assert.assertEquals(list.getClass(), JSONContactList.class);
     }
 
+    /**
+     * Tests that trying to build from an unknown file type will throw an exception
+     * @throws IOException should not happen
+     * @throws ContactListBuilder.UnimplementedContactListTypeException expected
+     */
     @Test(expected = ContactListBuilder.UnimplementedContactListTypeException.class)
     public void testBuildUnknown() throws IOException, ContactListBuilder.UnimplementedContactListTypeException {
         File unknownContactListFile = new File(testsRoot.getCanonicalPath() + "/test.unknowntype");
@@ -66,6 +75,12 @@ public class TestContactListUtils {
         ContactList list = ContactListBuilder.build(unknownContactListFile.getPath());
     }
 
+    /**
+     * Tests that asking for an existent {@link ContactList} works and actually gives the right one, by requesting the <code>default</code> contact list.
+     * @throws NoSuchListException should not happen
+     * @throws ContactListBuilder.UnimplementedContactListTypeException should not happen
+     * @throws IOException should not happen
+     */
     @Test
     public void testExistentMap() throws NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException, IOException {
         ContactList actualDefault = ContactListBuilder.build(defaultContactListFile);
@@ -74,6 +89,11 @@ public class TestContactListUtils {
         Assert.assertEquals(givenDefault, actualDefault);
     }
 
+    /**
+     * Tests that requesting a non existent {@link ContactList} effectively throws a {@link NoSuchListException}
+     * @throws NoSuchListException expected
+     * @throws ContactListBuilder.UnimplementedContactListTypeException should not happen
+     */
     @Test(expected = NoSuchListException.class)
     public void testNonExistentMap() throws NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
         Random rand = new Random();
