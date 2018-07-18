@@ -62,6 +62,7 @@ public class CommonUtilities {
      * @param date the date to format
      * @return the date in ISO format
      */
+    @SuppressWarnings("WeakerAccess")
     public static String dateToISO(Date date) {
         SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return (simpleFormat.format(date));

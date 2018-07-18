@@ -6,12 +6,19 @@ import java.io.IOException;
 
 public class FileSearch {
     public static File searchForFile(File root, String name) throws IOException {
-        for (File f : root.listFiles())
+        if (root == null)
+            throw new FileNotFoundException();
+
+        File[] files = root.listFiles();
+        if (files == null)
+            throw new FileNotFoundException();
+
+        for (File f : files)
             if (f.isFile())
                 if (f.getName().equalsIgnoreCase(name))
                     return f.getCanonicalFile();
 
-        for (File f : root.listFiles())
+        for (File f : files)
             if (f.isDirectory() && (!f.equals(root))) {
                 try {
                     File result = searchForFile(f, name);

@@ -3,6 +3,7 @@ package fr.ipgp.earlywarning.utilities;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
+import fr.ipgp.earlywarning.gateway.CharonGateway;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.asteriskjava.manager.AuthenticationFailedException;
@@ -10,6 +11,7 @@ import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
 import org.asteriskjava.manager.TimeoutException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -101,18 +103,50 @@ public class ConfigurationValidator {
         availableGateways.add("asterisk");
         availableGateways.add("charon");
 
+        /* Verify that the active Gateway is a known one */
         if (!availableGateways.contains(activeGateway.toLowerCase()))
             throw new ValidationException("gateway.active", "Unknown active Gateway");
 
+        /* Select what Gateway configuration should be validated */
         if (activeGateway.equalsIgnoreCase("asterisk"))
             validateAsteriskSettings();
-        else if (activeGateway.equalsIgnoreCase("charon"))
-            validateCharonSettings();
+
+        /* Always validate Charon settings, since it is used for the failover system. */
+        validateCharonSettings();
     }
 
-    private void validateCharonSettings()
-    {
-        // TODO: validateCharonSettings()
+    private void validateCharonSettings() throws ValidationException {
+        int port;
+        try {
+            //noinspection UnusedAssignment
+            port = configuration.getInt("gateway.charon.port");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("gateway.charon.port", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("gateway.charon.port", "Value cannot be converted to Integer: '" + configuration.getString("gateway.charon.port") + "'");
+        }
+
+        String host;
+        try {
+            //noinspection UnusedAssignment
+            host = configuration.getString("gateway.charon.host");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("gateway.charon.host", "Key does not exist.");
+        }
+
+        int timeout;
+        try {
+            //noinspection UnusedAssignment
+            timeout = configuration.getInt("gateway.charon.timeout");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("gateway.charon.timeout", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("gateway.charon.timeout", "Value cannot be converted to Integer: '" + configuration.getString("gateway.charon.timeout") + "'");
+        }
+
+        CharonGateway gateway = CharonGateway.getInstance(host, port, timeout);
+        if (!gateway.checkConnected())
+            throw new ValidationException("gateway.charon", "Charon I module is unreachable at with address " + host + ":" + String.valueOf(port));
     }
 
     /**
@@ -152,7 +186,7 @@ public class ConfigurationValidator {
 
         String[] params = {"ami_host", "ami_port", "ami_user", "ami_password"};
         Map<String, String> values = new HashMap<>();
-        for (String paramName: params) {
+        for (String paramName : params) {
             try {
                 values.put(paramName, configuration.getString("gateway.asterisk.settings." + paramName));
             } catch (NoSuchElementException ex) {
@@ -174,7 +208,7 @@ public class ConfigurationValidator {
         } catch (IOException ex) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface is unreachable: " +
                     ((ex.getMessage() != null && !ex.getMessage().equalsIgnoreCase("")) ?
-                            ex.getMessage(): "(no info)"));
+                            ex.getMessage() : "(no info)"));
         } catch (AuthenticationFailedException ex) {
             throw new ValidationException("gateway.asterisk.settings", "Asterisk Manager Interface credentials are incorrect.");
         } catch (TimeoutException ex) {
@@ -184,7 +218,7 @@ public class ConfigurationValidator {
     }
 
     /**
-     * Validates the <code>ContactServer</code> configuration, which means the <code>www-home</code>, the port to use and that the default contact list is defined and usable.
+     * Validates the {@link fr.ipgp.earlywarning.contacts.ContactListManagerServer}, which means the <code>www-home</code> and its contents, the port to use and that the default contact list is defined and usable.
      *
      * @throws ValidationException if a configuration error is detected
      */
@@ -195,6 +229,23 @@ public class ConfigurationValidator {
             home = configuration.getString("contacts.home");
         } catch (NoSuchElementException ex) {
             throw new ValidationException("contacts.home", "Key does not exist.");
+        }
+
+
+        try {
+            File root = new File(home).getAbsoluteFile();
+            if (!root.isDirectory())
+                throw new ValidationException("contacts.home", "ContactServer root directory does not exist or is not a directory ('" + root.getCanonicalPath() + "'");
+
+            String[] requiredFiles = new String[]{"index.html", "Sortable.min.js"};
+
+            for (String file : requiredFiles) {
+                File f = new File(root.getCanonicalPath() + "/" + file);
+                if (!f.isFile())
+                    throw new ValidationException("contacts.home", "File '" + file + "' does not exist in ContactServer root ('" + root.getCanonicalPath() + "'");
+            }
+        } catch (IOException e) {
+            throw new ValidationException("contacts.home", "ContactServer root directory is not accessible.");
         }
 
         int port;
@@ -244,9 +295,10 @@ public class ConfigurationValidator {
      * @param c the character to count
      * @return the number of occurrences of <code>c</code> in <code>s</code>
      */
+    @SuppressWarnings("SameParameterValue")
     private int occurrences(String s, char c) {
         int count = 0;
-        for (char c2: s.toCharArray())
+        for (char c2 : s.toCharArray())
             if (c2 == c)
                 count++;
         return count;
@@ -261,7 +313,7 @@ public class ConfigurationValidator {
     private Set<String> getTopLevelEntries(String prefix) {
         List<String> all = getEntries(prefix);
         Set<String> result = new HashSet<>();
-        for (String entry: all) {
+        for (String entry : all) {
             String[] split = entry.split("\\.");
             result.add(split[occurrences(prefix, '.') + 1]);
         }
@@ -278,17 +330,17 @@ public class ConfigurationValidator {
         Set<String> gateways = new HashSet<>();
         Map<String, Set<String>> availableGateways = new HashMap<>();
 
-        for (String sound: soundNames) {
+        for (String sound : soundNames) {
             availableGateways.put(sound, new HashSet<String>());
 
-            for (String gateway: getTopLevelEntries("sounds." + sound + "")) {
+            for (String gateway : getTopLevelEntries("sounds." + sound + "")) {
                 gateways.add(gateway);
                 availableGateways.get(sound).add(gateway);
             }
         }
 
-        for (String gateway: gateways)
-            for (String sound: soundNames)
+        for (String gateway : gateways)
+            for (String sound : soundNames)
                 if (!availableGateways.get(sound).contains(gateway))
                     EarlyWarning.appLogger.warn("Sound '" + sound + "' has no mapping for gateway '" + gateway + "'");
     }

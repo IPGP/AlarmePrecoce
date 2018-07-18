@@ -12,8 +12,8 @@ import java.net.*;
  */
 public class TriggerV2Sender3 {
 
+    private static final int port = 4445;
     private static byte[] message = null;
-    private static int port = 4445;
     private static InetAddress address = null;
     private static DatagramSocket socket = null;
     private static DatagramPacket packet = null;

@@ -40,17 +40,14 @@ public class CallOriginator implements ManagerEventListener {
      * The maximum amount of time to ring before giving up the call. It's not necessarily the real value: the call will be hung up when the <code>ringTimeout</code> is over AND the welcome audio file finished.
      */
     private static int ringTimeout;
-
-    /**
-     * The warning message to play when the callee answers
-     */
-    private String warningMessage;
-
     private static String amiHostname = null;
     private static int amiPort = -1;
     private static String managerUsername = null;
     private static String managerPassword = null;
-
+    /**
+     * The warning message to play when the callee answers
+     */
+    private String warningMessage;
     /**
      * The connection to AMI.
      */
@@ -156,11 +153,6 @@ public class CallOriginator implements ManagerEventListener {
         EarlyWarning.appLogger.debug("Warning message: " + warningMessage);
     }
 
-    public void testCredentials() throws AuthenticationFailedException, TimeoutException, IOException {
-            managerConnection.login();
-            managerConnection.logoff();
-    }
-
     /**
      * External ManagerConnection constructor. Allows us to keep the same ManagerConnection for multiple calls.
      *
@@ -201,6 +193,11 @@ public class CallOriginator implements ManagerEventListener {
         // Set the confirmation code
         confirmCode = code;
         this.warningMessage = warningMessage;
+    }
+
+    public void testCredentials() throws AuthenticationFailedException, TimeoutException, IOException {
+        managerConnection.login();
+        managerConnection.logoff();
     }
 
     @SuppressWarnings("SameParameterValue")

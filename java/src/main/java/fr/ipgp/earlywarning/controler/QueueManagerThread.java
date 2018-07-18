@@ -31,8 +31,8 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class QueueManagerThread extends Thread {
     private static QueueManagerThread uniqueInstance;
+    private final PriorityBlockingQueue<Trigger> queue;
     protected boolean moreTriggers = true;
-    private PriorityBlockingQueue<Trigger> queue;
     private Gateway gateway;
     private String resourcesPath;
     private MailerThread mailerThread;

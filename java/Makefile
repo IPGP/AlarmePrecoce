@@ -27,6 +27,17 @@ javadoc:
 	rm target/EarlyWarning.jar
 	rm -rf target/resources
 
+lpackage:
+	mvn package
+	mv target/EarlyWarning.jar .
+	rm -rf target
+	mkdir target
+	mv EarlyWarning.jar target
+
+hpackage:
+	lpackage
+	mv target/EarlyWarning.jar .
+
 package:
 	mvn package
 	mvn javadoc:javadoc

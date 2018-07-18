@@ -14,8 +14,7 @@ import java.util.List;
  * @author Thomas Kowalski
  */
 public class Tester {
-    public static void run(List<String> callList, String code, String warningMessage) throws Exception
-    {
+    public static void run(List<String> callList, String code, String warningMessage) throws Exception {
         // Start the AGI server.
         // It will handle the AGI request from Asterisk and will tell it what to do
         // What is great for us is that at the same time, it will communicate with the CallOriginator

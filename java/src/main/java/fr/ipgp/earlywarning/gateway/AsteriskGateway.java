@@ -3,9 +3,9 @@ package fr.ipgp.earlywarning.gateway;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.asterisk.CallOriginator;
 import fr.ipgp.earlywarning.asterisk.LocalAgiServer;
-import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.contacts.Contact;
 import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
@@ -24,30 +24,27 @@ import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.Initial;
  * @author Thomas Kowalski
  */
 public class AsteriskGateway implements Gateway {
+    private static AsteriskGateway uniqueInstance;
     /**
      * The {@link LocalAgiServer} to use to execute the {@link fr.ipgp.earlywarning.asterisk.AlertCallScript}
      */
-    LocalAgiServer server;
-
+    private final LocalAgiServer server;
     /**
      * The AMI host
      */
-    private String host;
-
+    private final String host;
     /**
      * The AMI port
      */
-    private int port;
-
+    private final int port;
     /**
      * The AMI username
      */
-    private String username;
-
+    private final String username;
     /**
      * The AMI password
      */
-    private String password;
+    private final String password;
 
     /**
      * Valued constructor with the necessary parameters to use an {@link AsteriskGateway}, which are the AMI information and credentials
@@ -65,8 +62,6 @@ public class AsteriskGateway implements Gateway {
 
         server = new LocalAgiServer();
     }
-
-    private static AsteriskGateway uniqueInstance;
 
     /**
      * @param host     the AMI host
@@ -86,7 +81,7 @@ public class AsteriskGateway implements Gateway {
      *
      * @return a new {@link ManagerConnection} that uses the local <code>host, port, username, password</code>
      */
-    ManagerConnection buildManagerConnection() {
+    private ManagerConnection buildManagerConnection() {
         ManagerConnectionFactory factory = new ManagerConnectionFactory(host, port, username, password);
         return factory.createManagerConnection();
     }
@@ -110,8 +105,7 @@ public class AsteriskGateway implements Gateway {
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
-                if (retries >= numbers.size())
-                {
+                if (retries >= numbers.size()) {
                     EarlyWarning.appLogger.error("Couldn't originate call after " + retries + " retries. Using failover system.");
                     return CallLoopResult.Error;
                 }
@@ -152,11 +146,11 @@ public class AsteriskGateway implements Gateway {
      * @param warningMessageFile the warning message file to play
      * @param confirmCode        the confirmation code to use
      */
-    public void callTillConfirm(ContactList list, String warningMessageFile, String confirmCode) {
+    private void callTillConfirm(ContactList list, String warningMessageFile, String confirmCode) {
         List<Contact> contacts = list.getCallList();
 
         List<String> numbers = new ArrayList<>();
-        for (Contact c: contacts)
+        for (Contact c : contacts)
             numbers.add(c.phone);
 
         callTillConfirm(numbers, warningMessageFile, confirmCode);

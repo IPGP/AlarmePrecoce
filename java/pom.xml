@@ -9,6 +9,9 @@
     <version>2.0.3</version>
     <packaging>jar</packaging>
     <name>OVPF Early Warning</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <repositories>
         <repository>
@@ -45,15 +48,10 @@
                 <configuration>
                     <forkCount>0</forkCount>
                     <testFailureIgnore>true</testFailureIgnore>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>/home/kowalski/Takamaka/Alarme/java/target/classes/
-                        </additionalClasspathElement>
-                    </additionalClasspathElements>
                     <argLine>-Xmx1024m</argLine>
                     <skipTests>false</skipTests>
                 </configuration>
                 <dependencies>
-                    <!-- Force using the latest JUnit 47 provider -->
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>
                         <artifactId>surefire-junit47</artifactId>

@@ -40,33 +40,37 @@ import static fr.ipgp.charon.CharonI.CharonCode.*;
  * @author Thomas Kowalski
  */
 public class CharonI {
+    private final int[] ledsArray = {0, 0, 0, 0, 0, 0, 0, 0};
+    private final int ledNumber = ledsArray.length;
     private int id;
     private String ip;
     private int tcpPort;
     private int tcpTimeout;
-    private final int[] ledsArray = {0, 0, 0, 0, 0, 0, 0, 0};
-    private final int ledNumber = ledsArray.length;
 
     /**
-     * Codes used to communicate with the Charon I module
+     * Constructor
+     *
+     * @param ip         Charon module's IP
+     * @param tcpPort    Charon module's TCP port
+     * @param tcpTimeout The TCP timeout to use
      */
-    public enum CharonCode {
-        IAC(0xFF),
-        BEGIN(0xFA),
-        END(0xF0),
-        COM_PORT_OPTION(0x2C),
-        GET_GPIO(0x32),
-        SET_GPIO(0x33);
+    public CharonI(String ip, int tcpPort, int tcpTimeout) {
+        this(0, ip, tcpPort, tcpTimeout);
+    }
 
-        private final int ord;
-
-        CharonCode(int ord) {
-            this.ord = ord;
-        }
-
-        int getOrd() {
-            return this.ord;
-        }
+    /**
+     * Constructor
+     *
+     * @param id         Charon module's ID
+     * @param ip         Charon module's IP
+     * @param tcpPort    Charon module's TCP port
+     * @param tcpTimeout The TCP timeout to use
+     */
+    public CharonI(int id, String ip, int tcpPort, int tcpTimeout) {
+        this.id = id;
+        this.ip = ip;
+        this.tcpPort = tcpPort;
+        this.tcpTimeout = tcpTimeout;
     }
 
     /**
@@ -99,6 +103,7 @@ public class CharonI {
      * @param LED     the parameter for the command
      * @return the datagram to send
      */
+    @SuppressWarnings("SameParameterValue")
     private String getCommand(CharonCode command, int LED) {
         try {
             return getCommand(command, getHex(LED));
@@ -140,38 +145,13 @@ public class CharonI {
      * @param LED the LED to get
      * @return the datagram to send
      */
+    @SuppressWarnings("SameParameterValue")
     private String getGetLEDCommand(int LED) {
         return getCommand(GET_GPIO, LED);
     }
 
     private String getSetLEDCommand(String LED) throws InvalidLedStateException {
         return getCommand(SET_GPIO, LED);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param ip         Charon module's IP
-     * @param tcpPort    Charon module's TCP port
-     * @param tcpTimeout The TCP timeout to use
-     */
-    public CharonI(String ip, int tcpPort, int tcpTimeout) {
-        this(0, ip, tcpPort, tcpTimeout);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param id         Charon module's ID
-     * @param ip         Charon module's IP
-     * @param tcpPort    Charon module's TCP port
-     * @param tcpTimeout The TCP timeout to use
-     */
-    public CharonI(int id, String ip, int tcpPort, int tcpTimeout) {
-        this.id = id;
-        this.ip = ip;
-        this.tcpPort = tcpPort;
-        this.tcpTimeout = tcpTimeout;
     }
 
     /**
@@ -274,6 +254,19 @@ public class CharonI {
         return "CharonI " + ip + ":" + tcpPort + " : " + ledStatesToString();
     }
 
+    /**
+     * Returns the current LED state in the form of a "byte String"
+     *
+     * @return a byte in the form of a String representing the LED states
+     */
+    public String ledStatesToString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < ledNumber; i++)
+            s.append(ledsArray[i]);
+
+        return s.toString();
+    }
+
 //    /**
 //     * Updates the LED state using the provided String. <br />
 //     * <b>Example :</b> <code>setLedState("01001100");</code><br />
@@ -305,19 +298,6 @@ public class CharonI {
 //        } else
 //            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
 //    }
-
-    /**
-     * Returns the current LED state in the form of a "byte String"
-     *
-     * @return a byte in the form of a String representing the LED states
-     */
-    public String ledStatesToString() {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < ledNumber; i++)
-            s.append(ledsArray[i]);
-
-        return s.toString();
-    }
 
     /**
      * Refreshes the current LED states (in the <code>ledsArray</code>)
@@ -423,5 +403,27 @@ public class CharonI {
 
         socket_module.close();
         refreshLedState();
+    }
+
+    /**
+     * Codes used to communicate with the Charon I module
+     */
+    public enum CharonCode {
+        IAC(0xFF),
+        BEGIN(0xFA),
+        END(0xF0),
+        COM_PORT_OPTION(0x2C),
+        GET_GPIO(0x32),
+        SET_GPIO(0x33);
+
+        private final int ord;
+
+        CharonCode(int ord) {
+            this.ord = ord;
+        }
+
+        int getOrd() {
+            return this.ord;
+        }
     }
 }

@@ -30,9 +30,9 @@ public class EarlyWarningThread extends Thread {
     protected DatagramSocket socket = null;
     protected DatagramPacket packet = null;
     protected boolean moreTriggers = true;
-    protected byte[] buffer = new byte[512];
-    protected int port;
-    protected boolean triggerOnError;
+    protected final byte[] buffer = new byte[512];
+    protected final int port;
+    protected final boolean triggerOnError;
     private QueueManagerThread queueManagerThread;
     private boolean defaultRepeat = true;
     private String defaultConfirmCode = null;

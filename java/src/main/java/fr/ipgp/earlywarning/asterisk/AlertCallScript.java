@@ -23,7 +23,7 @@ import org.asteriskjava.fastagi.*;
  *
  * @author Thomas Kowalski
  */
-public class AlertCallScript extends BaseAgiScript {
+class AlertCallScript extends BaseAgiScript {
     private static OnCodeReceivedListener onCodeReceivedListener;
     private static OnHangupListener onHangupListener;
     private static OnConnectedListener onConnectedListener;

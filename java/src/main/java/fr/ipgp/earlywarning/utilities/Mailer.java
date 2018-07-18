@@ -83,7 +83,7 @@ public class Mailer {
         Transport transport = session.getTransport("smtp");
         transport.connect(username, password);
         System.out.println(addresses.toString());
-        for (InternetAddress address: addresses) {
+        for (InternetAddress address : addresses) {
             System.out.println("Sending mail to " + address);
             transport.sendMessage(message, new InternetAddress[]{address});
         }

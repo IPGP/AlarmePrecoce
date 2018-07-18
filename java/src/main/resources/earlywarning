@@ -1,16 +1,24 @@
 #! /bin/sh
 
+# The file where the logs should be written
+LOGFILE="/var/log/earlywarning.log"
+
+# The user that should execute the app (sysop, probably)
+ALARMEPRECOCE_USER=root
+
+# The installation path of the application (directory containing the JAR)
+ALARMEPRECOCE_HOME=/root/thomas/Alarme/java/target/
+
+######################
+# STOP EDITING HERE  #
+######################
+
 PATH=$PATH:/usr/sbin:/usr/bin:/sbin:/bin
 DESC="EarlyWarning main app"
 NAME=earlywarningd
-SCRIPTNAME=/etc/init.d/$NAME
+# SCRIPTNAME=/etc/init.d/$NAME
 SCRIPTNAME="$( cd "$(dirname "$0")" ; pwd -P )/$(basename $0)"
 
-LOGFILE="/var/log/earlywarning.log"
-
-## Replace these with the values for your installation
-ALARMEPRECOCE_USER=root
-ALARMEPRECOCE_HOME=/root/thomas/Alarme/java/target/
 
 case "$1" in
   start)

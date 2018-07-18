@@ -1,7 +1,3 @@
-/**
- * Created June 6, 2016 12:39:01 PM
- * Copyright 2016 Observatoire volcanologique du Piton de La Fournaise / IPGP.
- */
 package fr.ipgp.earlywarning.gateway;
 
 import fr.ipgp.charon.CharonI;
@@ -20,15 +16,22 @@ import java.io.IOException;
  */
 public class CharonGateway implements Gateway {
 
-    private static CharonGateway uniqueInstance;
-    private CharonI charon;
-
     private final static int triggeringLed = 7;
+    private static CharonGateway uniqueInstance;
+    private final CharonI charon;
 
     private CharonGateway(String moduleIP, int modulePort, int tcpTimeout) {
         charon = new CharonI(moduleIP, modulePort, tcpTimeout);
     }
 
+    /**
+     * Returns the {@link CharonGateway}'s unique instance.
+     *
+     * @param moduleIP   the Charon I module's IP
+     * @param modulePort the Charon I module's TCP port
+     * @param tcpTimeout the TCP timeout to use
+     * @return the singleton's unique instance
+     */
     public static synchronized CharonGateway getInstance(String moduleIP, int modulePort, int tcpTimeout) {
         if (uniqueInstance == null) {
             uniqueInstance = new CharonGateway(moduleIP, modulePort, tcpTimeout);
@@ -36,20 +39,36 @@ public class CharonGateway implements Gateway {
         return uniqueInstance;
     }
 
+    /**
+     * Calls the duty phone until the operator acknowledges the message.
+     *
+     * @param trigger that triggered the call
+     * @return always {@link CallLoopResult}<code>.Confirmed</code> (it cannot fail)
+     */
     public CallLoopResult callTillConfirm(Trigger trigger) {
-        EarlyWarning.appLogger.info("CharonGateway: calling.");
-        String phoneToCall = trigger.getContactList().getCallList().get(0).phone;
-        callTillConfirm(phoneToCall);
-        return null;
+        EarlyWarning.appLogger.info("CharonGateway: calling duty phone.");
+        return callTillConfirm();
     }
 
-    public void callTillConfirm(String phone) {
-        call(triggeringLed);
+    /**
+     * Calls the duty phone until the operator acknowledges the message.
+     */
+    private CallLoopResult callTillConfirm() {
+        if (call(triggeringLed))
+            return CallLoopResult.Confirmed;
+        else
+            return CallLoopResult.Error;
     }
 
+    /**
+     * Calls the duty phone until the operator confirms his / her code.
+     *
+     * @param number as described by the interface, the phone number to call (<b>though it will not be called by this gateway.</b>
+     */
     @Override
     public void callTest(String number) {
-        callTillConfirm(number);
+        EarlyWarning.appLogger.warn("CharonGateway can't call a specified number. Calling duty phone.");
+        callTillConfirm();
     }
 
     @Override
@@ -57,7 +76,28 @@ public class CharonGateway implements Gateway {
         return "charon";
     }
 
-    public boolean call(int triggeringLed) {
+    /**
+     * Verify that the Charon I module is reachable by refreshing the LED states.
+     *
+     * @return <code>true</code> if the module is reachable, <code>false</code> otherwise
+     */
+    public boolean checkConnected() {
+        try {
+            charon.refreshLedState();
+        } catch (IOException | InvalidResponseException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Use the {@link CharonI} class in order to emit a call.
+     *
+     * @param triggeringLed the LED triggering the call (which will determine what is said)
+     * @return whether or not the call was emitted
+     */
+    private boolean call(int triggeringLed) {
         try {
             // Get latest LED state (for debugging purposes)
             charon.refreshLedState();
