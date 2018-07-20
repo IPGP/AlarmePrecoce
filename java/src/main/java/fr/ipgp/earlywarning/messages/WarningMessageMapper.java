@@ -5,10 +5,11 @@ import fr.ipgp.earlywarning.gateway.Gateway;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
+
+import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 
 /**
- * An utility that allows to map, for a given <code>Gateway</code> warning message names to file names to play.
+ * An utility that allows to map, for a given {@link Gateway} warning message names to file names to play.
  *
  * @author Thomas Kowalski
  * // TODO: add Javadoc for class
@@ -24,12 +25,16 @@ public class WarningMessageMapper {
         gatewayQualifier = qualifier;
 
         // Try and fetch the default warning message from the configuration
-        try {
-            String defaultWarning = EarlyWarning.configuration.getString("sounds.default." + gatewayQualifier);
-            mappings.put("default", defaultWarning);
-        } catch (NoSuchElementException ex) {
-            throw new NoSuchMessageException("Default message doesn't exist for gateway '" + gatewayQualifier + "' (should be 'sounds.default." + gatewayQualifier + "')");
-        }
+        String defaultWarning = null;
+
+        for (Map<String, String> soundEntry : getItems("sounds.sound"))
+            if (soundEntry.get("id").equalsIgnoreCase("default"))
+                defaultWarning = soundEntry.get(qualifier);
+
+        if (defaultWarning == null)
+            throw new NoSuchMessageException("Default message doesn't exist for gateway '" + gatewayQualifier + "' in configuration.");
+
+        mappings.put("default", defaultWarning);
     }
 
     private static void initMappers() {
@@ -65,13 +70,17 @@ public class WarningMessageMapper {
         if (mappings.containsKey(id))
             return mappings.get(id);
 
-        try {
-            String name = EarlyWarning.configuration.getString("sounds." + id + "." + gatewayQualifier);
-            mappings.put(id, name);
-            return name;
-        } catch (NoSuchElementException ex) {
-            throw new NoSuchMessageException(id);
+        String name = null;
+        for (Map<String, String> soundEntry : getItems("sounds.sound")) {
+            if (soundEntry.get("id").equals(id))
+                name = soundEntry.get(gatewayQualifier);
         }
+
+        if (name == null)
+            throw new NoSuchMessageException(id);
+
+        mappings.put(id, name);
+        return name;
     }
 
     @SuppressWarnings("WeakerAccess")

@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <earlywarning>
     <sounds>
-        <welcome>
+        <sound>
+            <id>welcome</id>
             <configured>accueil</configured>
-            <unconfigured>some_sound</unconfigured>
-        </welcome>
-        <login>
+            <unconfigured>welcome.wav</unconfigured>
+        </sound>
+        <sound>
+            <id>login</id>
             <configured>demandecode</configured>
-        </login>
-        <default>
+        </sound>
+        <sound>
+            <id>default</id>
             <configured>hello-world</configured>
-        </default>
-        <test_tone>
+        </sound>
+        <sound>
+            <id>test_tone</id>
             <configured>ascending-2tone</configured>
-        </test_tone>
-        <sismicite>
+        </sound>
+        <sound>
+            <id>sismicite</id>
             <configured>sismicite</configured>
-        </sismicite>
+        </sound>
+        <sound>
+            <id>rsam</id>
+            <configured>rsam</configured>
+        </sound>
     </sounds>
 </earlywarning>

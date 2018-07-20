@@ -23,8 +23,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.9" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-configuration:commons-configuration:1.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils-core:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-configuration:commons-configuration:1.10" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2" level="project" />
     <orderEntry type="library" name="Maven: commons-digester:commons-digester:1.8" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.7.0" level="project" />

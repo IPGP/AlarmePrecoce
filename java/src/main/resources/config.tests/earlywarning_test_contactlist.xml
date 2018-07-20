@@ -4,8 +4,14 @@
         <home>resources/www/</home>
         <port>6001</port>
         <lists>
-            <tech>resources/contacts/tech.json</tech>
-            <default>resources/contacts/default.json</default>
+            <list>
+                <id>tech</id>
+                <path>resources/contacts/tech.json</path>
+            </list>
+            <list>
+                <id>default</id>
+                <path>resources/contacts/default.json</path>
+            </list>
         </lists>
     </contacts>
 </earlywarning>

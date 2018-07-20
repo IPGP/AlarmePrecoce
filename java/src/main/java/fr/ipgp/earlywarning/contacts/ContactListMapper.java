@@ -5,6 +5,8 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import java.io.IOException;
 import java.util.*;
 
+import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
+
 /**
  * An utility that allows to map names to {@link ContactList} instances.
  *
@@ -27,14 +29,19 @@ public class ContactListMapper {
     private ContactListMapper() throws NoSuchListException, IOException, ContactListBuilder.UnimplementedContactListTypeException {
         mappings = new HashMap<>();
 
-        String defaultFileName = "";
+        String defaultFileName = null;
+
+        for (Map<String, String> listEntry : getItems("contacts.lists.list"))
+            if (listEntry.get("id").equalsIgnoreCase("default"))
+                defaultFileName = listEntry.get("path");
+
+
+        if (defaultFileName == null)
+            throw new NoSuchListException("Default list is unavailable.");
+
         try {
-            defaultFileName = EarlyWarning.configuration.getString("contacts.lists.default");
-            ContactList defaultContactList;
-            defaultContactList = ContactListBuilder.build(defaultFileName);
+            ContactList defaultContactList = ContactListBuilder.build(defaultFileName);
             mappings.put("default", defaultContactList);
-        } catch (NoSuchElementException ex) {
-            throw new NoSuchListException("Default list is not available ('contacts.lists.default' configuration entry).");
         } catch (ContactListBuilder.UnimplementedContactListTypeException e) {
             throw new ContactListBuilder.UnimplementedContactListTypeException("Default list has an invalid extension (" + defaultFileName + ")");
         }

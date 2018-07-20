@@ -59,6 +59,12 @@ public class Mailer {
         return uniqueInstance;
     }
 
+    public void testAuthentication() throws MessagingException {
+        Session session = Session.getDefaultInstance(properties, null);
+        Transport transport = session.getTransport("smtp");
+        transport.connect(username, password);
+    }
+
     public void sendNotificationAuth(String to, String subject, String body) throws MessagingException {
         Session session = Session.getDefaultInstance(properties, null);
         MimeMessage message = new MimeMessage(session);

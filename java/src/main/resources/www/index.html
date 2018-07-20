@@ -98,7 +98,22 @@
 
         .listElement-name {
             margin-left: 10px;
+            flex-grow: 0;
+        }
+
+        .listElement-phone {
+            margin-left: 8px;
             flex-grow: 1;
+            font-size: 0.8em;
+            vertical-align: bottom;
+        }
+
+        .listElement-phone::before {
+            content: "(";
+        }
+
+        .listElement-phone::after {
+            content: ")";
         }
 
         .remove-action {
@@ -236,18 +251,18 @@
             return name;
     }
 
-    function sendListsToServer() {
+    function sendListsToServer(reload) {
         console.log("Sending list.");
         var enabled = [];
         var available = [];
 
         Array.from(listEnabled.getElementsByTagName("li")).forEach(function (li) {
-            enabled.push(li.textContent.replace("✖", "").trim());
+            enabled.push(li.firstChild.textContent.trim());
         });
 
         Array.from(listAvailable.getElementsByTagName("li")).forEach(function (li) {
             if (li.textContent !== "Aucun")
-                available.push(li.textContent.replace("✖", "").trim());
+                available.push(li.firstChild.textContent.trim());
         });
 
         var result = {
@@ -262,6 +277,8 @@
                 var result = JSON.parse(this.responseText);
                 if (result["status"] !== "success")
                     alert("Une erreur est survenue lors de l'enregistrement.");
+                else if (reload)
+                    location.reload();
             }
         };
 
@@ -273,6 +290,11 @@
     // noinspection JSUnusedLocalSymbols
     function calllistAvailable_onAdd(evt) {
         console.error("This should not be called.");
+    }
+
+    function callListEnabled_onRemove(evt)
+    {
+        alert("coucou");
     }
 
     function rearrangeListEnabled(evt) {
@@ -318,6 +340,22 @@
 
         if (fieldName.value === "" || fieldPhone.value === "")
             return false;
+
+        var phone = fieldPhone.value;
+        if (phone.length < 10)
+        {
+            console.error("Given phone number is too short (" + phone.length + " < 10)");
+            alert("Le format du numéro de téléphone est invalide (mauvais nombre de caractères).");
+            return false;
+        }
+
+        for (var i = 0; i < phone.length; i++) {
+            if (isNaN(parseInt(phone.charAt(i)))) {
+                console.error("Cannot convert character '" + phone.charAt(i) + "' to an Integer.");
+                alert("Le format du numéro de téléphone est invalide (pas un numéro).");
+                return false;
+            };
+        }
 
         var data = {
             "name": fieldName.value,
@@ -375,7 +413,6 @@
         animation: 150,
         onAdd: callListEnabled_onAdd,
         onEnd: callListEnabled_onEnd,
-        filter: '.remove-action',
         onFilter: function (evt) {
             if (listEnabled.childElementCount === 1) {
                 alert("Vous ne pouvez pas supprimer toutes les personnes à appeler.");
@@ -400,7 +437,7 @@
 
             // Verify that we have at least one contact
             if (listAvailable.childElementCount === 1) {
-                alert("Vous ne pouvez pas supprimer toutes les personnes de l'agenda.");
+                alert("Vous ne pouvez pas supprimer toutes les personnes de l'annuaire.");
                 return;
             }
 
@@ -425,7 +462,7 @@
             });
 
             el && el.parentNode.removeChild(el);
-            sendListsToServer();
+            sendListsToServer(true);
         },
         animation: 150,
         onEnd: calllistAvailable_onEnd,
@@ -474,6 +511,10 @@
         span.className = "listElement-name";
         span.innerText = person.name;
 
+        var phoneSpan = document.createElement("span");
+        phoneSpan.className = "listElement-phone";
+        phoneSpan.innerText = person.phone;
+
         // The remove link
         var filter = document.createElement("i");
         filter.className = "remove-action";
@@ -483,6 +524,7 @@
             li.className += " priority";
 
         li.appendChild(span);
+        li.appendChild(phoneSpan);
         li.appendChild(filter);
 
         return li;

@@ -253,6 +253,7 @@ public class QueueManagerThread extends Thread {
             }
 
         // Verify that the default ContactList is available
+        // None of the exceptions should occur since they are checked by the configuration validator
         try {
             ContactListMapper.testDefaultList();
         } catch (NoSuchListException ex) {

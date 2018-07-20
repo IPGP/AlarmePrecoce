@@ -8,9 +8,11 @@ import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 
 import static commons.TestCommons.setUpEnvironment;
+import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
 public class TestContactListUtils {
@@ -36,7 +38,13 @@ public class TestContactListUtils {
 
         ContactListMapper.testDefaultList();
 
-        defaultContactListFile = EarlyWarning.configuration.getString("contacts.lists.default");
+        defaultContactListFile = null;
+        for(Map<String, String> contactListEntry : getItems("contacts.lists.list"))
+            if (contactListEntry.get("id").equals("default"))
+                defaultContactListFile = contactListEntry.get("path");
+
+        if (defaultContactListFile == null)
+            throw new NoSuchListException("No default list given.");
     }
 
     @AfterClass

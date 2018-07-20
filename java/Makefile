@@ -34,8 +34,7 @@ lpackage:
 	mkdir target
 	mv EarlyWarning.jar target
 
-hpackage:
-	lpackage
+hpackage: lpackage
 	mv target/EarlyWarning.jar .
 
 package:

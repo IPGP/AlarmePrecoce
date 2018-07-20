@@ -23,13 +23,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
+import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
+
 /**
  * Entry point for the application<br/>
- * First start the logger (Log4J)<br/>
- * Then, it checks its own uniqueness.<br/>
- * Reads the configuration file and then create the EarlyWarningThread.<br/>
- * If the configuration file specifies it, it starts the DataBaseHeartBeatThread.<br/>
- * Last, it creates the GUI
+ * - Starts the logger (Log4J)<br/>
+ * - Validates the configuration file<br />
+ * - Checks its own uniqueness.<br/>
+ * - Starts the call list Web interface server<br />
+ * - Reads the configuration file and then create the {@link EarlyWarningThread}.<br/>
+ * - If the configuration file specifies it, starts the {@link DataBaseHeartBeatThread}.<br/>
+ * - Creates the GUI, if possible.
  *
  * @author Patrice Boissier
  */
@@ -181,18 +185,6 @@ public class EarlyWarning {
         }
 
         return options;
-    }
-
-    private static String getWorkingDirectory() {
-        return System.getProperty("user.dir");
-    }
-
-    private static String buildPath(String relativePath) {
-        try {
-            return new File(getWorkingDirectory() + relativePath).getCanonicalPath();
-        } catch (IOException e) {
-            return getWorkingDirectory() + "/" + relativePath;
-        }
     }
 
     /**

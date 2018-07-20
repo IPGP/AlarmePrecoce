@@ -5,12 +5,16 @@ import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
 import org.apache.commons.configuration.ConversionException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.asteriskjava.manager.AuthenticationFailedException;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
 import org.asteriskjava.manager.TimeoutException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -69,6 +73,8 @@ public class ConfigurationValidator {
             validateContactsServer();
             validateSounds();
             validateGatewaySettings();
+            validateMail();
+            validateTriggers();
         } catch (ValidationException ex) {
             switch (onError) {
                 case Exit:
@@ -82,7 +88,142 @@ public class ConfigurationValidator {
                     break;
             }
         }
+
         EarlyWarning.appLogger.info("Configuration validation finished.");
+    }
+
+    private void validateTriggers() throws ValidationException {
+        boolean triggersForErrors;
+        try {
+            triggersForErrors = configuration.getBoolean("triggers.create_trigger_on_errors");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("triggers.create_trigger_on_errors", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("triggers.create_trigger_on_errors", "Value '" + configuration.getString("triggers.create_trigger_on_errors") + "' cannot be converted to a boolean.");
+        }
+
+        int defaultPriority;
+        try {
+            defaultPriority = configuration.getInt("triggers.defaults.priority");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("triggers.defaults.priority", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("triggers.defaults.priority", "Value '" + configuration.getString("triggers.defaults.priority") + "' cannot be converted to an integer.");
+        }
+
+        if (defaultPriority < 1 || defaultPriority > 10)
+            throw new ValidationException("triggers.defaults.priority", "Priority should be between 1 and 10");
+
+        int defaultConfirmCode;
+        String _defaultConfirmCode = null;
+        try {
+            _defaultConfirmCode = configuration.getString("triggers.defaults.confirm_code");
+            defaultConfirmCode = configuration.getInt("triggers.defaults.confirm_code");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("triggers.defaults.confirm_code", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("triggers.defaults.confirm_code", "Value '" + _defaultConfirmCode + "' cannot be converted to an integer.");
+        }
+
+        if (_defaultConfirmCode.length() > 4)
+            EarlyWarning.appLogger.warn("Default confirm code '" + _defaultConfirmCode + "' is longer thaan four digits.");
+
+        boolean defaultRepeat;
+        try {
+            defaultRepeat = configuration.getBoolean("triggers.defaults.repeat");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("triggers.defaults.repeat", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("triggers.defaults.repeat", "Value '" + configuration.getString("triggers.defaults.repeat") + "' cannot be converted to a boolean.");
+        }
+    }
+
+    /**
+     * Validates the e-mailing settings.
+     *
+     * @throws ValidationException
+     */
+    private void validateMail() throws ValidationException {
+        String _useMail = configuration.getString("mail.use_mail");
+        boolean useMail;
+        if (_useMail.equalsIgnoreCase("true"))
+            useMail = true;
+        else if (_useMail.equalsIgnoreCase("false"))
+            useMail = false;
+        else {
+            useMail = false;
+            EarlyWarning.appLogger.warn("E-mail status (active / inactive) is not a boolean: '" + _useMail + "', defaulting to false.");
+        }
+
+        // Don't validate e-mail settings if they are not in used
+        if (!useMail)
+            return;
+
+        boolean useSsl;
+        try {
+            useSsl = configuration.getBoolean("mail.smtp.use_ssl");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("mail.smtp.use_ssl", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("mail.smtp.use_ssl", "Value cannot be converted to a boolean.");
+        }
+
+        String[] fields = new String[]{"host", "username", "password"};
+
+        for (String field : fields) {
+            String value;
+            try {
+                value = configuration.getString("mail.smtp." + field);
+            } catch (NoSuchElementException ex) {
+                throw new ValidationException("mail.smtp." + field, "Key does not exist.");
+            }
+        }
+
+        String host = configuration.getString("mail.smtp.host");
+        String username = configuration.getString("mail.smtp.username");
+        String password = configuration.getString("mail.smtp.password");
+
+        String _from = "";
+        try {
+            _from = configuration.getString("mail.smtp.from");
+            InternetAddress from = new InternetAddress(_from);
+            from.validate();
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("mail.smtp.from", "Key does not exist.");
+        } catch (AddressException e) {
+            throw new ValidationException("mail.smtp.from", "Value '" + _from + "' cannot be converted to an e-mail address.");
+        }
+
+        int port;
+        try {
+            port = configuration.getInt("mail.smtp.port");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("mail.smtp.port", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("mail.smtp.port", "Value cannot be converted to an Integer.");
+        }
+
+        List<HierarchicalConfiguration> emailEntries = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
+
+        if (emailEntries.size() == 0)
+            throw new ValidationException("mail.smtp.mailinglist", "E-mailing is enabled but the mailing list is empty.");
+
+        for (HierarchicalConfiguration sub : emailEntries) {
+            String mail = sub.getString("email");
+            try {
+                InternetAddress internetAddress = new InternetAddress(mail);
+                internetAddress.validate();
+            } catch (AddressException ex) {
+                throw new ValidationException("mail.smtp.mailinglist", "Value '" + mail + "' cannot be converted to an e-mail address.");
+            }
+        }
+
+        try {
+            Mailer.getInstance(host, _from, username, password, String.valueOf(port), useSsl).testAuthentication();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new ValidationException("mail.smtp", "SMTP credentials are incorrect or another SMTP-related authentication exception occurred. Please check stacktrace for details..");
+        }
     }
 
     /**
@@ -258,18 +399,29 @@ public class ConfigurationValidator {
             throw new ValidationException("contacts.port", "Not an integer");
         }
 
-        String defaultPath;
+        String defaultPath = null;
         try {
-            defaultPath = configuration.getString("contacts.lists.default");
+            List<Map<String, String>> contactLists = getItems("contacts.lists.list");
+            for (Map<String, String> contactList : contactLists) {
+                if (contactList.get("id").equalsIgnoreCase("default")) {
+                    defaultPath = contactList.get("path");
+                    break;
+                }
+            }
+
+            if (defaultPath == null)
+                throw new ValidationException("contacts.lists.list.default", "No default contact list configured.");
+
             ContactList list = ContactListBuilder.build(defaultPath);
             if (list.getEnabledContacts().isEmpty())
                 EarlyWarning.appLogger.warn("Your default contact list ('" + defaultPath + "') currently does not have anyone on the call list. You should fix this or no call will be emitted.");
+
         } catch (NoSuchElementException ex) {
-            throw new ValidationException("contacts.lists.default", "Key does not exist.");
+            throw new ValidationException("contacts.lists.list", "No call list configured.");
         } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
-            throw new ValidationException("contacts.lists.default", "Unsupported file format for default list.");
+            throw new ValidationException("contacts.lists.list.default", "Unsupported file format for default list.");
         } catch (IOException ex) {
-            throw new ValidationException("contacts.lists.default", "File cannot be read or written.");
+            throw new ValidationException("contacts.lists.list.default", "File cannot be read or written.");
         }
     }
 
@@ -279,8 +431,7 @@ public class ConfigurationValidator {
      * @param prefix the prefix to use
      * @return a list of <code>String</code>
      */
-    @SuppressWarnings("unchecked")
-    private List<String> getEntries(String prefix) {
+    public static List<String> getEntries(XMLConfiguration configuration, String prefix) {
         List<String> result = new ArrayList<>();
         for (Iterator<String> it = configuration.getKeys(prefix); it.hasNext(); )
             result.add(it.next());
@@ -288,15 +439,19 @@ public class ConfigurationValidator {
         return result;
     }
 
-    /**
-     * Finds the number of occurrences of a character in a <code>String</code>
-     *
-     * @param s the <code>String</code> to search
-     * @param c the character to count
-     * @return the number of occurrences of <code>c</code> in <code>s</code>
-     */
+    private List<String> getEntries(String prefix) {
+        return getEntries(configuration, prefix);
+    }
+
+        /**
+         * Finds the number of occurrences of a character in a <code>String</code>
+         *
+         * @param s the <code>String</code> to search
+         * @param c the character to count
+         * @return the number of occurrences of <code>c</code> in <code>s</code>
+         */
     @SuppressWarnings("SameParameterValue")
-    private int occurrences(String s, char c) {
+    public static int occurrences(String s, char c) {
         int count = 0;
         for (char c2 : s.toCharArray())
             if (c2 == c)
@@ -310,8 +465,8 @@ public class ConfigurationValidator {
      * @param prefix the prefix to find entries for
      * @return the direct children of the node corresponding to <code>prefix</code>
      */
-    private Set<String> getTopLevelEntries(String prefix) {
-        List<String> all = getEntries(prefix);
+    public static Set<String> getTopLevelEntries(XMLConfiguration configuration, String prefix) {
+        List<String> all = getEntries(configuration, prefix);
         Set<String> result = new HashSet<>();
         for (String entry : all) {
             String[] split = entry.split("\\.");
@@ -320,20 +475,45 @@ public class ConfigurationValidator {
         return result;
     }
 
+    private Set<String> getTopLevelEntries(String prefix)
+    {
+        return getTopLevelEntries(configuration, prefix);
+    }
+
+    public static List<Map<String, String>> getItems(String at) {
+        List<Map<String, String>> items = new ArrayList<>();
+
+        List<HierarchicalConfiguration> entries = EarlyWarning.configuration.configurationsAt(at);
+        for (HierarchicalConfiguration entry : entries) {
+            Map<String, String> m = new HashMap<>();
+
+            for (Iterator<String> it = entry.getKeys(); it.hasNext(); ) {
+                String key = it.next();
+                m.put(key, entry.getString(key));
+            }
+
+            items.add(m);
+        }
+
+        return items;
+    }
+
     /**
      * Validates the sounds configuration. <br />
-     * This method cannot cause a <code>ValidationException</code> but only warn if a gateway has incomplete mappings.
+     * This method cannot cause a {@link ValidationException} but only warn if a gateway has incomplete mappings.
      */
-    @SuppressWarnings("unchecked")
     private void validateSounds() {
-        Set<String> soundNames = new HashSet<>(getTopLevelEntries("sounds"));
         Set<String> gateways = new HashSet<>();
+        Set<String> soundNames = new HashSet<>();
         Map<String, Set<String>> availableGateways = new HashMap<>();
+        List<Map<String, String>> sounds = getItems("sounds.sound");
 
-        for (String sound : soundNames) {
+        for (Map<String, String> soundEntry : sounds) {
+            String sound = soundEntry.get("id");
+            soundNames.add(sound);
             availableGateways.put(sound, new HashSet<String>());
 
-            for (String gateway : getTopLevelEntries("sounds." + sound + "")) {
+            for (String gateway : soundEntry.keySet()) {
                 gateways.add(gateway);
                 availableGateways.get(sound).add(gateway);
             }

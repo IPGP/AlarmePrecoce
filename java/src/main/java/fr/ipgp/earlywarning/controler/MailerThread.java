@@ -8,13 +8,11 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.utilities.Mailer;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -88,20 +86,16 @@ public class MailerThread extends Thread {
         smtpPort = EarlyWarning.configuration.getString("mail.smtp.port");
         useSSL = EarlyWarning.configuration.getBoolean("mail.smtp.use_ssl");
 
-        // TODO: update Apache Commons Configuration lib. It should resolve this warning.
-        @SuppressWarnings("unchecked")
-        List<XMLConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
+        List<HierarchicalConfiguration> fields = EarlyWarning.configuration.configurationsAt("mail.mailinglist.contact");
         List<InternetAddress> mails = new ArrayList<>();
-        //noinspection ForLoopReplaceableByForEach
-        for (Iterator<XMLConfiguration> it = fields.iterator(); it.hasNext(); ) {
-            HierarchicalConfiguration sub = it.next();
+        for (HierarchicalConfiguration sub : fields) {
             String mail = sub.getString("email");
             try {
                 InternetAddress internetAddress = new InternetAddress(mail);
                 internetAddress.validate();
                 mails.add(internetAddress);
-            } catch (AddressException ex) {
-                EarlyWarning.appLogger.error("Invalid E-mail address in configuration file: " + mail + " check mail.mailinglist section of earlywarning.xml configuration file. Address not added to the notification system.");
+            } catch (AddressException ignored) {
+                // Emails validity has already been checked at launch
             }
         }
         if (mails.size() == 0) {
