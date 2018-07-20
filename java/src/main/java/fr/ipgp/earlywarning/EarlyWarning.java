@@ -39,8 +39,8 @@ import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
  */
 public class EarlyWarning {
 
-    public static XMLConfiguration configuration;
     public static final Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
+    public static XMLConfiguration configuration;
 
     /**
      * The EarlyWarning application entry point.

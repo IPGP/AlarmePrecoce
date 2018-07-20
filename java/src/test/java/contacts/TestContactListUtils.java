@@ -15,6 +15,12 @@ import static commons.TestCommons.setUpEnvironment;
 import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
+
+/**
+ * Tests for the {@link ContactListMapper} and the {@link ContactListBuilder}
+ *
+ * @author Thomas Kowalski
+ */
 public class TestContactListUtils {
     private static File testsRoot;
     private static String defaultContactListFile;

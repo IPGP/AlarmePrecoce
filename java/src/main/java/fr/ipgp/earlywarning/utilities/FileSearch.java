@@ -4,7 +4,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Methods for searching files
+ *
+ * @author Thomas Kowalski
+ */
 public class FileSearch {
+    /**
+     * Searches for a file given by its name in a directory and its children
+     *
+     * @param root the directory to search the file in
+     * @param name the name of the file to search
+     * @return the found {@link File}
+     * @throws IOException if the file does not exist
+     */
     public static File searchForFile(File root, String name) throws IOException {
         if (root == null)
             throw new FileNotFoundException();

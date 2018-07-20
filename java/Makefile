@@ -22,8 +22,7 @@ validate:
 compile:
 	mvn compile
 
-javadoc:
-	package
+javadoc: package
 	rm target/EarlyWarning.jar
 	rm -rf target/resources
 

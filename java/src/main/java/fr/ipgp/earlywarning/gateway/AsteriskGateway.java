@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.CorrectCode;
-import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.DialRequested;
-import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.Initial;
+import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.*;
 
 /**
  * A gateway that uses an Asterisk server to originate and handle calls.

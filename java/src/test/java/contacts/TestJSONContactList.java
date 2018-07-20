@@ -18,6 +18,11 @@ import java.util.List;
 
 import static commons.TestCommons.setUpEnvironment;
 
+/**
+ * Tests for the {@link JSONContactList}
+ *
+ * @author Thomas Kowalski
+ */
 public class TestJSONContactList {
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestJSONContactList.class);
@@ -59,7 +64,7 @@ public class TestJSONContactList {
     }
 
     /**
-     * Verify that getting a contact by name works or throws a <code>NoSuchContactException</code> if the contact doesn't exist
+     * Verify that getting a contact by name works or throws a {@link NoSuchContactException} if the contact doesn't exist
      *
      * @throws NoSuchContactException expected: the contact doesn't exist
      */
@@ -117,7 +122,7 @@ public class TestJSONContactList {
     }
 
     /**
-     * Verify that the list correctly saves the file after adding a new contact and that a new <code>JSONContactList</code> finds the correct data in the file.
+     * Verify that the list correctly saves the file after adding a new contact and that a new {@link JSONContactList} finds the correct data in the file.
      *
      * @throws IOException if the file can't be created
      */

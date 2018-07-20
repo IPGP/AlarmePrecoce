@@ -14,6 +14,11 @@ import java.io.IOException;
 import static commons.TestCommons.setUpEnvironment;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
+/**
+ * Tests for the {@link CallOriginator}
+ *
+ * @author Thomas Kowalski
+ */
 public class TestCallOriginator {
     private static String correctUsername, correctHost, correctPassword;
     private static int correctPort;

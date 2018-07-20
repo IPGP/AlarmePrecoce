@@ -116,7 +116,7 @@ class AlertCallScript extends BaseAgiScript {
             while (true) {
                 String data = null;
                 try {
-                    data = getData(mapper.getName("welcome"), (long)(1 * SECOND), 4);
+                    data = getData(mapper.getName("welcome"), (long) (1 * SECOND), 4);
                 } catch (NoSuchMessageException e) {
                     EarlyWarning.appLogger.error("Could not play welcome file.");
                 }

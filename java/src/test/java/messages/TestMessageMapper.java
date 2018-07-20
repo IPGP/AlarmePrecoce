@@ -16,6 +16,11 @@ import java.util.Random;
 import static commons.TestCommons.setUpEnvironment;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
+/**
+ * Tests for the {@link WarningMessageMapper}
+ *
+ * @author Thomas Kowalski
+ */
 public class TestMessageMapper {
     private static Random rand;
 

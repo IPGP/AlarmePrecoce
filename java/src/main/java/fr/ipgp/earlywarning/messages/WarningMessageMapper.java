@@ -9,10 +9,9 @@ import java.util.Map;
 import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 
 /**
- * An utility that allows to map, for a given {@link Gateway} warning message names to file names to play.
+ * An utility that allows to map, for a given {@link Gateway}, the warning message ids to the names of files to play.
  *
  * @author Thomas Kowalski
- * // TODO: add Javadoc for class
  */
 public class WarningMessageMapper {
     private static Map<String, WarningMessageMapper> mappers;
@@ -42,16 +41,34 @@ public class WarningMessageMapper {
             mappers = new HashMap<>();
     }
 
+    /**
+     * Verify that, for a given <code>qualifier</code>, the default warning message is configured.
+     *
+     * @param qualifier the {@link Gateway}'s qualifier
+     * @throws NoSuchMessageException if the default message is not configured
+     */
     @SuppressWarnings("WeakerAccess")
     public static void testDefaultMessage(String qualifier) throws NoSuchMessageException {
         initMappers();
         mappers.put(qualifier, new WarningMessageMapper(qualifier));
     }
 
+    /**
+     * Verify that the default warning message is configured, for a given {@link Gateway}.
+     *
+     * @param gateway the {@link Gateway} to check
+     * @throws NoSuchMessageException if the default message is not configured
+     */
     public static void testDefaultMessage(Gateway gateway) throws NoSuchMessageException {
         testDefaultMessage(gateway.getSettingsQualifier());
     }
 
+    /**
+     * Returns the unique mapper for a given qualifier.
+     *
+     * @param qualifier the qualifier to use
+     * @return the {@link WarningMessageMapper} instance corresponding to this qualifier
+     */
     public static WarningMessageMapper getInstance(String qualifier) {
         initMappers();
 
@@ -63,10 +80,23 @@ public class WarningMessageMapper {
         return mappers.get(qualifier);
     }
 
+    /**
+     * Returns the unique mapper for a given {@link Gateway}
+     *
+     * @param gateway the {@link Gateway} to use
+     * @return the {@link WarningMessageMapper} instance corresponding to this {@link Gateway}
+     */
     public static WarningMessageMapper getInstance(Gateway gateway) {
         return getInstance(gateway.getSettingsQualifier());
     }
 
+    /**
+     * Returns the name of the file to play on this gateway, for a given ID
+     *
+     * @param id the ID of the sound
+     * @return the name of the corresponding file
+     * @throws NoSuchMessageException if the sound is not configured. See <code>getNameOrDefault</code>
+     */
     @SuppressWarnings("WeakerAccess")
     public String getName(String id) throws NoSuchMessageException {
         if (id == null)
@@ -88,11 +118,22 @@ public class WarningMessageMapper {
         return name;
     }
 
+    /**
+     * Returns the default warning message for this gateway
+     *
+     * @return the name of the default warning message file
+     */
     @SuppressWarnings("WeakerAccess")
     public String getDefault() {
         return mappings.get("default");
     }
 
+    /**
+     * Tries to find a mapping for a given ID, returns the default message if it is not configured
+     *
+     * @param id the ID to find a mapping for
+     * @return the corresponding file name, or if it is not configured, the default file name
+     */
     public String getNameOrDefault(String id) {
         try {
             return getName(id);

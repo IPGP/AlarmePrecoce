@@ -15,7 +15,7 @@ import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 public class ContactListMapper {
     private static ContactListMapper uniqueInstance;
     /**
-     * A map between names (<code>String</code>) and instances of corresponding {@link ContactList}s
+     * A map between names ({@link String}) and instances of corresponding {@link ContactList}s
      */
     private final Map<String, ContactList> mappings;
 
@@ -112,7 +112,7 @@ public class ContactListMapper {
     /**
      * Gets the default {@link ContactList}, as given in the configuration file.
      *
-     * @return the default <code>ContactList</code>
+     * @return the default {@link ContactList}
      */
     public ContactList getDefaultList() {
         assert mappings.keySet().contains("default");

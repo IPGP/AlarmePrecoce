@@ -9,7 +9,18 @@ import java.io.IOException;
 
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
+/**
+ * General utilities for the tests.
+ *
+ * @author Thomas Kowalski
+ */
 public class TestCommons {
+    /**
+     * Finds the right working directory (the one containing <code>resources</code>) and loads the default configuration
+     * @return the working directory
+     * @throws IOException if the default configuration file cannot be found
+     * @throws ConfigurationException if the configuration is invalid
+     */
     public static String setUpEnvironment() throws IOException, ConfigurationException {
         String root = "../";
 

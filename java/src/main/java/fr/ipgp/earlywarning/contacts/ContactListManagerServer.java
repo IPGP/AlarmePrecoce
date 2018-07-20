@@ -97,7 +97,9 @@ public class ContactListManagerServer {
     }
 
     /**
-     * The handler to send files (html, js, etc.)
+     * The {@link HttpHandler} used for GET requests to send files (html, js, etc.)
+     *
+     * @author Thomas Kowalski
      */
     static class GeneralHandler implements HttpHandler {
         /**
@@ -267,7 +269,7 @@ public class ContactListManagerServer {
     }
 
     /**
-     * The handler for order and enable / disable update requests.
+     * The {@link HttpHandler} used for POST requests, which are order and enable / disable update requests.
      */
     static class PostHandler implements HttpHandler {
         private static void handleNewContact(JSONObject data) {

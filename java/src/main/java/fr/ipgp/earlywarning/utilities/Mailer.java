@@ -16,7 +16,7 @@ import java.util.Properties;
 /**
  * Sends notification to a mailing list.
  *
- * @author patriceboissier
+ * @author Patrice Boissier
  */
 public class Mailer {
     private static Mailer uniqueInstance;

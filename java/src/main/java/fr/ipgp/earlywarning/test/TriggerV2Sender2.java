@@ -14,8 +14,8 @@ import java.util.Date;
  */
 public class TriggerV2Sender2 {
 
-    private static byte[] message = null;
     private static final int port = 4445;
+    private static byte[] message = null;
     private static InetAddress address = null;
     private static DatagramSocket socket = null;
     private static DatagramPacket packet = null;

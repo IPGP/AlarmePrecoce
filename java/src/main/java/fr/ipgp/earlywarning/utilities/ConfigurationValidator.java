@@ -66,7 +66,71 @@ public class ConfigurationValidator {
     }
 
     /**
-     * Validates the whole <code>XMLConfiguration</code>, taking measures depending on the <code>onError</code> behaviour.
+     * Returns all the configuration entries beginning with a prefix
+     *
+     * @param prefix the prefix to use
+     * @return a {@link List} of {@link String}
+     */
+    public static List<String> getEntries(XMLConfiguration configuration, String prefix) {
+        List<String> result = new ArrayList<>();
+        for (Iterator<String> it = configuration.getKeys(prefix); it.hasNext(); )
+            result.add(it.next());
+
+        return result;
+    }
+
+    /**
+     * Finds the number of occurrences of a character in a {@link String}
+     *
+     * @param s the {@link String} to search
+     * @param c the character to count
+     * @return the number of occurrences of <code>c</code> in <code>s</code>
+     */
+    @SuppressWarnings("SameParameterValue")
+    public static int occurrences(String s, char c) {
+        int count = 0;
+        for (char c2 : s.toCharArray())
+            if (c2 == c)
+                count++;
+        return count;
+    }
+
+    /**
+     * Finds the top level entries (which means the direct children of the prefix) in the configuration
+     *
+     * @param prefix the prefix to find entries for
+     * @return the direct children of the node corresponding to <code>prefix</code>
+     */
+    public static Set<String> getTopLevelEntries(XMLConfiguration configuration, String prefix) {
+        List<String> all = getEntries(configuration, prefix);
+        Set<String> result = new HashSet<>();
+        for (String entry : all) {
+            String[] split = entry.split("\\.");
+            result.add(split[occurrences(prefix, '.') + 1]);
+        }
+        return result;
+    }
+
+    public static List<Map<String, String>> getItems(String at) {
+        List<Map<String, String>> items = new ArrayList<>();
+
+        List<HierarchicalConfiguration> entries = EarlyWarning.configuration.configurationsAt(at);
+        for (HierarchicalConfiguration entry : entries) {
+            Map<String, String> m = new HashMap<>();
+
+            for (Iterator<String> it = entry.getKeys(); it.hasNext(); ) {
+                String key = it.next();
+                m.put(key, entry.getString(key));
+            }
+
+            items.add(m);
+        }
+
+        return items;
+    }
+
+    /**
+     * Validates the whole {@link XMLConfiguration}, taking measures depending on the <code>onError</code> behaviour.
      */
     public void validate() {
         EarlyWarning.appLogger.info("------------------------------------");
@@ -252,7 +316,7 @@ public class ConfigurationValidator {
                 throw new ValidationException("gateway.failover_enabled", "Value '" + configuration.getString("gateway.failover_enabled") + "' cannot be converted to a boolean.");
             }
 
-            if(!failoverEnabled)
+            if (!failoverEnabled)
                 EarlyWarning.appLogger.warn("Failover system is currently DISABLED.");
         }
 
@@ -451,77 +515,12 @@ public class ConfigurationValidator {
         }
     }
 
-    /**
-     * Returns all the configuration entries beginning with a prefix
-     *
-     * @param prefix the prefix to use
-     * @return a list of <code>String</code>
-     */
-    public static List<String> getEntries(XMLConfiguration configuration, String prefix) {
-        List<String> result = new ArrayList<>();
-        for (Iterator<String> it = configuration.getKeys(prefix); it.hasNext(); )
-            result.add(it.next());
-
-        return result;
-    }
-
     private List<String> getEntries(String prefix) {
         return getEntries(configuration, prefix);
     }
 
-        /**
-         * Finds the number of occurrences of a character in a <code>String</code>
-         *
-         * @param s the <code>String</code> to search
-         * @param c the character to count
-         * @return the number of occurrences of <code>c</code> in <code>s</code>
-         */
-    @SuppressWarnings("SameParameterValue")
-    public static int occurrences(String s, char c) {
-        int count = 0;
-        for (char c2 : s.toCharArray())
-            if (c2 == c)
-                count++;
-        return count;
-    }
-
-    /**
-     * Finds the top level entries (which means the direct children of the prefix) in the configuration
-     *
-     * @param prefix the prefix to find entries for
-     * @return the direct children of the node corresponding to <code>prefix</code>
-     */
-    public static Set<String> getTopLevelEntries(XMLConfiguration configuration, String prefix) {
-        List<String> all = getEntries(configuration, prefix);
-        Set<String> result = new HashSet<>();
-        for (String entry : all) {
-            String[] split = entry.split("\\.");
-            result.add(split[occurrences(prefix, '.') + 1]);
-        }
-        return result;
-    }
-
-    private Set<String> getTopLevelEntries(String prefix)
-    {
+    private Set<String> getTopLevelEntries(String prefix) {
         return getTopLevelEntries(configuration, prefix);
-    }
-
-    public static List<Map<String, String>> getItems(String at) {
-        List<Map<String, String>> items = new ArrayList<>();
-
-        List<HierarchicalConfiguration> entries = EarlyWarning.configuration.configurationsAt(at);
-        for (HierarchicalConfiguration entry : entries) {
-            Map<String, String> m = new HashMap<>();
-
-            for (Iterator<String> it = entry.getKeys(); it.hasNext(); ) {
-                String key = it.next();
-                m.put(key, entry.getString(key));
-            }
-
-            items.add(m);
-        }
-
-        return items;
     }
 
     /**
@@ -568,6 +567,8 @@ public class ConfigurationValidator {
     /**
      * The Exception used to express configuration mistakes.
      * It has a <code>parameter</code> field that corresponds to the field whose validation caused the error and a <code>problem</code> field that summarizes what the problem was.
+     *
+     * @author Thomas Kowalski
      */
     class ValidationException extends Throwable {
         /**

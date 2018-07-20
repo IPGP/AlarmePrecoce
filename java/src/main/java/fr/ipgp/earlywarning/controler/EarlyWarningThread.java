@@ -27,12 +27,12 @@ import java.util.NoSuchElementException;
  */
 public class EarlyWarningThread extends Thread {
     private static EarlyWarningThread uniqueInstance;
-    protected DatagramSocket socket = null;
-    protected DatagramPacket packet = null;
-    protected boolean moreTriggers = true;
     protected final byte[] buffer = new byte[512];
     protected final int port;
     protected final boolean triggerOnError;
+    protected DatagramSocket socket = null;
+    protected DatagramPacket packet = null;
+    protected boolean moreTriggers = true;
     private QueueManagerThread queueManagerThread;
     private boolean defaultRepeat = true;
     private String defaultConfirmCode = null;

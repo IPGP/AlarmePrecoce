@@ -11,7 +11,7 @@ import java.io.IOException;
 import static commons.TestCommons.setUpEnvironment;
 
 /**
- * @author patriceboissier
+ * @author Patrice Boissier
  */
 public class TestMockGateway {
 

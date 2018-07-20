@@ -173,7 +173,7 @@ public class CallOriginator implements ManagerEventListener {
     }
 
     /**
-     * Shortcut constructor: builds a new <code>CallManager</code> with the same credentials as before, only changing the confirmation code.
+     * Shortcut constructor: builds a new {@link ManagerConnection} with the same credentials as before, only changing the confirmation code.
      *
      * @param code the new confirmation code
      */

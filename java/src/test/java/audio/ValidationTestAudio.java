@@ -7,7 +7,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
 /**
- * @author patriceboissier
+ * @author Patrice Boissier
  */
 public class ValidationTestAudio {
 

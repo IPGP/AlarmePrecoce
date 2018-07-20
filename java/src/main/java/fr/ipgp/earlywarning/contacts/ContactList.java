@@ -41,14 +41,14 @@ public interface ContactList {
     /**
      * Returns all the contacts known by the list.
      *
-     * @return the contacts in the form of a <code>List</code>
+     * @return the contacts in the form of a {@link List}
      */
     List<Contact> getAvailableContacts();
 
     /**
      * Returns all the contacts currently in the call list
      *
-     * @return the enabled contacts in the form of a <code>List</code>
+     * @return the enabled contacts in the form of a {@link List}
      */
     List<Contact> getEnabledContacts();
 

@@ -9,7 +9,7 @@ import fr.ipgp.earlywarning.triggers.Trigger;
 /**
  * The phone gateway interface
  *
- * @author Patrice Boissier
+ * @author Thomas Kowalski
  */
 public interface Gateway {
     /**
@@ -23,8 +23,17 @@ public interface Gateway {
 
     /**
      * Returns the name that should be used to configure the sounds in the Settings.
-     * For Asterisk, this method should return a descriptive name, like <code>asterisk</code>, and then the configuration
-     * should provide a sounds configuration in the form of <code>sounds.soundId.asterisk</code>
+     * For Asterisk, this method should return a descriptive name, like <code>myGateway</code>, and the configuration
+     * should provide a configuration should contain mappings for each sound:<br />
+     * <code>
+     *     <sounds>
+     *         <sound>
+     *             <id>SOUNDID</id>
+     *             <...>mapping_other_gateway</...>
+     *             <myGateway>mapping_for_myGateway</myGateway>
+     *         </sound>
+     *     </sounds>
+     * </code>
      *
      * @return the qualifier used for configuration
      */

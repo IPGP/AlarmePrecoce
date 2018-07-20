@@ -17,6 +17,11 @@ import java.util.List;
 import static commons.TestCommons.setUpEnvironment;
 import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
+/**
+ * Validation test for the Asterisk gateway. See the documentation.
+ *
+ * @author Thomas Kowalski
+ */
 public class ValidationTestAsterisk {
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(ValidationTestAsterisk.class);

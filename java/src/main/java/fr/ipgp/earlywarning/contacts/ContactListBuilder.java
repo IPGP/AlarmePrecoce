@@ -29,11 +29,22 @@ public class ContactListBuilder {
         }
     }
 
+    /**
+     * Extracts the extension of a given file
+     *
+     * @param filename the name of the file
+     * @return its extension
+     */
     private static String getExtension(String filename) {
         String[] split = filename.split("\\.");
         return split[split.length - 1];
     }
 
+    /**
+     * The {@link Exception} to throw when the given file name does not have an extension compatible with any kind of {@link ContactList}
+     *
+     * @author Thomas Kowalski
+     */
     public static class UnimplementedContactListTypeException extends Throwable {
         public UnimplementedContactListTypeException(String s) {
             super(s);
