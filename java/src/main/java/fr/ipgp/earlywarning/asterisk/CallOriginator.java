@@ -426,7 +426,7 @@ public class CallOriginator implements ManagerEventListener {
          * The callee hung up during the call and before entering the confirmation code.
          */
         Hangup,
-        /**
+        DialRequested, /**
          * The call could not be emitted
          */
         Error

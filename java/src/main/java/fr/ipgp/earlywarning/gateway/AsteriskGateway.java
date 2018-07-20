@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.CorrectCode;
+import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.DialRequested;
 import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.Initial;
 
 /**
@@ -101,12 +102,15 @@ public class AsteriskGateway implements Gateway {
         // Assert: there is at least one enabled contact
         assert iterator.hasNext();
 
-        int retries = 0;
+        int originateTrials = 0;
+        int retriesBeforeFailover = numbers.size();
+        retriesBeforeFailover = 2;
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
-                if (retries >= numbers.size()) {
-                    EarlyWarning.appLogger.error("Couldn't originate call after " + retries + " retries. Using failover system.");
+                if (originateTrials >= retriesBeforeFailover) {
+                    EarlyWarning.appLogger.error("Couldn't originate call after " + originateTrials + " retries. Using failover system.");
+
                     return CallLoopResult.Error;
                 }
                 try {
@@ -115,12 +119,15 @@ public class AsteriskGateway implements Gateway {
                 }
             }
 
+            originateTrials++;
+
             if (!iterator.hasNext())
                 iterator = numbers.iterator();
 
             String toCall = iterator.next();
             EarlyWarning.appLogger.info("Calling " + toCall);
 
+            result = CallOriginator.CallResult.DialRequested;
             try {
                 result = originator.call(toCall);
             } catch (org.asteriskjava.manager.AuthenticationFailedException ignored) {
@@ -129,8 +136,12 @@ public class AsteriskGateway implements Gateway {
             } catch (org.asteriskjava.manager.TimeoutException ex) {
                 EarlyWarning.appLogger.error("Origination request timed out for number " + toCall);
             } catch (IOException ex) {
-                EarlyWarning.appLogger.error(ex.getMessage());
+                EarlyWarning.appLogger.error("Could not originate call (IOException): " + ex.getMessage());
             }
+
+            if (result == DialRequested)
+                // An exception has occurred
+                result = CallOriginator.CallResult.Error;
 
             if (result == CallOriginator.CallResult.Error)
                 EarlyWarning.appLogger.error("Error while originating call. Retrying.");
@@ -146,14 +157,14 @@ public class AsteriskGateway implements Gateway {
      * @param warningMessageFile the warning message file to play
      * @param confirmCode        the confirmation code to use
      */
-    private void callTillConfirm(ContactList list, String warningMessageFile, String confirmCode) {
+    private CallLoopResult callTillConfirm(ContactList list, String warningMessageFile, String confirmCode) {
         List<Contact> contacts = list.getCallList();
 
         List<String> numbers = new ArrayList<>();
         for (Contact c : contacts)
             numbers.add(c.phone);
 
-        callTillConfirm(numbers, warningMessageFile, confirmCode);
+        return callTillConfirm(numbers, warningMessageFile, confirmCode);
     }
 
     /**
@@ -161,21 +172,17 @@ public class AsteriskGateway implements Gateway {
      *
      * @param trigger that triggered the call
      */
-    @Override
     public CallLoopResult callTillConfirm(Trigger trigger) {
         String confirmCode = trigger.getConfirmCode();
         String warningMessageFile = WarningMessageMapper.getInstance(this).getNameOrDefault(trigger.getMessage());
 
-        callTillConfirm(trigger.getContactList(), warningMessageFile, confirmCode);
-        return null;
+        return callTillConfirm(trigger.getContactList(), warningMessageFile, confirmCode);
     }
 
-    @Override
     public void callTest(String number) {
         // TODO: implement callTest in AsteriskGateway
     }
 
-    @Override
     public String getSettingsQualifier() {
         return "asterisk";
     }

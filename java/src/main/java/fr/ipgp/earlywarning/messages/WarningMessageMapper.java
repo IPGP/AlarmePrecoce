@@ -53,6 +53,8 @@ public class WarningMessageMapper {
     }
 
     public static WarningMessageMapper getInstance(String qualifier) {
+        initMappers();
+
         if (!mappers.containsKey(qualifier)) {
             EarlyWarning.appLogger.fatal("Default warning message has not been tested for '" + qualifier + "'. Please verify that you do it with WarningMessageMapper.testDefaultMessage(gateway).");
             System.exit(-1);
@@ -67,6 +69,9 @@ public class WarningMessageMapper {
 
     @SuppressWarnings("WeakerAccess")
     public String getName(String id) throws NoSuchMessageException {
+        if (id == null)
+            throw new NoSuchMessageException("(null)");
+
         if (mappings.containsKey(id))
             return mappings.get(id);
 

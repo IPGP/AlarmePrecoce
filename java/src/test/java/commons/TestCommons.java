@@ -18,7 +18,7 @@ public class TestCommons {
         String workingDir = workingDirFile.getCanonicalPath();
         System.setProperty("user.dir", workingDir);
 
-        System.out.println("Working directory used for this test: '" + System.getProperty("user.dir") + "'");
+        System.out.println("Setting working directory to: '" + System.getProperty("user.dir") + "'");
 
         configurationFile = searchForFile(new File(workingDir), "earlywarning.xml");
 

@@ -25,6 +25,8 @@ public class TestMessageMapper {
 
     @BeforeClass
     public static void setUp() throws IOException, ConfigurationException {
+        System.out.println("MessageMapper tests.");
+
         String workingDir = setUpEnvironment();
 
         File configurationFile = searchForFile(new File(workingDir), "earlywarning_test_messagemapper.xml");
@@ -47,17 +49,20 @@ public class TestMessageMapper {
 
     @Test(expected = NoSuchMessageException.class)
     public void testRandomNonExistentGateway() throws NoSuchMessageException {
+        System.out.println("Testing Non-Existent Gateway");
         WarningMessageMapper.testDefaultMessage(randomGatewayName());
         WarningMessageMapper mapper = WarningMessageMapper.getInstance(randomGatewayName());
     }
 
     @Test(expected = NoSuchMessageException.class)
     public void testUnconfiguredGateway() throws NoSuchMessageException {
+        System.out.println("Testing Unconfigured Gateway");
         WarningMessageMapper.testDefaultMessage("unconfigured");
     }
 
     @Test
     public void testCorrectGateway() throws NoSuchMessageException {
+        System.out.println("Testing Configured Gateway");
         WarningMessageMapper.testDefaultMessage("configured");
         WarningMessageMapper mapper = WarningMessageMapper.getInstance("configured");
 

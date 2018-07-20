@@ -30,7 +30,7 @@ public class ValidationTestAudio {
         } catch (UnsupportedAudioFileException ex) {
             System.out.println("Unsupported audio file exception: " + ex.getMessage());
         } catch (LineUnavailableException ex) {
-            System.out.println("Line anavailable exception: " + ex.getMessage());
+            System.out.println("Line unavailable exception: " + ex.getMessage());
         } catch (IOException ex) {
             System.out.println("I/O exception: " + ex.getMessage());
         } catch (InterruptedException ignored) {

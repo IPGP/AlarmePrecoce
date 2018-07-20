@@ -2,6 +2,8 @@ package gateway;
 
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.asterisk.Tester;
+import fr.ipgp.earlywarning.messages.NoSuchMessageException;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.junit.BeforeClass;
@@ -21,13 +23,15 @@ public class ValidationTestAsterisk {
     }
 
     @BeforeClass
-    public static void setUp() throws IOException, ConfigurationException {
+    public static void setUp() throws IOException, ConfigurationException, NoSuchMessageException {
         String workingDir = setUpEnvironment();
 
         File configurationFile = searchForFile(new File(workingDir), "earlywarning.xml");
 
         EarlyWarning.configuration = new XMLConfiguration(configurationFile.getCanonicalPath());
         EarlyWarning.configuration.setThrowExceptionOnMissing(true);
+
+        WarningMessageMapper.testDefaultMessage("asterisk");
     }
 
     @Test

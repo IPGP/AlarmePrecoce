@@ -3,21 +3,27 @@ package controler;/*
   Copyright 2008 Observatoire volcanologique du Piton de La Fournaise / IPGP
  */
 
+import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.contacts.NoSuchListException;
 import fr.ipgp.earlywarning.controler.QueueManagerThread;
+import fr.ipgp.earlywarning.messages.NoSuchMessageException;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static commons.TestCommons.setUpEnvironment;
+import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
 /**
  * @author Patrice Boissier
@@ -29,10 +35,15 @@ public class TestQueueManagerThread {
     }
 
     @Before
-    public void setUp() throws IOException, ConfigurationException, NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
-        setUpEnvironment();
+    public void setUp() throws IOException, ConfigurationException, NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException, NoSuchMessageException {
+        String workingDir = setUpEnvironment();
+
+        File configurationFile = searchForFile(new File(workingDir), "earlywarning.xml");
+        EarlyWarning.configuration = new XMLConfiguration(configurationFile.getCanonicalPath());
+        EarlyWarning.configuration.setThrowExceptionOnMissing(true);
 
         ContactListMapper.testDefaultList();
+        WarningMessageMapper.testDefaultMessage(EarlyWarning.configuration.getString("gateway.active"));
     }
 
     @After

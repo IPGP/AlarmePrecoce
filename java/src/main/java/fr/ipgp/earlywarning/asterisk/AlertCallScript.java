@@ -1,6 +1,8 @@
 package fr.ipgp.earlywarning.asterisk;
 
 import fr.ipgp.earlywarning.EarlyWarning;
+import fr.ipgp.earlywarning.messages.NoSuchMessageException;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.asteriskjava.fastagi.*;
 
 /*
@@ -13,23 +15,26 @@ import org.asteriskjava.fastagi.*;
  * The (to this day) only AGI script we have.
  * <b>What does it do?</b>
  * <ul>
- * <li>Immediatly answer the call (for now, we can't detect when the callee actually answers)</li>
+ * <li>Immediately answer the call (for now, we can't detect when the callee actually answers)</li>
  * <li>Plays a "welcome" sound in a loop until the callee enters "11" on his dial pad</li>
  * <li>Plays an adequate sound, depending on the situation</li>
  * <li>Asks for a confirmation code</li>
- * <li>While the confirmation code is incorrect and the CallOriginator tells the script the user can carry on trying, it keeps asking for the code</li>
+ * <li>While the confirmation code is incorrect and the {@link CallOriginator} tells the script the user can carry on trying, it keeps asking for the code</li>
  * <li>Finally hangs up.</li>
  * </ul>
  *
  * @author Thomas Kowalski
  */
 class AlertCallScript extends BaseAgiScript {
+    private static final long SECOND = 1000;
     private static OnCodeReceivedListener onCodeReceivedListener;
     private static OnHangupListener onHangupListener;
     private static OnConnectedListener onConnectedListener;
     private static boolean hangupRequested = false;
     private static int maxCodeLength = 0;
     private static String warningMessage = null;
+
+    private static WarningMessageMapper mapper = WarningMessageMapper.getInstance("asterisk");
 
     /**
      * Setter for the {@link OnCodeReceivedListener}
@@ -99,20 +104,27 @@ class AlertCallScript extends BaseAgiScript {
         // Rest the hangup request state
         hangupRequested = false;
 
-        EarlyWarning.appLogger.debug("Handling new call.");
+        EarlyWarning.appLogger.debug("Handling new call");
 
         try {
             // Answer the call
-            EarlyWarning.appLogger.debug("Answering.");
+            EarlyWarning.appLogger.debug("Answering");
             answer();
 
             // Stream the welcome file
             EarlyWarning.appLogger.debug("Waiting for input");
             while (true) {
-                String data = getData("accueil", 1, 2);
+                String data = null;
+                try {
+                    data = getData(mapper.getName("welcome"), (long)(1 * SECOND), 4);
+                } catch (NoSuchMessageException e) {
+                    EarlyWarning.appLogger.error("Could not play welcome file.");
+                }
 
-                if (data == null || data.isEmpty())
+                if (data == null || data.isEmpty()) {
+                    EarlyWarning.appLogger.debug("Replaying welcome.");
                     continue;
+                }
 
                 // Check if hangup as been requested
                 if (hangupRequested)
@@ -126,19 +138,26 @@ class AlertCallScript extends BaseAgiScript {
                     // If the user has entered 11 (Acknowledge welcome message),
                     // stop playing the welcome message
                     break;
+                else
+                    EarlyWarning.appLogger.debug("Callee entered '" + data + "' != '11'");
             }
 
-            EarlyWarning.appLogger.debug("Playing adequate sound.");
+            EarlyWarning.appLogger.debug("Playing adequate sound (ID: '" + warningMessage + "', maps to: '" + mapper.getNameOrDefault(warningMessage) + "')");
             if (warningMessage != null)
-                streamFile(warningMessage);
+                streamFile(mapper.getNameOrDefault(warningMessage));
 
-            EarlyWarning.appLogger.debug("Waiting for code confirmation");
+            EarlyWarning.appLogger.debug("Waiting for DTMF code.");
 
             // action will be our loop variable for the retry-give up mechanism.
             CallOriginator.CallAction action = CallOriginator.CallAction.Retry;
 
             // Asks for a confirmation code (that ends with #)
-            String code = getData("demandecode", 3500, maxCodeLength);
+            String code = null;
+            try {
+                code = getData(mapper.getName("login"), 5 * SECOND, maxCodeLength);
+            } catch (NoSuchMessageException e) {
+                EarlyWarning.appLogger.error("Could not play welcome file.");
+            }
 
             // The action is determined by either its initial value or the return value of OnCodeReceivedListener.onCodeReceived
             while (action == CallOriginator.CallAction.Retry) {
@@ -152,13 +171,13 @@ class AlertCallScript extends BaseAgiScript {
 
                 switch (action) {
                     case Correct:
-                        streamFile("merci");
+                        streamFile(mapper.getNameOrDefault("bye"));
                         break;
                     case Retry:
-                        code = getData("incorrect", 3500, maxCodeLength);
+                        code = getData(mapper.getNameOrDefault("retry"), 3500, maxCodeLength);
                         break;
                     case GiveUp:
-                        streamFile("incorrect2");
+                        streamFile(mapper.getNameOrDefault("giveup"));
                         break;
                     default:
                         System.err.println("Unknown CallAction value returned: " + action);

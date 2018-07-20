@@ -4,6 +4,8 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
+import fr.ipgp.earlywarning.messages.NoSuchMessageException;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -239,6 +241,21 @@ public class ConfigurationValidator {
             throw new ValidationException("gateway.active", "Key does not exist.");
         }
 
+        if (!activeGateway.equalsIgnoreCase("charon")) {
+            // If the active Gateway is not the Charon module, verify whether or not the failover system is enabled.
+            boolean failoverEnabled;
+            try {
+                failoverEnabled = configuration.getBoolean("gateway.failover_enabled");
+            } catch (NoSuchElementException ex) {
+                throw new ValidationException("gateway.failover_enabled", "Key does not exist.");
+            } catch (ConversionException ex) {
+                throw new ValidationException("gateway.failover_enabled", "Value '" + configuration.getString("gateway.failover_enabled") + "' cannot be converted to a boolean.");
+            }
+
+            if(!failoverEnabled)
+                EarlyWarning.appLogger.warn("Failover system is currently DISABLED.");
+        }
+
         /* All the gateways that can be used */
         Set<String> availableGateways = new HashSet<>();
         availableGateways.add("asterisk");
@@ -251,6 +268,15 @@ public class ConfigurationValidator {
         /* Select what Gateway configuration should be validated */
         if (activeGateway.equalsIgnoreCase("asterisk"))
             validateAsteriskSettings();
+
+        /* Verify that the default sound is configured for the selected gateway */
+        try {
+            WarningMessageMapper.testDefaultMessage(activeGateway);
+            WarningMessageMapper.getInstance(activeGateway);
+            EarlyWarning.appLogger.debug("Default sound is configured.");
+        } catch (NoSuchMessageException e) {
+            throw new ValidationException("gateway.active", "No default sound configured for gateway '" + activeGateway + "'");
+        }
 
         /* Always validate Charon settings, since it is used for the failover system. */
         validateCharonSettings();

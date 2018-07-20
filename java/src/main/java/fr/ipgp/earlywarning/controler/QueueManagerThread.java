@@ -42,6 +42,7 @@ public class QueueManagerThread extends Thread {
     private boolean useSMS;
     private boolean useSound;
     private int retry;
+    private boolean useFailover = false;
 
     private QueueManagerThread() {
         this("QueueManagerThread");
@@ -91,7 +92,7 @@ public class QueueManagerThread extends Thread {
     }
 
     /**
-     * @return a <code>String</code> representing the <code>QueueManager</code>
+     * @return a {@link String} representing the <code>QueueManager</code>
      */
     public String toString() {
         return queue.size() + " Trigger" + (queue.size() > 1 ? 's' : '\0') + ": " + queue.toString();
@@ -138,10 +139,13 @@ public class QueueManagerThread extends Thread {
 
                 CallLoopResult result = gateway.callTillConfirm(trig);
                 if (result == CallLoopResult.Error) {
-                    configureCharonGateway();
-                    result = gateway.callTillConfirm(trig);
-                    if (result == CallLoopResult.Error)
-                        EarlyWarning.appLogger.fatal("SEVERE: Failover gateway could not originate call.");
+                    if (useFailover) {
+                        configureCharonGateway();
+                        result = gateway.callTillConfirm(trig);
+                        if (result == CallLoopResult.Error)
+                            EarlyWarning.appLogger.fatal("SEVERE: Failover gateway could not originate call.");
+                    } else
+                        EarlyWarning.appLogger.warn("Active gateway could not originate call but failover system is disabled.");
                 }
 
                 if (useMail) {
@@ -216,7 +220,6 @@ public class QueueManagerThread extends Thread {
         }
     }
 
-
     private void configureAudioSerialMessage() {
         try {
             useSound = EarlyWarning.configuration.getBoolean("audioserial.use_audioserial");
@@ -239,11 +242,11 @@ public class QueueManagerThread extends Thread {
         } else if (active.equalsIgnoreCase("charon")) {
             configureCharonGateway();
         } else {
-            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: " + active + ", should be 'asterisk' (only available option at the moment).");
+            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: '" + active + "'.");
             System.exit(-1);
         }
 
-        if (gateway.getClass() != CharonGateway.class)
+        if (gateway.getClass() != CharonGateway.class) {
             // Verify that the default warning message is available for this gateway
             try {
                 WarningMessageMapper.testDefaultMessage(gateway);
@@ -251,6 +254,8 @@ public class QueueManagerThread extends Thread {
                 EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getName() + "'");
                 System.exit(-1);
             }
+            useFailover = EarlyWarning.configuration.getBoolean("gateway.failover_enabled");
+        }
 
         // Verify that the default ContactList is available
         // None of the exceptions should occur since they are checked by the configuration validator
@@ -286,6 +291,7 @@ public class QueueManagerThread extends Thread {
     }
 
     private void configureCharonGateway() {
+        EarlyWarning.appLogger.info("Configuring Charon.");
         try {
             String host = EarlyWarning.configuration.getString("gateway.charon.host");
             int port = EarlyWarning.configuration.getInt("gateway.charon.port");
