@@ -3,7 +3,10 @@ package fr.ipgp.earlywarning.contacts;
 import fr.ipgp.earlywarning.EarlyWarning;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
 
@@ -82,16 +85,23 @@ public class ContactListMapper {
         if (mappings.keySet().contains(name))
             return mappings.get(name);
 
-        String fileName = "";
+        String filename = "";
+        for (Map<String, String> listEntry : getItems("contacts.lists.list")) {
+            if (listEntry.get("id").equals(name))
+                filename = listEntry.get("path");
+        }
+
+        if (filename == "")
+            throw new NoSuchListException(name);
+
         try {
-            fileName = EarlyWarning.configuration.getString("contacts.lists." + name);
-            ContactList list = ContactListBuilder.build(fileName);
+            ContactList list = ContactListBuilder.build(filename);
             mappings.put(name, list);
             return list;
-        } catch (NoSuchElementException | IOException ex) {
+        } catch (IOException ex) {
             throw new NoSuchListException(name);
-        } catch (ContactListBuilder.UnimplementedContactListTypeException e) {
-            throw new ContactListBuilder.UnimplementedContactListTypeException("Requested call list has an invalid extension (" + fileName + ")");
+        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+            throw new ContactListBuilder.UnimplementedContactListTypeException("Requested call list has an invalid extension (" + filename + ")");
         }
     }
 
@@ -124,16 +134,11 @@ public class ContactListMapper {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public List<String> getAvailableLists() {
         List<String> availableLists = new ArrayList<>();
 
-        Iterator<String> it = EarlyWarning.configuration.getKeys("contacts.lists");
-        for (; it.hasNext(); ) {
-            String name = it.next();
-            String[] split = name.split("\\.");
-            availableLists.add(split[split.length - 1]);
-        }
+        for (Map<String, String> listEntry : getItems("contacts.lists.list"))
+            availableLists.add(listEntry.get("id"));
 
         return availableLists;
     }
