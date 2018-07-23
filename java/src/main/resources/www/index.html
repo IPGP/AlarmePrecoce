@@ -312,10 +312,6 @@
         console.error("This should not be called.");
     }
 
-    function callListEnabled_onRemove(evt) {
-        alert("coucou");
-    }
-
     function rearrangeListEnabled(evt) {
         var to = evt.to;
         var first = to.getElementsByTagName("li")[0];
@@ -391,7 +387,7 @@
                 console.error("Given phone number is already in use.");
                 alert("Le contact '" + p.name + "' utilise déjà le numéro de téléphone donné (" + phone + ")");
                 cancel = true;
-            } else if (p.name.toLowerCase() == name.toLowerCase())
+            } else if (p.name.toLowerCase() === name.toLowerCase())
             {
                 console.error("Given name is already in use.");
                 alert("Un contact '" + name + "' existe déjà.");
@@ -409,7 +405,6 @@
                 alert("Le format du numéro de téléphone est invalide (pas un numéro).");
                 return false;
             }
-            ;
         }
 
         var data = {
@@ -483,7 +478,7 @@
             if (el === listEnabled.firstChild)
                 alert("thomas!");
 
-            if (hasClass(el, "priority") && evt.oldIndex == 0) {
+            if (hasClass(el, "priority") && evt.oldIndex === 0) {
                 alert("Vous ne pouvez pas supprimer le numéro prioritaire du haut de la liste.");
                 return;
             }
@@ -587,7 +582,7 @@
         var result = {
             "list": getListName(),
             "contact": newContact
-        }
+        };
 
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
@@ -632,8 +627,9 @@
         actions.className = "actions-wrapper";
 
         // The remove link
-        if (mode == LIST_AVAILABLE) {
-            var filter = document.createElement("i");
+        var filter = null;
+        if (mode === LIST_AVAILABLE) {
+            filter = document.createElement("i");
             filter.className = "action remove-action fas fa-trash";
             filter.title = "Supprimer le contact";
 
@@ -645,8 +641,8 @@
                 sendListsToServer(true);
             };
         }
-        else if (mode == LIST_ENABLED) {
-            var filter = document.createElement("i");
+        else if (mode === LIST_ENABLED) {
+            filter = document.createElement("i");
             filter.className = "action remove-action fas fa-trash";
             filter.title = "Enlever de la liste d'appel";
         }
@@ -657,7 +653,7 @@
         li.appendChild(span);
         li.appendChild(phoneSpan);
         li.appendChild(actions);
-        if (mode == LIST_AVAILABLE)
+        if (mode === LIST_AVAILABLE)
             actions.appendChild(makeDefault);
 
         actions.appendChild(filter);

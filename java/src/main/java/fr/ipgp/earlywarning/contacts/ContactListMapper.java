@@ -91,7 +91,7 @@ public class ContactListMapper {
                 filename = listEntry.get("path");
         }
 
-        if (filename == "")
+        if (filename.equals(""))
             throw new NoSuchListException(name);
 
         try {

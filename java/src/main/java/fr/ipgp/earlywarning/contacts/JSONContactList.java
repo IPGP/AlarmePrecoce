@@ -306,6 +306,7 @@ public class JSONContactList implements ContactList {
         return arr.toString();
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public void updateDefaultContact(Contact newContact) {
         for (Contact c : contacts)

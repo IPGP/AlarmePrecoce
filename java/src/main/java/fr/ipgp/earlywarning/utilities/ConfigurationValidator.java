@@ -158,6 +158,7 @@ public class ConfigurationValidator {
         EarlyWarning.appLogger.info("Configuration validation finished.");
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void validateTriggers() throws ValidationException {
         boolean triggersForErrors;
         try {
@@ -207,8 +208,9 @@ public class ConfigurationValidator {
     /**
      * Validates the e-mailing settings.
      *
-     * @throws ValidationException
+     * @throws ValidationException if a configuration error is detected
      */
+    @SuppressWarnings("UnusedAssignment")
     private void validateMail() throws ValidationException {
         String _useMail = configuration.getString("mail.use_mail");
         boolean useMail;

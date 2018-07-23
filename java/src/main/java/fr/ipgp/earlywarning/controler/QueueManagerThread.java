@@ -92,7 +92,7 @@ public class QueueManagerThread extends Thread {
     }
 
     /**
-     * @return a {@link String} representing the {@link QueueManager}
+     * @return a {@link String} representing the {@link QueueManagerThread}
      */
     public String toString() {
         return queue.size() + " Trigger" + (queue.size() > 1 ? 's' : '\0') + ": " + queue.toString();

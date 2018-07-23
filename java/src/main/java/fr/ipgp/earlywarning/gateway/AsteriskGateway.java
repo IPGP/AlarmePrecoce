@@ -101,7 +101,7 @@ public class AsteriskGateway implements Gateway {
         assert iterator.hasNext();
 
         int originateTrials = 0;
-        int retriesBeforeFailover = numbers.size();
+        @SuppressWarnings("UnusedAssignment") int retriesBeforeFailover = numbers.size();
         retriesBeforeFailover = 2;
         CallOriginator.CallResult result = Initial;
         do {

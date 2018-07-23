@@ -34,7 +34,7 @@ class AlertCallScript extends BaseAgiScript {
     private static int maxCodeLength = 0;
     private static String warningMessage = null;
 
-    private static WarningMessageMapper mapper = WarningMessageMapper.getInstance("asterisk");
+    private static final WarningMessageMapper mapper = WarningMessageMapper.getInstance("asterisk");
 
     /**
      * Setter for the {@link OnCodeReceivedListener}
@@ -116,7 +116,7 @@ class AlertCallScript extends BaseAgiScript {
             while (true) {
                 String data = null;
                 try {
-                    data = getData(mapper.getName("welcome"), (long) (1 * SECOND), 4);
+                    data = getData(mapper.getName("welcome"), SECOND, 4);
                 } catch (NoSuchMessageException e) {
                     EarlyWarning.appLogger.error("Could not play welcome file.");
                 }
