@@ -1,0 +1,23 @@
+# Service de l'AlarmePrecoce de l'OVPF
+# A compléter puis copier dans /etc/systemd/system/
+# Demarrage : systemctl start earlywarning.service
+# Arrêt     : systemctl stop earlywarning.service
+# Etat      : systemctl status earlywarning.service
+
+[Unit]
+Description=Alarme Precoce de l'OVPF
+After=network.target
+
+[Service]
+Type=simple
+User=UTILISATEUR_ALARME_PRECOCE
+WorkingDirectory=DOSSIER_INSTALLATION_ALARME_PRECOCE
+ExecStart=/bin/bash DOSSIER_INSTALLATION_ALARME_PRECOCE/EarlyWarning.sh
+Restart=on-failure 
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=/var/log/earlywarning.log
+#StandardOutput=tty
+
+[Install]
+WantedBy=multi-user.target
