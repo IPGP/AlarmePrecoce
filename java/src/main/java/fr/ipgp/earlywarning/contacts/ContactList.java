@@ -83,6 +83,11 @@ public interface ContactList {
      */
     String getEnabledContactsAsJson();
 
+    /**
+     * Updates the prioritized contact for the list.
+     */
+    void updateDefaultContact(Contact c);
+
     @Override
     boolean equals(Object o);
 

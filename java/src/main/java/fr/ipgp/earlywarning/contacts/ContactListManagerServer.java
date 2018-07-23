@@ -140,7 +140,7 @@ public class ContactListManagerServer {
          * @param responseBody the OutputStream to write to
          * @throws IOException if index.html can't be read
          */
-        private void serveIndex(ContactList list, File file, OutputStream responseBody) throws IOException {
+        private void serveIndex(String listname, ContactList list, File file, OutputStream responseBody) throws IOException {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
 
             StringBuilder sb = new StringBuilder();
@@ -166,6 +166,13 @@ public class ContactListManagerServer {
             for (String s : ContactListMapper.getInstance().getAvailableLists()) {
                 Element a = doc.createElement("a");
                 a.attr("href", "/index.html?list=" + s);
+                if (listname.equals(s)) {
+                    a.addClass("bold");
+                    a.attr("title", "Liste en cours d'édition");
+                } else {
+                    a.attr("title", "Basculer vers la liste '" + s + "'");
+                }
+
                 a.text(s);
                 listsList.appendChild(a);
             }
@@ -197,7 +204,9 @@ public class ContactListManagerServer {
                 path = path.replace("//", "/");
 
             // If we are serving the index, try to determine the right ContactList
-            ContactList list = null;
+            String name = getListNameForURI(uri);
+            ContactList list = getListForURI(uri);
+
             if (path.endsWith("index.html")) {
                 try {
                     list = getListForURI(uri);
@@ -215,7 +224,7 @@ public class ContactListManagerServer {
                 t.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
                 if (path.endsWith("index.html")) {
-                    serveIndex(list, f, t.getResponseBody());
+                    serveIndex(name, list, f, t.getResponseBody());
                 } else
                     sendFile(new FileInputStream(f), t.getResponseBody());
 
@@ -227,11 +236,12 @@ public class ContactListManagerServer {
             }
         }
 
-        private ContactList getListForURI(URI uri) {
+        private String getListNameForURI(URI uri)
+        {
             if (!uri.toString().contains("?"))
-                return ContactListMapper.getInstance().getDefaultList();
+                return "default";
             else if (uri.toString().split("\\?")[1].trim().equals(""))
-                return ContactListMapper.getInstance().getDefaultList();
+                return "default";
 
             Map<String, String> parameters = getQueryMap(uri.getQuery());
 
@@ -240,7 +250,10 @@ public class ContactListManagerServer {
                 EarlyWarning.appLogger.info("Web server received request for list '" + listName + "'");
 
                 try {
-                    return ContactListMapper.getInstance().getList(listName);
+                    // Attempt to get the corresponding list
+                    ContactListMapper.getInstance().getList(listName);
+                    // We could get it: return the name that was requested
+                    return listName;
                 } catch (NoSuchListException ex) {
                     EarlyWarning.appLogger.error("User requested to modify Contact List '" + listName + "', which does not exist.");
                     return null;
@@ -249,8 +262,23 @@ public class ContactListManagerServer {
                     return null;
                 }
             } else {
-                return ContactListMapper.getInstance().getDefaultList();
+                return "default";
             }
+        }
+
+        private ContactList getListForURI(URI uri) {
+            String name = getListNameForURI(uri);
+            if (name == null)
+                return null;
+            else {
+                try {
+                    return ContactListMapper.getInstance().getList(name);
+                } catch (NoSuchListException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
+                    // This won't happen: we have already verified that the list name was working in the getListNameForURI body
+                }
+            }
+
+            return null;
         }
 
         private void serveEmpty(HttpExchange t, String result) {
@@ -273,6 +301,7 @@ public class ContactListManagerServer {
      */
     static class PostHandler implements HttpHandler {
         private static void handleNewContact(JSONObject data) {
+            EarlyWarning.appLogger.info("Adding new contact");
             String phone = data.getString("phone");
             String name = data.getString("name");
             boolean priority = data.getBoolean("priority");
@@ -309,17 +338,10 @@ public class ContactListManagerServer {
             JSONArray enabledNames = data.getJSONArray("enabled");
             JSONArray allNames = data.getJSONArray("available");
             String listName = data.getString("list");
-            ContactList list;
+            ContactList list = getList(listName);
 
-            try {
-                list = ContactListMapper.getInstance().getList(listName);
-            } catch (NoSuchListException ex) {
-                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which does not exist.");
+            if (list == null)
                 return;
-            } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
-                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which has an invalid format.");
-                return;
-            }
 
             List<String> names = new ArrayList<>();
             for (int i = 0; i < enabledNames.length(); i++) {
@@ -337,6 +359,31 @@ public class ContactListManagerServer {
             } catch (IOException ex) {
                 EarlyWarning.appLogger.error("Can't write contact list.");
             }
+        }
+
+        private static ContactList getList(String listName)
+        {
+            try {
+                return ContactListMapper.getInstance().getList(listName);
+            } catch (NoSuchListException ex) {
+                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which does not exist.");
+                return null;
+            } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
+                EarlyWarning.appLogger.error("User tried to update contact list '" + listName + "', which has an invalid format.");
+                return null;
+            }
+        }
+
+        private static void handleUpdateDefault(JSONObject data) {
+            EarlyWarning.appLogger.info("Updating default contact.");
+            Contact defaultContact = new Contact(data.getJSONObject("contact"));
+            String listName = data.getString("list");
+
+            ContactList list = getList(listName);
+            if (list == null)
+                return;
+
+            list.updateDefaultContact(defaultContact);
         }
 
         /**
@@ -364,6 +411,7 @@ public class ContactListManagerServer {
 
                     // The data we need is here
                     EarlyWarning.appLogger.info("Received JSON data: " + new String(data));
+                    EarlyWarning.appLogger.info("Requested URI: " + uri);
                     JSONObject json = new JSONObject(new String(data));
 
                     uri = uri.replaceAll("/", "");
@@ -371,7 +419,10 @@ public class ContactListManagerServer {
                         handleNewContact(json);
                     else if (uri.equalsIgnoreCase("update"))
                         handleUpdate(json);
+                    else if (uri.equalsIgnoreCase("updatedefault"))
+                        handleUpdateDefault(json);
                     else {
+                        EarlyWarning.appLogger.info("404 - " + uri);
                         byte[] response = "{\"status\": \"error\"}".getBytes();
                         he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, response.length);
                         OutputStream os = he.getResponseBody();

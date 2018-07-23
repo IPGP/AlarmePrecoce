@@ -12,6 +12,14 @@
             box-sizing: border-box;
         }
 
+        .center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
         body {
             background-color: #FFCCBC;
         }
@@ -116,18 +124,26 @@
             content: ")";
         }
 
-        .remove-action {
+        .actions-wrapper {
+            flex-grow: 0;
             display: none;
+        }
+
+        .action:last-child {
+            margin-right: 5px;
+        }
+
+        .action {
+            margin-right: 15px;
             font-style: normal;
             cursor: pointer;
             font-size: 13pt;
             text-align: right;
-            flex-grow: 0;
             align-self: center;
         }
 
-        li:hover .remove-action {
-            display: inline-block;
+        li:hover .actions-wrapper {
+            display: block;
         }
 
         /* New contact form */
@@ -179,18 +195,19 @@
         #available-lists a:hover {
             text-decoration: underline;
         }
+
+        #field-contact-priority,
+        label {
+            display: inline;
+        }
     </style>
     <script>
         // Used only for code-writing purposes
         var people = [];
         var people_enabled = [];
     </script>
-    <style>
-        #field-contact-priority,
-        label {
-            display: inline;
-        }
-    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+          integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
 </head>
 
 <body onLoad="fillList()">
@@ -202,9 +219,17 @@
     </div>
 </div>
 <div class="container">
+    <p class="center">Pour ajouter des contacts à la liste d'appel, faites les glisser de l'annuaire à la liste d'appel.<br />
+        Supprimer un contact de l'annuaire supprime également toutes ses occurrences dans la liste d'appel.<br />
+    Cliquez sur <span class="fas fa-angle-double-up"></span> pour rendre un contact prioritaire.</p>
     <div id="callListSelectors" class="callLists-wrapper">
         <div class="callList">
-            <h2 class="callList-title">Personnes disponibles</h2>
+            <h2 class="callList-title">Liste d'appel</h2>
+            <ul id="callList-enabled">
+            </ul>
+        </div>
+        <div class="callList">
+            <h2 class="callList-title">Annuaire</h2>
             <ul id="callList-available">
 
             </ul>
@@ -219,11 +244,6 @@
             </form>
         </div>
 
-        <div class="callList">
-            <h2 class="callList-title">Personnes à appeler</h2>
-            <ul id="callList-enabled">
-            </ul>
-        </div>
     </div>
 </div>
 <!--suppress JSUnusedGlobalSymbols -->
@@ -292,8 +312,7 @@
         console.error("This should not be called.");
     }
 
-    function callListEnabled_onRemove(evt)
-    {
+    function callListEnabled_onRemove(evt) {
         alert("coucou");
     }
 
@@ -318,7 +337,23 @@
         }
     }
 
+    function Contact(name, phone, priority) {
+        this.name = name;
+        this.phone = phone;
+        this.priority = priority;
+    }
+
     function callListEnabled_onAdd(evt) {
+        var person = new Contact(
+            evt.item.firstChild.textContent.trim(),
+            evt.item.childNodes[1].textContent.trim(),
+            hasClass(evt.item, "priority")
+        );
+
+        var newItem = buildListItem(person, LIST_ENABLED);
+
+        listEnabled.insertBefore(newItem, evt.item);
+        listEnabled.removeChild(evt.item);
         rearrangeListEnabled(evt);
         sendListsToServer();
     }
@@ -342,19 +377,39 @@
             return false;
 
         var phone = fieldPhone.value;
-        if (phone.length < 10)
-        {
+        var name = fieldName.value;
+
+        if (phone.length < 10) {
             console.error("Given phone number is too short (" + phone.length + " < 10)");
             alert("Le format du numéro de téléphone est invalide (mauvais nombre de caractères).");
             return false;
         }
+
+        var cancel = false;
+        people.forEach(function (p) {
+            if (p.phone === phone) {
+                console.error("Given phone number is already in use.");
+                alert("Le contact '" + p.name + "' utilise déjà le numéro de téléphone donné (" + phone + ")");
+                cancel = true;
+            } else if (p.name.toLowerCase() == name.toLowerCase())
+            {
+                console.error("Given name is already in use.");
+                alert("Un contact '" + name + "' existe déjà.");
+                cancel = true;
+            }
+        });
+
+        if (cancel)
+            return false;
+
 
         for (var i = 0; i < phone.length; i++) {
             if (isNaN(parseInt(phone.charAt(i)))) {
                 console.error("Cannot convert character '" + phone.charAt(i) + "' to an Integer.");
                 alert("Le format du numéro de téléphone est invalide (pas un numéro).");
                 return false;
-            };
+            }
+            ;
         }
 
         var data = {
@@ -372,14 +427,14 @@
             if (this.readyState === 4 && this.status === 200) {
                 if (data.priority) {
                     removePriorityClass();
-                    listEnabled.insertBefore(buildListItem(data), listEnabled.firstChild);
+                    listEnabled.insertBefore(buildListItem(data, LIST_ENABLED), listEnabled.firstChild);
                 }
 
                 // Add the new contact to the list
-                listAvailable.appendChild(buildListItem(data));
+                listAvailable.appendChild(buildListItem(data, LIST_AVAILABLE));
 
                 if (listEnabled.childElementCount === 0)
-                    listEnabled.appendChild(buildListItem(data));
+                    listEnabled.appendChild(buildListItem(data, LIST_ENABLED));
 
                 // Empty the New Contact fields
                 fieldName.value = "";
@@ -403,6 +458,9 @@
     var listEnabled = byId('callList-enabled');
     var listAvailable = byId('callList-available');
 
+    var LIST_ENABLED = 0;
+    var LIST_AVAILABLE = 1;
+
     var sortableListEnabled = Sortable.create(listEnabled, {
         sort: true,
         group: {
@@ -410,16 +468,26 @@
             pull: false,
             put: true
         },
+        filter: '.remove-action',
         animation: 150,
         onAdd: callListEnabled_onAdd,
         onEnd: callListEnabled_onEnd,
         onFilter: function (evt) {
+            var el = sortableListEnabled.closest(evt.item);
+
             if (listEnabled.childElementCount === 1) {
                 alert("Vous ne pouvez pas supprimer toutes les personnes à appeler.");
                 return;
             }
 
-            var el = sortableListEnabled.closest(evt.item);
+            if (el === listEnabled.firstChild)
+                alert("thomas!");
+
+            if (hasClass(el, "priority") && evt.oldIndex == 0) {
+                alert("Vous ne pouvez pas supprimer le numéro prioritaire du haut de la liste.");
+                return;
+            }
+
             el && el.parentNode.removeChild(el);
             sendListsToServer();
         }
@@ -473,7 +541,7 @@
         var firstCall = null;
 
         people.forEach(function (x) {
-            var li = buildListItem(x);
+            var li = buildListItem(x, LIST_AVAILABLE);
             listAvailable.appendChild(li);
 
             if (x.priority) {
@@ -487,13 +555,13 @@
         if (people_enabled.length > 0) {
             people_enabled.forEach(function (phone) {
                 var person = findPersonByPhone(phone);
-                var li = buildListItem(person);
+                var li = buildListItem(person, LIST_ENABLED);
                 listEnabled.appendChild(li);
             });
         }
         else {
             if (firstCall != null) {
-                var li = buildListItem(firstCall);
+                var li = buildListItem(firstCall, LIST_ENABLED);
                 listEnabled.appendChild(li);
             }
         }
@@ -501,7 +569,51 @@
     }
 </script>
 <script>
-    function buildListItem(person) {
+    function setDefaultContact(name) {
+        removePriority();
+        var newContact = null;
+        people.forEach(function (p) {
+            if (p.name === name) {
+                newContact = p;
+                p.priority = true;
+            }
+        });
+
+        if (newContact == null) {
+            console.error("Trying to make a non-existent contact default.");
+            return;
+        }
+
+        var result = {
+            "list": getListName(),
+            "contact": newContact
+        }
+
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var result = JSON.parse(this.responseText);
+                if (result["status"] !== "success")
+                    alert("Une erreur est survenue lors de l'enregistrement.");
+            }
+        };
+
+        req.open("POST", getServerAddress() + "updatedefault", true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.send(JSON.stringify(result));
+
+        var first = listEnabled.getElementsByTagName("li")[0];
+        if (first.firstChild.textContent.trim() === newContact.name) {
+            console.log("Not reinserting default contact.");
+        }
+        else {
+            console.log(first.textContent);
+            var li = buildListItem(newContact, LIST_ENABLED);
+            listEnabled.insertBefore(li, listEnabled.firstChild);
+        }
+    }
+
+    function buildListItem(person, mode) {
         // The main container
         var li = document.createElement("li");
         li.className = "listItem";
@@ -515,17 +627,40 @@
         phoneSpan.className = "listElement-phone";
         phoneSpan.innerText = person.phone;
 
+        // The actions wrapper
+        var actions = document.createElement("div");
+        actions.className = "actions-wrapper";
+
         // The remove link
-        var filter = document.createElement("i");
-        filter.className = "remove-action";
-        filter.innerText = "✖";
+        if (mode == LIST_AVAILABLE) {
+            var filter = document.createElement("i");
+            filter.className = "action remove-action fas fa-trash";
+            filter.title = "Supprimer le contact";
+
+            var makeDefault = document.createElement("i");
+            makeDefault.className = "action default-action fas fa-angle-double-up";
+            makeDefault.title = "Rendre prioritaire";
+            makeDefault.onclick = function () {
+                setDefaultContact(person.name);
+                sendListsToServer(true);
+            };
+        }
+        else if (mode == LIST_ENABLED) {
+            var filter = document.createElement("i");
+            filter.className = "action remove-action fas fa-trash";
+            filter.title = "Enlever de la liste d'appel";
+        }
 
         if (person.priority)
             li.className += " priority";
 
         li.appendChild(span);
         li.appendChild(phoneSpan);
-        li.appendChild(filter);
+        li.appendChild(actions);
+        if (mode == LIST_AVAILABLE)
+            actions.appendChild(makeDefault);
+
+        actions.appendChild(filter);
 
         return li;
     }

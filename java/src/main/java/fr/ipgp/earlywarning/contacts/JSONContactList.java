@@ -306,6 +306,15 @@ public class JSONContactList implements ContactList {
         return arr.toString();
     }
 
+    @Override
+    public void updateDefaultContact(Contact newContact) {
+        for (Contact c : contacts)
+            if (c.name.equals(newContact.name))
+                c.priority = true;
+            else
+                c.priority = false;
+    }
+
     public boolean equals(Object o) {
         if (o == null)
             return false;
