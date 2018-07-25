@@ -46,7 +46,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
 
     /**
      * Decode the properties of the received message from the DatagramPacket.
-     * Set the Trigger attributes.
+     * Sets the {@link Trigger}'s attributes.
      *
      * @throws UnknownTriggerFormatException, InvalidTriggerFieldException, MissingTriggerFieldException
      */
@@ -76,7 +76,7 @@ public class DatagramTriggerConverter implements TriggerConverter {
 
     /**
      * Decode the old OVPF format: type 01
-     * Sismo dd/MM/yyyy HH:mm:ss Declenchement
+     * <code>Sismo dd/MM/yyyy HH:mm:ss Declenchement</code>
      *
      * @param packetContentElements the elements of the received message
      * @throws InvalidTriggerFieldException if a datagram field is invalid
@@ -97,15 +97,15 @@ public class DatagramTriggerConverter implements TriggerConverter {
     /**
      * Decode version 2 messages.<br/>
      * <b>Format: </b><br/>
-     * vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message<br/>
-     * vv: version, two digit<br/>
-     * p: priority, one digit<br/>
-     * yyyy/MM/dd HH:mm:ss: date, ISO format<br/>
-     * application: application name, [a-zA-Z_0-9]*<br/>
-     * calllist: call list, either a comma separated list of digits or a .csv file name ([a-zA-Z_0-9]*\.csv)<br/>
-     * repeat: true or false<br/>
-     * confirmcode: confirmation code, a digit sequence (1 to 6 digits)
-     * message: warning message, either text message encapsulated between two "pipes" (|) or a .wav file ([a-zA-Z_0-9]*\.wav)
+     * <code>vv p yyyy/MM/dd HH:mm:ss application calllist repeat confirmcode message</code><br/>
+     * <code>vv</code>: version, two digits<br/>
+     * <code>p</code>: priority, one digit<br/>
+     * <code>yyyy/MM/dd HH:mm:ss</code>: date, in ISO format<br/>
+     * <code>application</code>: application name, [a-zA-Z_0-9]*<br/>
+     * <code>list</code>: ID in the configuration of the call list to use<br/>
+     * <code>repeat</code>: <code>true</code> or <code>false</code><br/>
+     * <code>confirmcode</code>: confirmation code, a digit sequence (1 to 6 digits)
+     * <code>message</code>: ID in the configuration of the warning message file to play
      *
      * @param packetContentElements the elements of the received message
      */
@@ -119,20 +119,29 @@ public class DatagramTriggerConverter implements TriggerConverter {
         } else
             throw new MissingTriggerFieldException("Not enough fields for a V2 trigger: " + this.packetContent);
 
+        // Priority sanity check
         if (!packetContentElements[1].matches("\\d"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid priority " + packetContentElements[1]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid priority: '" + packetContentElements[1] + "'");
+
+        // Date sanity check
         if (!CommonUtilities.isDate(packetContentElements[2] + " " + packetContentElements[3], "yyyy/MM/dd HH:mm:ss"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid date format " + packetContentElements[2] + " " + packetContentElements[3]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid date format: '" + packetContentElements[2] + " " + packetContentElements[3] + "'");
+
+        // Application name sanity check
         if (!packetContentElements[4].matches("\\w*"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid application name " + packetContentElements[4]);
-        if (!(packetContentElements[6].equals("true") || packetContentElements[6].equals("false")))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid repeat " + packetContentElements[6]);
-        if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid confirm code " + packetContentElements[7]);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid application name: '" + packetContentElements[4] + "'");
+
+        // Call list ID sanity check
         if (!packetContentElements[5].matches("\\w+"))
-            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid call list " + packetContentElements[5]);
-//        if (!warningMessage.matches("\\w+"))
-//            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid warning message " + warningMessageBuilder);
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid call list ID: '" + packetContentElements[5] + "'");
+
+        // Repeat mode sanity check
+        if (!(packetContentElements[6].equals("true") || packetContentElements[6].equals("false")))
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid repeat: '" + packetContentElements[6] + "'");
+
+        // Confirmation code sanity check
+        if (!packetContentElements[7].matches("\\d+") || packetContentElements[7].length() > 7)
+            throw new InvalidTriggerFieldException("Invalid V2 trigger field(s): invalid confirmation code: '" + packetContentElements[7] + "'");
 
         trigger.setContactList(ContactListMapper.getInstance().getListOrDefault(packetContentElements[5]));
         trigger.setMessage(warningMessage);
