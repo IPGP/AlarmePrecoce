@@ -6,6 +6,7 @@ import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
  */
 public class TestMessageMapper {
     private static Random rand;
+    private static final String DEFAULT_SOUND_NAME = "hello-world";
 
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestMessageMapper.class);
@@ -72,5 +74,9 @@ public class TestMessageMapper {
         WarningMessageMapper mapper = WarningMessageMapper.getInstance("configured");
 
         mapper.getName("welcome");
+        mapper.getNameIgnoreCase("wElCoME");
+
+        Assert.assertEquals(mapper.getNameOrDefault("non-existent-sound"), DEFAULT_SOUND_NAME);
+        Assert.assertEquals(mapper.getNameOrDefaultIgnoreCase("non-existent-souNd"), DEFAULT_SOUND_NAME);
     }
 }

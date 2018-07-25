@@ -3,7 +3,9 @@ package fr.ipgp.earlywarning.messages;
 import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.gateway.Gateway;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static fr.ipgp.earlywarning.utilities.ConfigurationValidator.getItems;
@@ -138,6 +140,37 @@ public class WarningMessageMapper {
         try {
             return getName(id);
         } catch (NoSuchMessageException ex) {
+            EarlyWarning.appLogger.warn("Mapping for '" + id + "' not found, defaulting to '" + getDefault() + "'");
+            return getDefault();
+        }
+    }
+
+    public List<String> getAvailableMessages() {
+        List<String> sounds = new ArrayList<>();
+        List<Map<String, String>> messageEntries = getItems("sounds.sound");
+        for (Map<String, String> messageEntry : messageEntries)
+            if (messageEntry.containsKey(gatewayQualifier))
+                sounds.add(messageEntry.get("id"));
+
+        return sounds;
+    }
+
+    public String getNameIgnoreCase(String id) throws NoSuchMessageException {
+        for (String k : getAvailableMessages())
+            if (k.equalsIgnoreCase(id)) {
+                if (!k.equals(id))
+                    EarlyWarning.appLogger.info("Mapping '" + id + "' to '" + k + "' (ignoring case)");
+                return getName(k);
+            }
+
+        throw new NoSuchMessageException(id);
+    }
+
+    public String getNameOrDefaultIgnoreCase(String id) {
+        try {
+            return getNameIgnoreCase(id);
+        } catch (NoSuchMessageException ex) {
+            EarlyWarning.appLogger.warn("Mapping for '" + id + "' (ignore case) not found, defaulting to '" + getDefault() + "'");
             return getDefault();
         }
     }

@@ -4,6 +4,7 @@ import fr.ipgp.charon.CharonI;
 import fr.ipgp.charon.InvalidLedStateException;
 import fr.ipgp.charon.InvalidResponseException;
 import fr.ipgp.earlywarning.EarlyWarning;
+import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.io.IOException;
  */
 public class CharonGateway implements Gateway {
 
-    private final static int triggeringLed = 7;
+    private final static int defaultLed = 5;
     private static CharonGateway uniqueInstance;
     private final CharonI charon;
 
@@ -47,13 +48,31 @@ public class CharonGateway implements Gateway {
      */
     public CallLoopResult callTillConfirm(Trigger trigger) {
         EarlyWarning.appLogger.info("CharonGateway: calling duty phone.");
-        return callTillConfirm();
+
+        String ledString = WarningMessageMapper.getInstance(this).getNameOrDefaultIgnoreCase(trigger.getMessage());
+
+        EarlyWarning.appLogger.info("CharonGateway: Using LED " + ledString + " for message '" + trigger.getMessage() + "'");
+
+        int led;
+        try {
+            led = Integer.parseInt(ledString);
+        } catch (NumberFormatException ex) {
+            led = defaultLed;
+            EarlyWarning.appLogger.error("'" + ledString + "' cannot be converted to an Integer. Defaulting to LED " + defaultLed);
+        }
+
+        if (led == -1) {
+            EarlyWarning.appLogger.error("Sound '-1' was mapped in CharonGateway. '-1' mappings should be used for sounds that are not played by CharonGateway. Exiting.");
+            return CallLoopResult.Error;
+        }
+
+        return callTillConfirm(led);
     }
 
     /**
      * Calls the duty phone until the operator acknowledges the message.
      */
-    private CallLoopResult callTillConfirm() {
+    private CallLoopResult callTillConfirm(int triggeringLed) {
         if (call(triggeringLed))
             return CallLoopResult.Confirmed;
         else
@@ -68,7 +87,7 @@ public class CharonGateway implements Gateway {
     @Override
     public void callTest(String number) {
         EarlyWarning.appLogger.warn("CharonGateway can't call a specified number. Calling duty phone.");
-        callTillConfirm();
+        callTillConfirm(defaultLed);
     }
 
     @Override
@@ -116,13 +135,13 @@ public class CharonGateway implements Gateway {
 
             return true;
         } catch (InvalidLedStateException ignored) {
-            // This can't happen: we haven't given a custom LED state String
+            // This can't happen: we have not given a custom LED state String
             return false;
         } catch (IOException ex) {
             System.out.println("Error: " + ex.getMessage());
             return false;
         } catch (InvalidResponseException e) {
-            EarlyWarning.appLogger.error("Received invalid response from Charon Gateway: " + e.getResponse());
+            EarlyWarning.appLogger.error("CharonGateway: Received invalid response from Charon Gateway: " + e.getResponse());
             EarlyWarning.appLogger.error(e.getMessage());
             return false;
         }
