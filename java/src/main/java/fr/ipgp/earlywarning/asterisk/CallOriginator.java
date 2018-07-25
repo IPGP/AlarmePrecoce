@@ -253,6 +253,9 @@ public class CallOriginator implements ManagerEventListener {
         AlertCallScript.setOnConnectedListener(onConnectedListener);
         AlertCallScript.setWarningMessage(warningMessage);
 
+        if (managerConnection.getState() == ManagerConnectionState.RECONNECTING)
+            managerConnection.logoff();
+
         if (managerConnection.getState() != ManagerConnectionState.CONNECTED
                 && managerConnection.getState() != ManagerConnectionState.CONNECTING) {
             managerConnection.login();
@@ -291,7 +294,11 @@ public class CallOriginator implements ManagerEventListener {
      */
     public CallResult call(String number) throws IOException, AuthenticationFailedException, TimeoutException {
         // Initialize the ManagerConnection and the event listeners
-        init();
+        try {
+            init();
+        } catch (IllegalStateException ex) {
+            return CallResult.Error;
+        }
 
         // Construct the OriginateAction and originate the call
         OriginateAction originateAction = buildOriginateAction(number);

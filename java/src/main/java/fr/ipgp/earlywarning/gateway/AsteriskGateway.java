@@ -5,6 +5,7 @@ import fr.ipgp.earlywarning.asterisk.CallOriginator;
 import fr.ipgp.earlywarning.asterisk.LocalAgiServer;
 import fr.ipgp.earlywarning.contacts.Contact;
 import fr.ipgp.earlywarning.contacts.ContactList;
+import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
 import org.asteriskjava.manager.ManagerConnection;
@@ -122,6 +123,11 @@ public class AsteriskGateway implements Gateway {
             if (!iterator.hasNext())
                 iterator = numbers.iterator();
 
+            if (!iterator.hasNext()) {
+                EarlyWarning.appLogger.error("No numbers in requested call list. Calling again with default call list.");
+                return callTillConfirm(ContactListMapper.getInstance().getDefaultList(), warningMessageFile, confirmCode);
+            }
+
             String toCall = iterator.next();
             EarlyWarning.appLogger.info("Calling " + toCall);
 
@@ -179,6 +185,11 @@ public class AsteriskGateway implements Gateway {
 
     public void callTest(String number) {
         // TODO: implement callTest in AsteriskGateway
+    }
+
+    @Override
+    public String toString() {
+        return "Asterisk Gateway (" + username + "@" + host + ":" + port + ")";
     }
 
     public String getSettingsQualifier() {

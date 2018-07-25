@@ -43,6 +43,7 @@ public class QueueManagerThread extends Thread {
     private boolean useSound;
     private int retry;
     private boolean useFailover = false;
+    private boolean failoverTriggered = false;
 
     private QueueManagerThread() {
         this("QueueManagerThread");
@@ -137,16 +138,28 @@ public class QueueManagerThread extends Thread {
                 Trigger trig = queue.poll();
                 assert trig != null;
 
-                configureGateway();
+                if (failoverTriggered) {
+                    EarlyWarning.appLogger.info("Failover gateway was used for the last call, attempting to restore default gateway.");
+                    configureGateway();
+                    failoverTriggered = false;
+                }
+
+                // Use the gateway to originate calls
                 CallLoopResult result = gateway.callTillConfirm(trig);
+
                 if (result == CallLoopResult.Error) {
                     if (useFailover) {
+                        failoverTriggered = true;
+                        EarlyWarning.appLogger.info("Default gateway '" + gateway.getSettingsQualifier() + "' could not originate call. Using failover system.");
+
                         configureCharonGateway();
                         result = gateway.callTillConfirm(trig);
+
                         if (result == CallLoopResult.Error)
                             EarlyWarning.appLogger.fatal("SEVERE: Failover gateway could not originate call.");
+
                     } else
-                        EarlyWarning.appLogger.warn("Active gateway could not originate call but failover system is disabled.");
+                        EarlyWarning.appLogger.warn("Active gateway '" + gateway.getSettingsQualifier() + "' could not originate call but failover system is disabled.");
                 }
 
                 if (useMail) {
@@ -242,18 +255,16 @@ public class QueueManagerThread extends Thread {
             configureAsteriskGateway();
         } else if (active.equalsIgnoreCase("charon")) {
             configureCharonGateway();
-        } else {
-            EarlyWarning.appLogger.fatal("Unknown gateway in configuration: '" + active + "'.");
-            System.exit(-1);
         }
+
+        EarlyWarning.appLogger.info("Gateway configured: " + gateway.toString());
 
         if (gateway.getClass() != CharonGateway.class) {
             // Verify that the default warning message is available for this gateway
             try {
                 WarningMessageMapper.testDefaultMessage(gateway);
-            } catch (NoSuchMessageException ex) {
-                EarlyWarning.appLogger.fatal("Can't find default warning sound for gateway '" + gateway.getClass().getName() + "'");
-                System.exit(-1);
+            } catch (NoSuchMessageException ignored) {
+                EarlyWarning.appLogger.error("No default sound configured for '" + gateway.getSettingsQualifier() + "', the default gateway.");
             }
             useFailover = EarlyWarning.configuration.getBoolean("gateway.failover_enabled");
         }
@@ -262,15 +273,9 @@ public class QueueManagerThread extends Thread {
         // None of the exceptions should occur since they are checked by the configuration validator
         try {
             ContactListMapper.testDefaultList();
-        } catch (NoSuchListException ex) {
-            EarlyWarning.appLogger.fatal("No default contact list given.");
-            System.exit(-1);
-        } catch (ContactListBuilder.UnimplementedContactListTypeException ex) {
-            EarlyWarning.appLogger.fatal("Unsupported format for default list.");
-            System.exit(-1);
-        } catch (IOException ex) {
-            EarlyWarning.appLogger.fatal("Cannot initialize default contact list.");
-            System.exit(-1);
+        } catch (NoSuchListException ignored) {
+        } catch (ContactListBuilder.UnimplementedContactListTypeException ignored) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -282,12 +287,8 @@ public class QueueManagerThread extends Thread {
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
 
             gateway = AsteriskGateway.getInstance(host, port, username, password);
-        } catch (ConversionException ex) {
-            EarlyWarning.appLogger.fatal("Wrong value in Asterisk Gateway configuration: can't convert to int.");
-            System.exit(-1);
-        } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("Missing field in Asterisk Gateway configuration: verify that settings.ami_host, settings.ami_port, settings.ami_user and settings.ami_password are set.");
-            System.exit(-1);
+        } catch (ConversionException ignored) {
+        } catch (NoSuchElementException ignored) {
         }
     }
 
@@ -299,17 +300,8 @@ public class QueueManagerThread extends Thread {
             int timeout = EarlyWarning.configuration.getInt("gateway.charon.timeout");
 
             gateway = CharonGateway.getInstance(host, port, timeout);
-            try {
-                WarningMessageMapper.testDefaultMessage(gateway);
-            } catch (NoSuchMessageException e) {
-                EarlyWarning.appLogger.error("No default message configured for Charon.");
-            }
-        } catch (ConversionException ex) {
-            EarlyWarning.appLogger.fatal("Wrong value in Charon Gateway configuration: can't convert to int.");
-            System.exit(-1);
-        } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("Missing field in Charon Gateway configuration: verify that host, ip and timeout are set.");
-            System.exit(-1);
+        } catch (ConversionException ignored) {
+        } catch (NoSuchElementException ignored) {
         }
     }
 }

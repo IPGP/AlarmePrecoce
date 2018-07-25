@@ -320,6 +320,13 @@ public class ConfigurationValidator {
 
             if (!failoverEnabled)
                 EarlyWarning.appLogger.warn("Failover system is currently DISABLED.");
+            else {
+                try {
+                    WarningMessageMapper.testDefaultMessage("charon");
+                } catch (NoSuchMessageException e) {
+                    throw new ValidationException("sounds.default", "No default LED given for failover system 'charon'");
+                }
+            }
         }
 
         /* All the gateways that can be used */
@@ -497,7 +504,10 @@ public class ConfigurationValidator {
             for (Map<String, String> contactList : contactLists) {
                 if (contactList.get("id").equalsIgnoreCase("default")) {
                     defaultPath = contactList.get("path");
-                    break;
+                } else {
+                    ContactList list = ContactListBuilder.build(contactList.get("path"));
+                    if(list.getEnabledContacts().isEmpty())
+                        EarlyWarning.appLogger.warn("Your list '" + contactList.get("id") + "' has no enabled contact.");
                 }
             }
 
