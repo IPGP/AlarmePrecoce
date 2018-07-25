@@ -121,14 +121,14 @@ class AlertCallScript extends BaseAgiScript {
                     EarlyWarning.appLogger.error("Could not play welcome file.");
                 }
 
+                // Check if hangup as been requested
+                if (hangupRequested)
+                    hangup();
+
                 if (data == null || data.isEmpty()) {
                     EarlyWarning.appLogger.debug("Replaying welcome.");
                     continue;
                 }
-
-                // Check if hangup as been requested
-                if (hangupRequested)
-                    hangup();
 
                 if (onConnectedListener != null)
                     // Notify the OnConnectedListener, if it's available

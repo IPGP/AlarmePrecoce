@@ -137,6 +137,7 @@ public class QueueManagerThread extends Thread {
                 Trigger trig = queue.poll();
                 assert trig != null;
 
+                configureGateway();
                 CallLoopResult result = gateway.callTillConfirm(trig);
                 if (result == CallLoopResult.Error) {
                     if (useFailover) {
@@ -298,6 +299,11 @@ public class QueueManagerThread extends Thread {
             int timeout = EarlyWarning.configuration.getInt("gateway.charon.timeout");
 
             gateway = CharonGateway.getInstance(host, port, timeout);
+            try {
+                WarningMessageMapper.testDefaultMessage(gateway);
+            } catch (NoSuchMessageException e) {
+                EarlyWarning.appLogger.error("No default message configured for Charon.");
+            }
         } catch (ConversionException ex) {
             EarlyWarning.appLogger.fatal("Wrong value in Charon Gateway configuration: can't convert to int.");
             System.exit(-1);
