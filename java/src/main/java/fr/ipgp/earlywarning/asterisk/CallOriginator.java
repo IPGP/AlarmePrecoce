@@ -115,7 +115,7 @@ public class CallOriginator implements ManagerEventListener {
                 callAction = CallAction.Correct;
             else {
                 if (--remainingTries > 0)
-                    // If the code is incorrect and the user doesn't have any try left
+                    // If the code is incorrect and the user does not have any try left
                     callAction = CallAction.Retry;
                 else
                     // If the user can try again
@@ -160,7 +160,7 @@ public class CallOriginator implements ManagerEventListener {
      * @param code       the confirmation code
      */
     public CallOriginator(ManagerConnection connection, String code, String warningMessage) {
-        // If we get a null ManagerConnection, we can't create a default one without credentials.
+        // If we get a null ManagerConnection, we cannot create a default one without credentials.
         assert connection != null;
 
         this.managerConnection = connection;
@@ -239,7 +239,7 @@ public class CallOriginator implements ManagerEventListener {
      *
      * @throws AuthenticationFailedException if the AMI credentials are incorrect
      * @throws TimeoutException              if the AMI authentication times out
-     * @throws IOException                   if ManagerEvents listeners can't be set
+     * @throws IOException                   if ManagerEvents listeners cannot be set
      */
     private void init() throws AuthenticationFailedException, TimeoutException, IOException {
         callAction = CallAction.Retry;
@@ -404,7 +404,7 @@ public class CallOriginator implements ManagerEventListener {
          */
         Retry,
         /**
-         * The code was incorrect and the callee doesn't have any try left.
+         * The code was incorrect and the callee does not have any try left.
          */
         GiveUp
     }
@@ -422,7 +422,7 @@ public class CallOriginator implements ManagerEventListener {
          */
         Busy,
         /**
-         * The callee didn't enter the correct confirmation code [after several tries].
+         * The callee did not enter the correct confirmation code [after several tries].
          */
         IncorrectCode,
         /**

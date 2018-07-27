@@ -15,7 +15,7 @@ import org.asteriskjava.fastagi.*;
  * The (to this day) only AGI script we have.
  * <b>What does it do?</b>
  * <ul>
- * <li>Immediately answer the call (for now, we can't detect when the callee actually answers)</li>
+ * <li>Immediately answer the call (for now, we cannot detect when the callee actually answers)</li>
  * <li>Plays a "welcome" sound in a loop until the callee enters "11" on his dial pad</li>
  * <li>Plays an adequate sound, depending on the situation</li>
  * <li>Asks for a confirmation code</li>

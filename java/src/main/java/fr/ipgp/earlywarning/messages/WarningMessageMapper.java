@@ -33,7 +33,7 @@ public class WarningMessageMapper {
                 defaultWarning = soundEntry.get(qualifier);
 
         if (defaultWarning == null)
-            throw new NoSuchMessageException("Default message doesn't exist for gateway '" + gatewayQualifier + "' in configuration.");
+            throw new NoSuchMessageException("Default message does not exist for gateway '" + gatewayQualifier + "' in configuration.");
 
         mappings.put("default", defaultWarning);
     }

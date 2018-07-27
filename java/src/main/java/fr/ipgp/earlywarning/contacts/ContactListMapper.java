@@ -51,10 +51,10 @@ public class ContactListMapper {
     }
 
     /**
-     * Constructs the ContactListMapper, which checks that the <code>default</code> list exists. If it doesn't, throws an exception.
+     * Constructs the ContactListMapper, which checks that the <code>default</code> list exists. If it does not, throws an exception.
      *
-     * @throws NoSuchListException if the <code>default</code> contact list doesn't exist
-     * @throws IOException         if the file corresponding to the <code>default</code> contact list can't be read
+     * @throws NoSuchListException if the <code>default</code> contact list does not exist
+     * @throws IOException         if the file corresponding to the <code>default</code> contact list cannot be read
      */
     public static void testDefaultList() throws NoSuchListException, IOException, ContactListBuilder.UnimplementedContactListTypeException {
         uniqueInstance = new ContactListMapper();
@@ -110,7 +110,7 @@ public class ContactListMapper {
      * Verifies that a list exist with the given name and returns it, otherwise returns the default list.
      *
      * @param name the name of the list to get
-     * @return the requested list or the default list if it doesn't exist
+     * @return the requested list or the default list if it does not exist
      */
     public ContactList getListOrDefault(String name) {
         try {
@@ -130,7 +130,7 @@ public class ContactListMapper {
         try {
             return getList("default");
         } catch (NoSuchListException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
-            // This can't happen: the default list is built upon object construction
+            // This cannot happen: the default list is built upon object construction
             return null;
         }
     }

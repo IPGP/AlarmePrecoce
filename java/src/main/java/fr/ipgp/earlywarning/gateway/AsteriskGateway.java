@@ -108,7 +108,7 @@ public class AsteriskGateway implements Gateway {
         do {
             if (result != Initial) {
                 if (originateTrials >= retriesBeforeFailover) {
-                    EarlyWarning.appLogger.error("Couldn't originate call after " + originateTrials + " retries. Using failover system.");
+                    EarlyWarning.appLogger.error("could not originate call after " + originateTrials + " retries. Using failover system.");
 
                     return CallLoopResult.Error;
                 }

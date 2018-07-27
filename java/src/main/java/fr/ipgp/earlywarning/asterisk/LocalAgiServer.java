@@ -45,7 +45,7 @@ public class LocalAgiServer {
 
     /**
      * A hardcoded {@link MappingStrategy}<br />
-     * The main advantage is that we don't rely on an external mapping files (since it often causes problems).
+     * The main advantage is that we do not rely on an external mapping files (since it often causes problems).
      */
     class AlertCallMappingStrategy implements MappingStrategy {
         @Override

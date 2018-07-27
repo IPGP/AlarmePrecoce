@@ -109,7 +109,7 @@ public class CharonI {
         try {
             return getCommand(command, getHex(LED));
         } catch (InvalidLedStateException ignored) {
-            // This can't happen, since getHex always returns even-length strings.
+            // This cannot happen, since getHex always returns even-length strings.
             return null;
         }
     }
@@ -358,11 +358,11 @@ public class CharonI {
                 // ledsArray[ledNumber - 1 - i] = ledValues.charAt(i) == '1' ? 1 : 0;
 
             } else
-                // If no match for the result has been found (which probably can't happen)
-                throw new InvalidResponseException("The response didn't contain the LED state.", result);
+                // If no match for the result has been found (which probably cannot happen)
+                throw new InvalidResponseException("The response did not contain the LED state.", result);
         } else
-            // If the result doesn't match our expected format
-            throw new InvalidResponseException("The response length wasn't the expected one (" + count + ", should have been 7).", new String(data));
+            // If the result does not match our expected format
+            throw new InvalidResponseException("The response length was not the expected one (" + count + ", should have been 7).", new String(data));
 
     }
 
@@ -370,7 +370,7 @@ public class CharonI {
      * Applies the current LED state<br />
      * Establishes a TCP connection to the Charon module and applies the local LED state via the socket.
      *
-     * @throws IOException              if the connection can't be established
+     * @throws IOException              if the connection cannot be established
      * @throws InvalidResponseException if the response from the module in invalid
      */
     public void applyLedState() throws IOException, InvalidResponseException {
@@ -390,7 +390,7 @@ public class CharonI {
         try {
             command = getSetLEDCommand(hexadecimalState);
         } catch (InvalidLedStateException ignored) {
-            // This can't happen: the String was built by the programme.
+            // This cannot happen: the String was built by the programme.
         }
 
         assert command != null;

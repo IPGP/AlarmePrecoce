@@ -49,7 +49,7 @@ public class ClickatellHttp {
      * This tests whether your account details works.
      *
      * @return True if details were accepted, and false otherwise.
-     * @throws UnknownHostException if the host can't be reached
+     * @throws UnknownHostException if the host cannot be reached
      */
     public boolean testAuth() throws UnknownHostException {
         try {
@@ -170,7 +170,7 @@ public class ClickatellHttp {
         if (result.contains("Authentication failed")) {
             throw new Exception("Authentication Failed");
         }
-        // We don't throw an exception here, as maybe only part of your
+        // We do not throw an exception here, as maybe only part of your
         // messages failed:
         String lines[] = result.split("\n");
         for (String l : lines) {
@@ -395,7 +395,7 @@ public class ClickatellHttp {
      * @param targetURL     The URL that should get hit.
      * @param urlParameters The data you want to send via the POST.
      * @return The content of the request.
-     * @throws UnknownHostException if the host can't be reached
+     * @throws UnknownHostException if the host cannot be reached
      */
     private String excutePost(String targetURL, String urlParameters) throws UnknownHostException {
         URL url;

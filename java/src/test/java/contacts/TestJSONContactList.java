@@ -39,7 +39,7 @@ public class TestJSONContactList {
         File contactsRoot = new File(testsRoot.getCanonicalPath() + "/contacts");
         if (!contactsRoot.isDirectory())
             if (!contactsRoot.mkdirs())
-                throw new IOException("Can't create tests folder '" + contactsRoot.getCanonicalPath() + "'");
+                throw new IOException("Cannot create tests folder '" + contactsRoot.getCanonicalPath() + "'");
     }
 
     @AfterClass
@@ -48,7 +48,7 @@ public class TestJSONContactList {
     }
 
     /**
-     * Verify that, if the target file doesn't exist, the {@link JSONContactList} creates the necessary folders and the JSON file.
+     * Verify that, if the target file does not exist, the {@link JSONContactList} creates the necessary folders and the JSON file.
      */
     @Test
     public void testCreateNewFile() throws IOException {
@@ -61,13 +61,13 @@ public class TestJSONContactList {
         } catch (IOException ignored) {
         }
 
-        Assert.assertTrue("The JSONContactList didn't create a new file.", f.exists());
+        Assert.assertTrue("The JSONContactList did not create a new file.", f.exists());
     }
 
     /**
-     * Verify that getting a contact by name works or throws a {@link NoSuchContactException} if the contact doesn't exist
+     * Verify that getting a contact by name works or throws a {@link NoSuchContactException} if the contact does not exist
      *
-     * @throws NoSuchContactException expected: the contact doesn't exist
+     * @throws NoSuchContactException expected: the contact does not exist
      */
     @Test(expected = NoSuchContactException.class)
     public void testGetNonExistentContact() throws NoSuchContactException, IOException {
@@ -108,7 +108,7 @@ public class TestJSONContactList {
         try {
             contactList = new JSONContactList("tests/contacts.json");
         } catch (IOException ex) {
-            Assert.fail("Couldn't create the contacts.json file.");
+            Assert.fail("could not create the contacts.json file.");
         }
 
         contactList.addContact(contact1);
@@ -125,7 +125,7 @@ public class TestJSONContactList {
     /**
      * Verify that the list correctly saves the file after adding a new contact and that a new {@link JSONContactList} finds the correct data in the file.
      *
-     * @throws IOException if the file can't be created
+     * @throws IOException if the file cannot be created
      */
     @Test
     public void testWriteAndLoadContacts() throws IOException {
@@ -135,7 +135,7 @@ public class TestJSONContactList {
         try {
             contactList = new JSONContactList("tests/contacts.json");
         } catch (IOException ex) {
-            Assert.fail("Couldn't create the contacts.json file.");
+            Assert.fail("could not create the contacts.json file.");
         }
 
         contactList.addContact(contact1);
@@ -144,10 +144,10 @@ public class TestJSONContactList {
         try {
             contactList = new JSONContactList("tests/contacts.json");
         } catch (IOException ex) {
-            Assert.fail("Couldn't create the contacts.json file.");
+            Assert.fail("could not create the contacts.json file.");
         }
 
-        Assert.assertTrue("The contact list didn't load the contacts.", contactList.getAvailableContacts().contains(contact1));
+        Assert.assertTrue("The contact list did not load the contacts.", contactList.getAvailableContacts().contains(contact1));
     }
 
     /**
@@ -164,7 +164,7 @@ public class TestJSONContactList {
         try {
             contactList = new JSONContactList("tests/contacts.json");
         } catch (IOException ex) {
-            Assert.fail("Couldn't create the contacts.json file.");
+            Assert.fail("could not create the contacts.json file.");
         }
 
         // Add all the contacts
@@ -189,7 +189,7 @@ public class TestJSONContactList {
         Assert.assertTrue("'Mouse' was not in the enabled contacts.", contactList.getEnabledContacts().contains(contact2));
 
         // Verify 'Computer' has been deleted from the list
-        Assert.assertFalse("'Computer' wasn't removed from the AvailableList", contactList.getAvailableContacts().contains(contact4));
+        Assert.assertFalse("'Computer' was not removed from the AvailableList", contactList.getAvailableContacts().contains(contact4));
     }
 
 }

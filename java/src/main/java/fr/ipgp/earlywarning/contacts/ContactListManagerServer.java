@@ -138,7 +138,7 @@ public class ContactListManagerServer {
          *
          * @param file         the index.html empty template
          * @param responseBody the OutputStream to write to
-         * @throws IOException if index.html can't be read
+         * @throws IOException if index.html cannot be read
          */
         private void serveIndex(String listname, ContactList list, File file, OutputStream responseBody) throws IOException {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
@@ -183,10 +183,10 @@ public class ContactListManagerServer {
 
         /**
          * Verifies that the request file exists and serves it if it does.
-         * If the file doesn't exist, send a 404-response.
+         * If the file does not exist, send a 404-response.
          *
          * @param t the HttpExchange to be handled
-         * @throws IOException if the file exists but can't be read.
+         * @throws IOException if the file exists but cannot be read.
          */
         public void handle(HttpExchange t) throws IOException {
             URI uri = t.getRequestURI();
@@ -273,7 +273,7 @@ public class ContactListManagerServer {
                 try {
                     return ContactListMapper.getInstance().getList(name);
                 } catch (NoSuchListException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
-                    // This won't happen: we have already verified that the list name was working in the getListNameForURI body
+                    // This cannot happen: we have already verified that the list name was working in the getListNameForURI body
                 }
             }
 
@@ -290,7 +290,7 @@ public class ContactListManagerServer {
                 os.write(result.getBytes());
                 os.close();
             } catch (IOException ex) {
-                EarlyWarning.appLogger.error("Can't write 404 response to client: " + ex.getMessage());
+                EarlyWarning.appLogger.error("Cannot write 404 response to client: " + ex.getMessage());
             }
         }
     }
@@ -323,7 +323,7 @@ public class ContactListManagerServer {
             try {
                 list.write();
             } catch (IOException ex) {
-                EarlyWarning.appLogger.error("Can't write JSONContactList: " + ex.getMessage());
+                EarlyWarning.appLogger.error("Cannot write JSONContactList: " + ex.getMessage());
             }
         }
 
@@ -356,7 +356,7 @@ public class ContactListManagerServer {
             try {
                 list.write();
             } catch (IOException ex) {
-                EarlyWarning.appLogger.error("Can't write contact list.");
+                EarlyWarning.appLogger.error("Cannot write contact list.");
             }
         }
 
@@ -388,7 +388,7 @@ public class ContactListManagerServer {
          * Handles a <code>POST</code> request.
          *
          * @param he the exchange to handle
-         * @throws IOException if the index.html template can't be read
+         * @throws IOException if the index.html template cannot be read
          */
         public void handle(HttpExchange he) throws IOException {
             Thread.currentThread().setName("ContactServer");

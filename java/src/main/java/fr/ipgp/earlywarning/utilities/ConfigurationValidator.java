@@ -225,7 +225,7 @@ public class ConfigurationValidator {
             EarlyWarning.appLogger.warn("E-mail status (active / inactive) is not a boolean: '" + _useMail + "', defaulting to false.");
         }
 
-        // Don't validate e-mail settings if they are not in used
+        // Do not validate e-mail settings if they are not in used
         if (!useMail)
             return;
 

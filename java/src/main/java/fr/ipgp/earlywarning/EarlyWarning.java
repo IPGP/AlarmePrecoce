@@ -88,8 +88,10 @@ public class EarlyWarning {
     private static PreInitOptions parseArgsPreInit(final String[] args) {
         PreInitOptions options = new PreInitOptions();
         for (String arg : args) {
-            if (arg.equalsIgnoreCase("--novalidation"))
-                options.validateConfiguration = false;
+            if (arg.equalsIgnoreCase("--novalidation")) {
+                EarlyWarning.appLogger.warn("Due to the risks it exposes the application to, the --novalidation argument cannot be used anymore.");
+                // options.validateConfiguration = false;
+            }
             else if (arg.equalsIgnoreCase("--searchresources"))
                 options.searchResources = true;
         }
@@ -172,7 +174,7 @@ public class EarlyWarning {
                 }
             }.start();
         } else if (options.testCall) {
-            // Only execute the unique test call if we haven't already executed two other test calls
+            // Only execute the unique test call if we have not already executed two other test calls
             appLogger.info("--testcall was passed: a trigger will be emitted after 2500ms.");
             new Thread() {
                 public void run() {
