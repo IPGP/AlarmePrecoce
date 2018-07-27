@@ -47,6 +47,8 @@ public class CharonI {
     private int tcpPort;
     private int tcpTimeout;
 
+    private static final boolean DEBUG = false;
+
     /**
      * Constructor
      *
@@ -299,6 +301,12 @@ public class CharonI {
 //            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
 //    }
 
+    private void printDebug(String s)
+    {
+        if (DEBUG)
+            System.out.println("CharonGateway: " + s);
+    }
+
     /**
      * Refreshes the current LED states (in the <code>ledsArray</code>)
      */
@@ -314,7 +322,7 @@ public class CharonI {
 
         // TODO: why 0x00 ?
         String command = getGetLEDCommand(0x00);
-        System.out.println("Command to send: " + command);
+        printDebug("Command to send: " + command);
         os.write(DatatypeConverter.parseHexBinary(command));
 
         byte[] data = new byte[100];
@@ -371,7 +379,7 @@ public class CharonI {
         String ledValues = ledStatesToString();
 
         // Print it
-        System.out.println("Affecting LED values: '" + ledValues + "'");
+        printDebug("Affecting LED values: '" + ledValues + "'");
 
         // Convert the String (eg 00010010) to its integer counterpart
         int decimalValue = Integer.parseInt(ledValues, 2);
@@ -399,7 +407,7 @@ public class CharonI {
         os.write(DatatypeConverter.parseHexBinary(command));
         os.close();
 
-        System.out.println("Sent: " + command);
+        printDebug("Sent: " + command);
 
         socket_module.close();
         refreshLedState();

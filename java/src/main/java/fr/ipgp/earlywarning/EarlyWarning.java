@@ -7,13 +7,14 @@ package fr.ipgp.earlywarning;
 import fr.ipgp.earlywarning.contacts.ContactListManagerServer;
 import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
+import fr.ipgp.earlywarning.heartbeat.HeartbeatServerThread;
 import fr.ipgp.earlywarning.test.TriggerV2Sender2;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
 import fr.ipgp.earlywarning.utilities.FileSearch;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConversionException;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -21,23 +22,26 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
 
 /**
- * Entry point for the application<br/>
- * - Starts the logger (Log4J)<br/>
- * - Validates the configuration file<br />
- * - Checks its own uniqueness.<br/>
- * - Starts the call list Web interface server<br />
- * - Reads the configuration file and then create the {@link EarlyWarningThread}.<br/>
- * - If the configuration file specifies it, starts the {@link DataBaseHeartBeatThread}.<br/>
- * - Creates the GUI, if possible.
+ * Entry point for the application
+ * <ul>
+ * <li>Starts the logger (Log4J)</li>
+ * <li>Validates the configuration file</li>
+ * <li>Checks its own uniqueness.</li>
+ * <li>Starts the call list Web interface server</li>
+ * <li>Reads the configuration file and then create the {@link EarlyWarningThread}.</li>
+ * <li>If the configuration file specifies it, starts the {@link DataBaseHeartBeatThread}.</li>
+ * <li>Creates the GUI, if possible.</li>
+ * </ul>
  *
  * @author Patrice Boissier
+ * @author Thomas Kowalski
  */
 public class EarlyWarning {
+    private static final String CONFIGURATION_PATH = "resources/earlywarning.xml";
 
     public static final Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
     public static XMLConfiguration configuration;
@@ -67,6 +71,7 @@ public class EarlyWarning {
         startEarlyWarningThread();
         startDataBaseHeartBeatThread();
         startContactsServer();
+        startFailoverManager();
 
         // Create the GUI for compatible platforms
         createGui();
@@ -193,17 +198,18 @@ public class EarlyWarning {
      */
     private static void readConfiguration(boolean validate) {
         try {
-            configuration = new XMLConfiguration(buildPath("resources/earlywarning.xml"));
-            configuration.setThrowExceptionOnMissing(true);
-            if (validate) {
-                ConfigurationValidator validator = new ConfigurationValidator(configuration);
-                validator.validate();
-            } else
-                appLogger.warn("No validation will be made on the configuration file. If it contains a mistake, it will only be noticeable at call time.");
-        } catch (ConfigurationException cex) {
-            appLogger.fatal("Fatal error: configuration file not present or not readable. Exiting application");
-            System.exit(1);
+            configuration = new XMLConfiguration(buildPath(CONFIGURATION_PATH));
+        } catch (ConfigurationException e) {
+            appLogger.fatal("Could not read configuration at '" + CONFIGURATION_PATH  + "'");
+            System.exit(-1);
         }
+
+        configuration.setThrowExceptionOnMissing(true);
+        if (validate) {
+            ConfigurationValidator validator = new ConfigurationValidator(configuration);
+            validator.validate();
+        } else
+            appLogger.warn("No validation will be made on the configuration file. If it contains a mistake, it will only be noticeable at call time.");
     }
 
     /**
@@ -253,12 +259,6 @@ public class EarlyWarning {
         try {
             Thread earlyWarningThread = EarlyWarningThread.getInstance();
             earlyWarningThread.start();
-        } catch (ConversionException ex) {
-            appLogger.fatal("Fatal error: an element value has wrong type: check network section of earlywarning.xml configuration file. Exiting application.");
-            System.exit(1);
-        } catch (NoSuchElementException ex) {
-            appLogger.fatal("Fatal error: An element value is undefined: check network section of earlywarning.xml configuration file. Exiting application.");
-            System.exit(1);
         } catch (IOException ex) {
             appLogger.fatal("Fatal error: I/O exception: " + ex.getMessage() + ". Exiting application.");
             System.exit(1);
@@ -269,16 +269,26 @@ public class EarlyWarning {
      * Starts the {@link DataBaseHeartBeatThread}.
      */
     private static void startDataBaseHeartBeatThread() {
-        try {
-            if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-                Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
-                dataBaseHeartBeatThread.start();
-            }
-        } catch (ConversionException ex) {
-            appLogger.error("An element value has wrong type: check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
-        } catch (NoSuchElementException ex) {
-            appLogger.error("An element value is undefined: check hearbeat section of earlywarning.xml configuration file. HearBeat notification disabled.");
+        if (configuration.getBoolean("heartbeat.use_heartbeat")) {
+            Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
+            dataBaseHeartBeatThread.start();
         }
+    }
+
+    private static void startFailoverManager() {
+        if (!configuration.getBoolean("failover.is_failover")) {
+            int port = configuration.getInt("failover.heartbeat_port");
+            HeartbeatServerThread heartbeatServerThread = null;
+            try {
+                heartbeatServerThread = HeartbeatServerThread.getInstance(port);
+            } catch (IOException e) {
+                appLogger.fatal("Could not start heartbeat server.");
+                System.exit(-1);
+            }
+
+            heartbeatServerThread.start();
+        } else
+            appLogger.info("Current instance is failover, not starting heartbeat server.");
     }
 
     /**

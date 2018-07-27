@@ -13,6 +13,8 @@ import fr.ipgp.earlywarning.gateway.AsteriskGateway;
 import fr.ipgp.earlywarning.gateway.CallLoopResult;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
+import fr.ipgp.earlywarning.heartbeat.AliveRequester;
+import fr.ipgp.earlywarning.heartbeat.AliveState;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
@@ -44,6 +46,9 @@ public class QueueManagerThread extends Thread {
     private int retry;
     private boolean useFailover = false;
     private boolean failoverTriggered = false;
+    private boolean isFailover;
+    private String failoverMainHost = null;
+    private Integer failoverMainPort = null;
 
     private QueueManagerThread() {
         this("QueueManagerThread");
@@ -133,10 +138,23 @@ public class QueueManagerThread extends Thread {
 
         configureAudioSerialMessage();
 
-        while (moreTriggers) {
+        configureFailover();
+
+        while (true) {
             if (queue.size() > 0) {
                 Trigger trig = queue.poll();
                 assert trig != null;
+
+                if (isFailover)
+                {
+                    boolean mainOnline = AliveRequester.getInstance(failoverMainHost, failoverMainPort).getOnline();
+                    if (mainOnline)
+                    {
+                        EarlyWarning.appLogger.info("Main instance is alive, not processing trigger.");
+                        continue;
+                    } else
+                        EarlyWarning.appLogger.info("Main instance is dead, processing trigger.");
+                }
 
                 if (failoverTriggered) {
                     EarlyWarning.appLogger.info("Failover gateway was used for the last call, attempting to restore default gateway.");
@@ -170,6 +188,7 @@ public class QueueManagerThread extends Thread {
                         EarlyWarning.appLogger.error("Error while sending notification emails: " + ex.getMessage());
                     }
                 }
+
                 if (useSMS) {
                     try {
                         smsThread.sendSMS(trig.mailTrigger());
@@ -177,6 +196,7 @@ public class QueueManagerThread extends Thread {
                         EarlyWarning.appLogger.error("Error while sending SMS notification: " + ex.getMessage());
                     }
                 }
+
                 if (useSound) {
                     audioSerialMessage.sendMessage(trig, resourcesPath);
                     while (audioSerialMessage.isPlaying()) {
@@ -187,14 +207,16 @@ public class QueueManagerThread extends Thread {
                         }
                     }
                 }
+
                 try {
                     Thread.sleep(30000);
                 } catch (InterruptedException ex) {
                     EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
+
             } else {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
                 }
@@ -274,6 +296,17 @@ public class QueueManagerThread extends Thread {
         try {
             ContactListMapper.testDefaultList();
         } catch (NoSuchListException | IOException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
+        }
+    }
+
+    private void configureFailover()
+    {
+        isFailover = EarlyWarning.configuration.getBoolean("failover.is_failover");
+
+        if (isFailover)
+        {
+            failoverMainHost = EarlyWarning.configuration.getString("failover.main");
+            failoverMainPort = EarlyWarning.configuration.getInt("failover.heartbeat_port");
         }
     }
 

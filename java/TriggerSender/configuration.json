@@ -1,0 +1,24 @@
+{
+  "instances": [
+    {
+      "host": "195.83.188.10",
+      "port": 4445
+    },
+    {
+      "host": "195.83.188.41",
+      "port": 4445
+    }
+  ],
+  "triggers": [
+    {
+      "id" : 1234,
+      "priority" : 8,
+      "date" : "2018/07/27 11:16:28",
+      "application" : "TriggerSender",
+      "contactlist" : "default",
+      "repeat" : true,
+      "code" : "11",
+      "message" : "default"
+    }
+  ]
+}
