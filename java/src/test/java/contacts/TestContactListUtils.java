@@ -4,7 +4,10 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.contacts.*;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +48,7 @@ public class TestContactListUtils {
         ContactListMapper.testDefaultList();
 
         defaultContactListFile = null;
-        for(Map<String, String> contactListEntry : getItems("contacts.lists.list"))
+        for (Map<String, String> contactListEntry : getItems("contacts.lists.list"))
             if (contactListEntry.get("id").equals("default"))
                 defaultContactListFile = contactListEntry.get("path");
 
@@ -61,6 +64,7 @@ public class TestContactListUtils {
 
     /**
      * Tests that building a {@link ContactList} from a JSON file works.
+     *
      * @throws IOException should not happen
      */
     @Test
@@ -79,7 +83,8 @@ public class TestContactListUtils {
 
     /**
      * Tests that trying to build from an unknown file type will throw an exception
-     * @throws IOException should not happen
+     *
+     * @throws IOException                                              should not happen
      * @throws ContactListBuilder.UnimplementedContactListTypeException expected
      */
     @Test(expected = ContactListBuilder.UnimplementedContactListTypeException.class)
@@ -91,9 +96,10 @@ public class TestContactListUtils {
 
     /**
      * Tests that asking for an existent {@link ContactList} works and actually gives the right one, by requesting the <code>default</code> contact list.
-     * @throws NoSuchListException should not happen
+     *
+     * @throws NoSuchListException                                      should not happen
      * @throws ContactListBuilder.UnimplementedContactListTypeException should not happen
-     * @throws IOException should not happen
+     * @throws IOException                                              should not happen
      */
     @Test
     public void testExistentMap() throws NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException, IOException {
@@ -105,7 +111,8 @@ public class TestContactListUtils {
 
     /**
      * Tests that requesting a non existent {@link ContactList} effectively throws a {@link NoSuchListException}
-     * @throws NoSuchListException expected
+     *
+     * @throws NoSuchListException                                      expected
      * @throws ContactListBuilder.UnimplementedContactListTypeException should not happen
      */
     @Test(expected = NoSuchListException.class)

@@ -130,8 +130,7 @@ public class SingleContactList implements ContactList {
     }
 
     @Override
-    public void updateDefaultContact(Contact c)
-    {
+    public void updateDefaultContact(Contact c) {
         if (contact.equals(c))
             contact.priority = true;
     }

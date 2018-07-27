@@ -148,8 +148,7 @@ public class CharonGateway implements Gateway {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Charon Gateway (" + charon.getIp() + ":" + charon.getTcpPort() + ")";
     }
 }

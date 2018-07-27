@@ -23,8 +23,8 @@ import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
  * @author Thomas Kowalski
  */
 public class TestMessageMapper {
-    private static Random rand;
     private static final String DEFAULT_SOUND_NAME = "hello-world";
+    private static Random rand;
 
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestMessageMapper.class);
@@ -44,13 +44,11 @@ public class TestMessageMapper {
     }
 
     @AfterClass
-    public static void tearDown()
-    {
+    public static void tearDown() {
 
     }
 
-    private String randomGatewayName()
-    {
+    private String randomGatewayName() {
         return "Gateway<" + rand.nextInt() + ">";
     }
 

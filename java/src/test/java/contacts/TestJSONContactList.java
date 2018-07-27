@@ -24,11 +24,12 @@ import static commons.TestCommons.setUpEnvironment;
  * @author Thomas Kowalski
  */
 public class TestJSONContactList {
+    private static File testsRoot;
+
     public static junit.framework.Test suite() {
         return new junit.framework.JUnit4TestAdapter(TestJSONContactList.class);
     }
 
-    private static File testsRoot;
     @BeforeClass
     public static void setUp() throws IOException, ConfigurationException {
         setUpEnvironment();
@@ -36,7 +37,7 @@ public class TestJSONContactList {
         testsRoot = new File("tests").getCanonicalFile();
 
         File contactsRoot = new File(testsRoot.getCanonicalPath() + "/contacts");
-        if(!contactsRoot.isDirectory())
+        if (!contactsRoot.isDirectory())
             if (!contactsRoot.mkdirs())
                 throw new IOException("Can't create tests folder '" + contactsRoot.getCanonicalPath() + "'");
     }

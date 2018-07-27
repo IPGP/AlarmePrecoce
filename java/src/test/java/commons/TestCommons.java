@@ -17,14 +17,15 @@ import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 public class TestCommons {
     /**
      * Finds the right working directory (the one containing <code>resources</code>) and loads the default configuration
+     *
      * @return the working directory
-     * @throws IOException if the default configuration file cannot be found
+     * @throws IOException            if the default configuration file cannot be found
      * @throws ConfigurationException if the configuration is invalid
      */
     public static String setUpEnvironment() throws IOException, ConfigurationException {
         String root = "../";
 
-        File configurationFile = searchForFile(root,"earlywarning.xml");
+        File configurationFile = searchForFile(root, "earlywarning.xml");
         File workingDirFile = configurationFile.getParentFile().getParentFile().getCanonicalFile();
         String workingDir = workingDirFile.getCanonicalPath();
         System.setProperty("user.dir", workingDir);

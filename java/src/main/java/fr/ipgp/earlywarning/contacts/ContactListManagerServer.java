@@ -236,8 +236,7 @@ public class ContactListManagerServer {
             }
         }
 
-        private String getListNameForURI(URI uri)
-        {
+        private String getListNameForURI(URI uri) {
             if (!uri.toString().contains("?"))
                 return "default";
             else if (uri.toString().split("\\?")[1].trim().equals(""))
@@ -361,8 +360,7 @@ public class ContactListManagerServer {
             }
         }
 
-        private static ContactList getList(String listName)
-        {
+        private static ContactList getList(String listName) {
             try {
                 return ContactListMapper.getInstance().getList(listName);
             } catch (NoSuchListException ex) {

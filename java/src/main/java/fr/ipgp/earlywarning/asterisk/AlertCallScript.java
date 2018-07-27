@@ -27,14 +27,13 @@ import org.asteriskjava.fastagi.*;
  */
 class AlertCallScript extends BaseAgiScript {
     private static final long SECOND = 1000;
+    private static final WarningMessageMapper mapper = WarningMessageMapper.getInstance("asterisk");
     private static OnCodeReceivedListener onCodeReceivedListener;
     private static OnHangupListener onHangupListener;
     private static OnConnectedListener onConnectedListener;
     private static boolean hangupRequested = false;
     private static int maxCodeLength = 0;
     private static String warningMessage = null;
-
-    private static final WarningMessageMapper mapper = WarningMessageMapper.getInstance("asterisk");
 
     /**
      * Setter for the {@link OnCodeReceivedListener}

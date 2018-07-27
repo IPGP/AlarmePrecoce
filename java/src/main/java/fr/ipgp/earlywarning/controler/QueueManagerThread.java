@@ -273,9 +273,7 @@ public class QueueManagerThread extends Thread {
         // None of the exceptions should occur since they are checked by the configuration validator
         try {
             ContactListMapper.testDefaultList();
-        } catch (NoSuchListException ignored) {
-        } catch (ContactListBuilder.UnimplementedContactListTypeException ignored) {
-        } catch (IOException ignored) {
+        } catch (NoSuchListException | IOException | ContactListBuilder.UnimplementedContactListTypeException ignored) {
         }
     }
 
@@ -287,8 +285,7 @@ public class QueueManagerThread extends Thread {
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
 
             gateway = AsteriskGateway.getInstance(host, port, username, password);
-        } catch (ConversionException ignored) {
-        } catch (NoSuchElementException ignored) {
+        } catch (ConversionException | NoSuchElementException ignored) {
         }
     }
 
@@ -300,8 +297,7 @@ public class QueueManagerThread extends Thread {
             int timeout = EarlyWarning.configuration.getInt("gateway.charon.timeout");
 
             gateway = CharonGateway.getInstance(host, port, timeout);
-        } catch (ConversionException ignored) {
-        } catch (NoSuchElementException ignored) {
+        } catch (ConversionException | NoSuchElementException ignored) {
         }
     }
 }

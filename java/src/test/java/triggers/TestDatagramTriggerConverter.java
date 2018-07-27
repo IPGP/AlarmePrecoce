@@ -23,8 +23,8 @@ import static commons.TestCommons.setUpEnvironment;
  */
 public class TestDatagramTriggerConverter {
 
-    private DatagramPacket packet = null;
     private final byte[] buffer = new byte[65535];
+    private DatagramPacket packet = null;
     private InetAddress address = null;
 
     public static junit.framework.Test suite() {

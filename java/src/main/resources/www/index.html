@@ -219,9 +219,9 @@
     </div>
 </div>
 <div class="container">
-    <p class="center">Pour ajouter des contacts à la liste d'appel, faites les glisser de l'annuaire à la liste d'appel.<br />
-        Supprimer un contact de l'annuaire supprime également toutes ses occurrences dans la liste d'appel.<br />
-    Cliquez sur <span class="fas fa-angle-double-up"></span> pour rendre un contact prioritaire.</p>
+    <p class="center">Pour ajouter des contacts à la liste d'appel, faites les glisser de l'annuaire à la liste d'appel.<br/>
+        Supprimer un contact de l'annuaire supprime également toutes ses occurrences dans la liste d'appel.<br/>
+        Cliquez sur <span class="fas fa-angle-double-up"></span> pour rendre un contact prioritaire.</p>
     <div id="callListSelectors" class="callLists-wrapper">
         <div class="callList">
             <h2 class="callList-title">Liste d'appel</h2>
@@ -387,8 +387,7 @@
                 console.error("Given phone number is already in use.");
                 alert("Le contact '" + p.name + "' utilise déjà le numéro de téléphone donné (" + phone + ")");
                 cancel = true;
-            } else if (p.name.toLowerCase() === name.toLowerCase())
-            {
+            } else if (p.name.toLowerCase() === name.toLowerCase()) {
                 console.error("Given name is already in use.");
                 alert("Un contact '" + name + "' existe déjà.");
                 cancel = true;

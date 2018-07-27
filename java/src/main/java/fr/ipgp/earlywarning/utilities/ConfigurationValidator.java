@@ -506,7 +506,7 @@ public class ConfigurationValidator {
                     defaultPath = contactList.get("path");
                 } else {
                     ContactList list = ContactListBuilder.build(contactList.get("path"));
-                    if(list.getEnabledContacts().isEmpty())
+                    if (list.getEnabledContacts().isEmpty())
                         EarlyWarning.appLogger.warn("Your list '" + contactList.get("id") + "' has no enabled contact.");
                 }
             }
