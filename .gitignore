@@ -6,6 +6,7 @@
 
 # User-specific stuff:
 .idea/**/workspace.xml
+java/.idea/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
 
@@ -21,6 +22,7 @@
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/libraries
 
 # CMake
 cmake-build-debug/
@@ -94,9 +96,22 @@ hs_err_pid*
 
 java/defaultCallList.voc
 target
+java/target
 java/bin
 java/bin-test
 java/bin-eclipse
 java/dist
 
 !java/lib/*.jar
+
+Javadoc
+
+*.lock
+
+java/dependency-reduced-pom.xml
+
+java/tests
+
+java/src/main/resources/contacts/*
+
+java/src/main/tests/*

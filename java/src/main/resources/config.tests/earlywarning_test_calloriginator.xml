@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<earlywarning>
+    <gateway>
+        <active>
+            asterisk
+        </active>
+        <asterisk>
+            <retries>3</retries>
+            <ring_timeout>15000</ring_timeout>
+            <agi_server_host>localhost</agi_server_host>
+            <!-- These values can be edited in /etc/asterisk/manager.conf -->
+            <settings>
+                <ami_host>127.0.0.1</ami_host>
+                <ami_port>5038</ami_port>
+                <ami_user>manager</ami_user>
+                <ami_password>ovpf</ami_password>
+            </settings>
+        </asterisk>
+    </gateway>
+</earlywarning>
