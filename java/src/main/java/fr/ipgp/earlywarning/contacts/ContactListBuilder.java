@@ -16,7 +16,7 @@ public class ContactListBuilder {
      *
      * @param filename the file from which we want to instantiate a {@link ContactList}
      * @return the corresponding {@link ContactList}
-     * @throws IOException if no corresponding {@link ContactList} implementation can be found or the file can't be read
+     * @throws IOException if no corresponding {@link ContactList} implementation can be found or the file cannot be read
      */
     public static ContactList build(String filename) throws IOException, UnimplementedContactListTypeException {
         String extension = getExtension(filename);

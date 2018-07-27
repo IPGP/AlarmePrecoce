@@ -32,7 +32,7 @@ public class JSONContactList implements ContactList {
      * Normal constructor for the JSONContactList.
      *
      * @param path the JSON file path.
-     * @throws IOException if the file can't be read and written
+     * @throws IOException if the file cannot be read and written
      */
     public JSONContactList(String path) throws IOException {
         contacts = new ArrayList<>();
@@ -46,7 +46,7 @@ public class JSONContactList implements ContactList {
         else {
             if (!file.getParentFile().getCanonicalFile().isDirectory())
                 if (!file.getParentFile().getCanonicalFile().mkdirs())
-                    throw new IOException("Can't create directories '" + file.getParentFile().getCanonicalPath() + "'");
+                    throw new IOException("Cannot create directories '" + file.getParentFile().getCanonicalPath() + "'");
 
             // Reserve the file for later use.
             initializeFile();
@@ -57,7 +57,7 @@ public class JSONContactList implements ContactList {
     /**
      * Initialize the JSON file with two empty lists.
      *
-     * @throws IOException if the file can't be written
+     * @throws IOException if the file cannot be written
      */
     private void initializeFile() throws IOException {
         FileWriter writer = new FileWriter(file);
@@ -117,7 +117,7 @@ public class JSONContactList implements ContactList {
      */
     public void addContact(Contact contact, boolean writeAfter) {
         if (contact == null)
-            throw new NullArgumentException("Can't add a null contact.");
+            throw new NullArgumentException("Cannot add a null contact.");
 
         contacts.add(contact);
 
@@ -130,7 +130,7 @@ public class JSONContactList implements ContactList {
             try {
                 write();
             } catch (IOException ex) {
-                System.err.println("Couldn't write contact list.");
+                System.err.println("could not write contact list.");
             }
         }
     }
@@ -138,7 +138,7 @@ public class JSONContactList implements ContactList {
     /**
      * Writes the contacts list and the call list to the JSON file.
      *
-     * @throws IOException if the file can't be written
+     * @throws IOException if the file cannot be written
      */
     public void write() throws IOException {
         JSONObject obj = new JSONObject();
@@ -162,7 +162,7 @@ public class JSONContactList implements ContactList {
     /**
      * Reads the JSON file and fills local lists (call list and contacts list)
      *
-     * @throws IOException if the file can't be read
+     * @throws IOException if the file cannot be read
      */
     private void read() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -287,7 +287,7 @@ public class JSONContactList implements ContactList {
                 assert getNames().indexOf(name) > -1;
                 callList.add(getContactByName(name).phone);
             } catch (NoSuchContactException ignored) {
-                // This can't happen, since only existing contacts can be added to the call list.
+                // This cannot happen, since only existing contacts can be added to the call list.
             }
 
         }

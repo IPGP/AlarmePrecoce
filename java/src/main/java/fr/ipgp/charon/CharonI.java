@@ -40,6 +40,7 @@ import static fr.ipgp.charon.CharonI.CharonCode.*;
  * @author Thomas Kowalski
  */
 public class CharonI {
+    private static final boolean DEBUG = false;
     private final int[] ledsArray = {0, 0, 0, 0, 0, 0, 0, 0};
     private final int ledNumber = ledsArray.length;
     private int id;
@@ -108,7 +109,7 @@ public class CharonI {
         try {
             return getCommand(command, getHex(LED));
         } catch (InvalidLedStateException ignored) {
-            // This can't happen, since getHex always returns even-length strings.
+            // This cannot happen, since getHex always returns even-length strings.
             return null;
         }
     }
@@ -299,6 +300,11 @@ public class CharonI {
 //            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
 //    }
 
+    private void printDebug(String s) {
+        if (DEBUG)
+            System.out.println("CharonGateway: " + s);
+    }
+
     /**
      * Refreshes the current LED states (in the <code>ledsArray</code>)
      */
@@ -314,7 +320,7 @@ public class CharonI {
 
         // TODO: why 0x00 ?
         String command = getGetLEDCommand(0x00);
-        System.out.println("Command to send: " + command);
+        printDebug("Command to send: " + command);
         os.write(DatatypeConverter.parseHexBinary(command));
 
         byte[] data = new byte[100];
@@ -352,11 +358,11 @@ public class CharonI {
                 // ledsArray[ledNumber - 1 - i] = ledValues.charAt(i) == '1' ? 1 : 0;
 
             } else
-                // If no match for the result has been found (which probably can't happen)
-                throw new InvalidResponseException("The response didn't contain the LED state.", result);
+                // If no match for the result has been found (which probably cannot happen)
+                throw new InvalidResponseException("The response did not contain the LED state.", result);
         } else
-            // If the result doesn't match our expected format
-            throw new InvalidResponseException("The response length wasn't the expected one (" + count + ", should have been 7).", new String(data));
+            // If the result does not match our expected format
+            throw new InvalidResponseException("The response length was not the expected one (" + count + ", should have been 7).", new String(data));
 
     }
 
@@ -364,14 +370,14 @@ public class CharonI {
      * Applies the current LED state<br />
      * Establishes a TCP connection to the Charon module and applies the local LED state via the socket.
      *
-     * @throws IOException              if the connection can't be established
+     * @throws IOException              if the connection cannot be established
      * @throws InvalidResponseException if the response from the module in invalid
      */
     public void applyLedState() throws IOException, InvalidResponseException {
         String ledValues = ledStatesToString();
 
         // Print it
-        System.out.println("Affecting LED values: '" + ledValues + "'");
+        printDebug("Affecting LED values: '" + ledValues + "'");
 
         // Convert the String (eg 00010010) to its integer counterpart
         int decimalValue = Integer.parseInt(ledValues, 2);
@@ -384,7 +390,7 @@ public class CharonI {
         try {
             command = getSetLEDCommand(hexadecimalState);
         } catch (InvalidLedStateException ignored) {
-            // This can't happen: the String was built by the programme.
+            // This cannot happen: the String was built by the programme.
         }
 
         assert command != null;
@@ -399,7 +405,7 @@ public class CharonI {
         os.write(DatatypeConverter.parseHexBinary(command));
         os.close();
 
-        System.out.println("Sent: " + command);
+        printDebug("Sent: " + command);
 
         socket_module.close();
         refreshLedState();

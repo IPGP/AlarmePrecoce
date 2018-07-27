@@ -28,7 +28,7 @@ public class Tester {
 
         // Construct the CallOriginator with our ManagerConnection and the confirmation code defined up
         // The CallOriginator's task is to emit the call and then wait for data from the AGI script.
-        // The AGI script doesn't do any choice (it doesn't know the confirmation code)
+        // The AGI script does not do any choice (it does not know the confirmation code)
         // So the AGI script sends signals to the CallOriginator, the latter answers what it should do (retry, give up...)
         CallOriginator originator = new CallOriginator(managerConnection, code, warningMessage);
 
@@ -39,7 +39,7 @@ public class Tester {
         Iterator<String> it = callList.iterator();
 
         while ((result == CallOriginator.CallResult.Initial // If it's the first iteration
-                || result != CallOriginator.CallResult.CorrectCode) // Or if the call didn't result in a correct code
+                || result != CallOriginator.CallResult.CorrectCode) // Or if the call did not result in a correct code
                 && it.hasNext()) { // AND, either way, if we still have people to call
 
             // Get the next phone number
@@ -50,7 +50,7 @@ public class Tester {
             result = originator.call(number);
 
             if (result != CallOriginator.CallResult.CorrectCode) {
-                // If we didn't get a correct code, we're gonna retry
+                // If we did not get a correct code, we're gonna retry
                 // This is perfectible and could be simplified by moving it to the beginning of the loop
                 // But we'll keep it here because it's simpler to understand
                 // Wait a bit for Asterisk to finish its housekeeping work before retrying
@@ -70,7 +70,7 @@ public class Tester {
 
         // Close the connection.
         // It's not necessary in this case (because it's the end of the program anyway)
-        // But in a real-world case, we don't want to keep a useless open connection.
+        // But in a real-world case, we do not want to keep a useless open connection.
         managerConnection.logoff();
     }
 

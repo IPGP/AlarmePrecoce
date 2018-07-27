@@ -12,11 +12,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="AlarmePrecoce" />
         <module name="AlarmePrecoce (1)" />
+        <module name="TriggerSender" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AlarmePrecoce" target="7" />
       <module name="AlarmePrecoce (1)" target="7" />
+      <module name="TriggerSender" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

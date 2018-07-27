@@ -4,6 +4,7 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
+import fr.ipgp.earlywarning.heartbeat.AliveRequester;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.apache.commons.configuration.ConversionException;
@@ -141,6 +142,7 @@ public class ConfigurationValidator {
             validateGatewaySettings();
             validateMail();
             validateTriggers();
+            validateFailover();
         } catch (ValidationException ex) {
             switch (onError) {
                 case Exit:
@@ -223,7 +225,7 @@ public class ConfigurationValidator {
             EarlyWarning.appLogger.warn("E-mail status (active / inactive) is not a boolean: '" + _useMail + "', defaulting to false.");
         }
 
-        // Don't validate e-mail settings if they are not in used
+        // Do not validate e-mail settings if they are not in used
         if (!useMail)
             return;
 
@@ -560,6 +562,40 @@ public class ConfigurationValidator {
             for (String sound : soundNames)
                 if (!availableGateways.get(sound).contains(gateway))
                     EarlyWarning.appLogger.warn("Sound '" + sound + "' has no mapping for gateway '" + gateway + "'");
+    }
+
+    public void validateFailover() throws ValidationException {
+        boolean isFailover;
+        try {
+            isFailover = configuration.getBoolean("failover.is_failover");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("failover.is_failover", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("failover.is_failover", "Value '" + configuration.getString("failover.is_failover") + "' cannot be converted to a boolean.");
+        }
+
+        int port;
+        try {
+            port = configuration.getInt("failover.heartbeat_port");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("failover.heartbeat_port", "Key does not exist.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("failover.heartbeat_port", "Value '" + configuration.getString("failover.heartbeat_port") + "' cannot be converted to an integer.");
+        }
+
+        if (isFailover) {
+            String host;
+            try {
+                host = configuration.getString("failover.main");
+            } catch (NoSuchElementException ex) {
+                throw new ValidationException("failover.main", "Key does not exist.");
+            }
+
+            AliveRequester requester = AliveRequester.getInstance(host, port);
+            boolean currentlyRunning = requester.getOnline();
+            if (!currentlyRunning)
+                EarlyWarning.appLogger.warn("Current instance is configured to be a failover but the main instance that should be running at " + host + " IS NOT RESPONDING. Is the configuration wrong or is there an error on the other side?");
+        }
     }
 
     /**

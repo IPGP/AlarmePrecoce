@@ -86,7 +86,7 @@ public class CharonGateway implements Gateway {
      */
     @Override
     public void callTest(String number) {
-        EarlyWarning.appLogger.warn("CharonGateway can't call a specified number. Calling duty phone.");
+        EarlyWarning.appLogger.warn("CharonGateway cannot call a specified number. Calling duty phone.");
         callTillConfirm(defaultLed);
     }
 
@@ -135,7 +135,7 @@ public class CharonGateway implements Gateway {
 
             return true;
         } catch (InvalidLedStateException ignored) {
-            // This can't happen: we have not given a custom LED state String
+            // This cannot happen: we have not given a custom LED state String
             return false;
         } catch (IOException ex) {
             System.out.println("Error: " + ex.getMessage());

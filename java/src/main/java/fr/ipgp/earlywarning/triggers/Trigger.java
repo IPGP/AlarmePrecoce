@@ -38,6 +38,17 @@ public class Trigger implements Comparable {
         contactList = ContactListMapper.getInstance().getDefaultList();
     }
 
+    public Trigger(Long id, Integer priority, String date, String application, String contactList, boolean repeat, String confirmcode, String message) {
+        this(id, priority);
+
+        this.date = date;
+        this.application = application;
+        this.contactList = ContactListMapper.getInstance().getListOrDefault(contactList);
+        this.repeat = repeat;
+        this.confirmCode = confirmcode;
+        this.messageId = message;
+    }
+
     /**
      * @return the textMessage
      */

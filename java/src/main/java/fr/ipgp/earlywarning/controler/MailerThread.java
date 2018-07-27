@@ -110,7 +110,7 @@ public class MailerThread extends Thread {
      *
      * @param subject the mail subject
      * @param body    the mail body
-     * @throws MessagingException if the notifications can't be sent
+     * @throws MessagingException if the notifications cannot be sent
      */
     public void sendNotification(String subject, String body) throws MessagingException {
         mailer.sendNotificationsAuth(emails, subject, body);
