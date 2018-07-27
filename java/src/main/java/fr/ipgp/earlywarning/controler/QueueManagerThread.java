@@ -14,7 +14,6 @@ import fr.ipgp.earlywarning.gateway.CallLoopResult;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
 import fr.ipgp.earlywarning.gateway.Gateway;
 import fr.ipgp.earlywarning.heartbeat.AliveRequester;
-import fr.ipgp.earlywarning.heartbeat.AliveState;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
@@ -127,6 +126,7 @@ public class QueueManagerThread extends Thread {
         this.useSound = useSound;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void run() {
         EarlyWarning.appLogger.debug("Thread creation");
 
@@ -145,11 +145,9 @@ public class QueueManagerThread extends Thread {
                 Trigger trig = queue.poll();
                 assert trig != null;
 
-                if (isFailover)
-                {
+                if (isFailover) {
                     boolean mainOnline = AliveRequester.getInstance(failoverMainHost, failoverMainPort).getOnline();
-                    if (mainOnline)
-                    {
+                    if (mainOnline) {
                         EarlyWarning.appLogger.info("Main instance is alive, not processing trigger.");
                         continue;
                     } else
@@ -299,12 +297,10 @@ public class QueueManagerThread extends Thread {
         }
     }
 
-    private void configureFailover()
-    {
+    private void configureFailover() {
         isFailover = EarlyWarning.configuration.getBoolean("failover.is_failover");
 
-        if (isFailover)
-        {
+        if (isFailover) {
             failoverMainHost = EarlyWarning.configuration.getString("failover.main");
             failoverMainPort = EarlyWarning.configuration.getInt("failover.heartbeat_port");
         }

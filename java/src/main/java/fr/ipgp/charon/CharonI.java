@@ -40,14 +40,13 @@ import static fr.ipgp.charon.CharonI.CharonCode.*;
  * @author Thomas Kowalski
  */
 public class CharonI {
+    private static final boolean DEBUG = false;
     private final int[] ledsArray = {0, 0, 0, 0, 0, 0, 0, 0};
     private final int ledNumber = ledsArray.length;
     private int id;
     private String ip;
     private int tcpPort;
     private int tcpTimeout;
-
-    private static final boolean DEBUG = false;
 
     /**
      * Constructor
@@ -301,8 +300,7 @@ public class CharonI {
 //            throw new InvalidLedStateException("Invalid LED value String: '" + newLedState + "'");
 //    }
 
-    private void printDebug(String s)
-    {
+    private void printDebug(String s) {
         if (DEBUG)
             System.out.println("CharonGateway: " + s);
     }

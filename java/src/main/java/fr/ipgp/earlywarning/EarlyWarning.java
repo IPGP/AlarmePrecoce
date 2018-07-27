@@ -14,7 +14,6 @@ import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
 import fr.ipgp.earlywarning.utilities.FileSearch;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -41,9 +40,8 @@ import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
  * @author Thomas Kowalski
  */
 public class EarlyWarning {
-    private static final String CONFIGURATION_PATH = "resources/earlywarning.xml";
-
     public static final Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
+    private static final String CONFIGURATION_PATH = "resources/earlywarning.xml";
     public static XMLConfiguration configuration;
 
     /**
@@ -200,7 +198,7 @@ public class EarlyWarning {
         try {
             configuration = new XMLConfiguration(buildPath(CONFIGURATION_PATH));
         } catch (ConfigurationException e) {
-            appLogger.fatal("Could not read configuration at '" + CONFIGURATION_PATH  + "'");
+            appLogger.fatal("Could not read configuration at '" + CONFIGURATION_PATH + "'");
             System.exit(-1);
         }
 
@@ -296,14 +294,14 @@ public class EarlyWarning {
      */
     @SuppressWarnings("EmptyMethod")
     private static void createGui() {
-        // TODO: fix this
+        // TODO: fix this in a future version
         //        try {
-//            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
-//            fileCallListControler.displayView();
-//        } catch (HeadlessException ignored)
-//        {
-//            appLogger.info("Running in headless mode.");
-//        }
+        //            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
+        //            fileCallListControler.displayView();
+        //        } catch (HeadlessException ignored)
+        //        {
+        //            appLogger.info("Running in headless mode.");
+        //        }
     }
 
     /**

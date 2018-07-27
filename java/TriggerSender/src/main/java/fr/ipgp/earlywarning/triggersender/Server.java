@@ -1,8 +1,8 @@
 package fr.ipgp.earlywarning.triggersender;
 
 public class Server {
-    public String host;
-    public int port;
+    public final String host;
+    public final int port;
 
     public Server(String host, int port)
     {

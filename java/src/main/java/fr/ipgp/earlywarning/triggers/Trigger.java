@@ -38,8 +38,7 @@ public class Trigger implements Comparable {
         contactList = ContactListMapper.getInstance().getDefaultList();
     }
 
-    public Trigger(Long id, Integer priority, String date, String application, String contactList, boolean repeat, String confirmcode, String message)
-    {
+    public Trigger(Long id, Integer priority, String date, String application, String contactList, boolean repeat, String confirmcode, String message) {
         this(id, priority);
 
         this.date = date;

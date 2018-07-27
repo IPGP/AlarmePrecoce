@@ -10,11 +10,10 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class HeartbeatServerThread extends Thread {
+    private static HeartbeatServerThread uniqueInstance;
     int port;
     ServerSocket server;
     boolean active = true;
-
-    private static HeartbeatServerThread uniqueInstance;
 
     private HeartbeatServerThread(int port) throws IOException {
         this.port = port;
@@ -28,18 +27,17 @@ public class HeartbeatServerThread extends Thread {
         return uniqueInstance;
     }
 
-    public void disable()
-    {
+    public void disable() {
         EarlyWarning.appLogger.info("Disabling heartbeat server.");
         active = false;
     }
 
-    public void enable()
-    {
+    public void enable() {
         EarlyWarning.appLogger.info("Enabling heartbeat server.");
         active = true;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public void run() {
         EarlyWarning.appLogger.info("Starting heartbeat server on port " + port);
 
@@ -98,7 +96,6 @@ public class HeartbeatServerThread extends Thread {
                 out.flush();
             } catch (IOException e) {
                 EarlyWarning.appLogger.error("Could not write response to socket.");
-                continue;
             }
         }
     }

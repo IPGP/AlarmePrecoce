@@ -76,7 +76,8 @@ public class WarningMessageMapper {
 
         if (!mappers.containsKey(qualifier)) {
             EarlyWarning.appLogger.fatal("Default warning message has not been tested for '" + qualifier + "'. Please verify that you do it with WarningMessageMapper.testDefaultMessage(gateway).");
-            System.exit(-1);
+            // Removed this for safety reasons:
+            // System.exit(-1);
         }
 
         return mappers.get(qualifier);

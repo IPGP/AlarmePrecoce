@@ -39,11 +39,14 @@ public class Sender {
         try {
             packet = new DatagramPacket(data, data.length, InetAddress.getByName(host), port);
             socket = new DatagramSocket();
-        } catch (SocketException ex) {
+        } catch (SocketException | UnknownHostException ex) {
             ex.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         }
+
+        if (socket == null)
+            System.err.println("Could not build socket for " + host + ":" + port);
+        else if (packet == null)
+            System.err.println("Could not build packet for " + host + ":" + port);
 
         try {
             socket.send(packet);

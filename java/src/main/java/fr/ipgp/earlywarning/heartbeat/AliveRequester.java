@@ -14,6 +14,7 @@ import java.util.Map;
 
 
 public class AliveRequester {
+    private static Map<String, AliveRequester> instances = new HashMap<>();
     String host;
     int port;
 
@@ -22,9 +23,7 @@ public class AliveRequester {
         this.port = port;
     }
 
-    private static Map<String, AliveRequester> instances = new HashMap<>();
-    public static AliveRequester getInstance(String host, int port)
-    {
+    public static AliveRequester getInstance(String host, int port) {
         String key = host + ":" + port;
         if (instances.containsKey(key))
             return instances.get(key);
@@ -68,8 +67,7 @@ public class AliveRequester {
         try {
             out.writeObject(req);
             out.flush();
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             EarlyWarning.appLogger.error("Could not write request to socket.");
             return AliveState.CantWrite;
         }

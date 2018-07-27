@@ -13,8 +13,8 @@ abstract class Configuration {
     static String path;
     static JSONObject configuration;
 
-    public static List<Server> servers = new ArrayList<>();
-    public static List<Map<String, String>> triggers = new ArrayList<>();
+    public static final List<Server> servers = new ArrayList<>();
+    public static final List<Map<String, String>> triggers = new ArrayList<>();
 
     public static void readConfiguration(String path) throws FileNotFoundException {
         System.out.println("Reading configuration from '" + path + "'");

@@ -175,16 +175,8 @@ public class EarlyWarningThread extends Thread {
      * Configure the thread, based on the configuration file.
      */
     private void configureThread() {
-        try {
-            defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
-            defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
-            defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
-        } catch (ConversionException ex) {
-            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code has a wrong value in configuration file: check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-            System.exit(-1);
-        } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("Default call list, warning message, repeat or confirm code is missing in configuration file: check triggers.defaults section of earlywarning.xml configuration file. Exiting application.");
-            System.exit(-1);
-        }
+        defaultRepeat = EarlyWarning.configuration.getBoolean("triggers.defaults.repeat");
+        defaultConfirmCode = EarlyWarning.configuration.getString("triggers.defaults.confirm_code");
+        defaultPriority = EarlyWarning.configuration.getInt("triggers.defaults.priority");
     }
 }

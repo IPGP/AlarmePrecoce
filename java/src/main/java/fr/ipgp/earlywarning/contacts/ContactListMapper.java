@@ -68,7 +68,8 @@ public class ContactListMapper {
     public static ContactListMapper getInstance() {
         if (uniqueInstance == null) {
             EarlyWarning.appLogger.fatal("Mapper should have already been initialized. Please verify that you have tester the default list with ContactListMapper.testDefaultList()");
-            System.exit(-1);
+            // Removed this for safety reasons
+            // System.exit(-1);
         }
 
         return uniqueInstance;

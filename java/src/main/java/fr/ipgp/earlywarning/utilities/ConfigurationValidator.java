@@ -5,7 +5,6 @@ import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.gateway.CharonGateway;
 import fr.ipgp.earlywarning.heartbeat.AliveRequester;
-import fr.ipgp.earlywarning.heartbeat.AliveState;
 import fr.ipgp.earlywarning.messages.NoSuchMessageException;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import org.apache.commons.configuration.ConversionException;
@@ -578,8 +577,7 @@ public class ConfigurationValidator {
         int port;
         try {
             port = configuration.getInt("failover.heartbeat_port");
-        } catch (NoSuchElementException ex)
-        {
+        } catch (NoSuchElementException ex) {
             throw new ValidationException("failover.heartbeat_port", "Key does not exist.");
         } catch (ConversionException ex) {
             throw new ValidationException("failover.heartbeat_port", "Value '" + configuration.getString("failover.heartbeat_port") + "' cannot be converted to an integer.");

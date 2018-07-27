@@ -3,13 +3,11 @@ package fr.ipgp.earlywarning.heartbeat;
 import java.util.Date;
 
 public class AliveResponse extends Message {
-    public AliveResponse(Date date)
-    {
+    public AliveResponse(Date date) {
         super(date);
     }
 
-    public AliveResponse()
-    {
+    public AliveResponse() {
         this(new Date());
     }
 
