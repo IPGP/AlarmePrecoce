@@ -1,0 +1,414 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{geometry}
+
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\title{\textbf{EarlyWarning}\\Tests de Validation}
+\author{Thomas Kowalski}
+\date{Juillet 2018}
+
+\lstset{language = java}
+
+\begin{document}
+
+\maketitle
+
+
+\pagebreak
+\tableofcontents
+
+\pagebreak
+\section{Tests de l'interface d'édition de listes de contacts}
+
+\subsection{Ajout d'un contact}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer le serveur EarlyWarning ;
+    \item Lancer un navigateur Internet et se rendre à l'adresse correspondante (par défaut : \texttt{IP:6001} \textit{le port peut-être modifié dans le fichier de configuration} \texttt{earlywarning.xml}\textit{, section} \texttt{contacts} $\rightarrow$ \texttt{port} ;
+    \item Ajouter un nouveau contact en remplissant les champs \textit{Nom} et \textit{Téléphone} ;
+    \item Valider en cliquant sur \textit{Ajouter}.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Le nouveau contact est ajouté dans la liste de contacts correspondante. \\
+Pour le vérifier, on peut ouvrir le fichier de la liste de contacts (on peut trouver la correspondance entre le nom de la liste et le fichier dans \texttt{earlywarning.xml}, section \texttt{contacts} $\rightarrow$ \texttt{lists} $\rightarrow$ \texttt{<le nom de la liste choisie>} et vérifier que le nouveau contact est bien présent.
+
+\subsection{Ajout d'un contact à la liste d'appel}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer le serveur EarlyWarning ;
+    \item Lancer un navigateur Internet et se rendre à l'adresse correspondante (par défaut : \texttt{IP:6001} \textit{le port peut-être modifié dans le fichier de configuration} \texttt{earlywarning.xml}\textit{, section} \texttt{contacts} $\rightarrow$ \texttt{port} ;
+    \item Ajouter un contact à la liste d'appel en le faisant glisser de gauche à droite.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Le contact sélectionné est ajouté à la liste d'appel correspondante à la position choisie.\\
+Pour le vérifier, on peut ouvrir le fichier de la liste de contacts correspondant.
+
+\paragraph{Déroulement et résultat\\} 
+
+\textbf{Succès} On ajoute un contact (\texttt{Philippe} / \texttt{0692877305}) et on actualise la page, il est bien présent dans la liste. On redémarre l'application, le contact est toujours présent.
+
+\subsection{Réordonnement de la liste d'appel}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer le serveur EarlyWarning ;
+    \item Lancer un navigateur Internet et se rendre à l'adresse correspondante (par défaut : \texttt{IP:6001} \textit{le port peut-être modifié dans le fichier de configuration} \texttt{earlywarning.xml}\textit{, section} \texttt{contacts} $\rightarrow$ \texttt{port} ;
+    \item Réordonner la liste d'appel.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+La position du contact sélectionné a été modifiée dans la liste d'appel choisie..\\
+Pour le vérifier, on peut ouvrir le fichier de la liste de contacts correspondant.
+
+\paragraph{Tests supplémentaires\\}
+
+On peut également vérifier qu'un contact \emph{prioritaire} est toujours situé en haut de la liste d'appel. Pour le vérifier, on peut réordonner la liste (qui devrait toujours laisser le contact prioritaire tout en haut) et vérifier que le fichier a toujours ce contact en première position.
+
+\paragraph{Déroulement et résultat\\} 
+
+\textbf{Succès} On fait glisser un contact vers la liste d'appel puis on actualise la page, il est toujours présent. On redémarre l'application, le contact est toujours dans la liste d'appel.
+
+\pagebreak
+\section{Tests de la passerelle Asterisk}
+
+\subsection{Test d'un appel simple}
+
+\textit{La classe \texttt{ValidationTestAsterisk} permet de faciliter la mise en place de ce test.}
+
+Pour mettre en place ce test, on s'intéresse à cette méthode :
+
+\begin{lstlisting}
+    @Test
+    public void validationTest() throws Exception {
+        List<String> callList = new ArrayList<>();
+        callList.add("<numero 1>");
+        callList.add("<numero 2>");
+        String code = "1256";
+        String message = "demo-thanks";
+
+        Tester.run(callList, code, message);
+    }
+\end{lstlisting}
+
+Pour lancer le test, ajouter autant de numéros que souhaité à \texttt{callList} grâce à \texttt{callList.add("numero");}.
+
+Les variables \texttt{code} et \texttt{message} permettent respectivement de personnaliser le code de confirmation à entrer pour arrêter les appels et le son (son nom sur le serveur Asterisk) à jouer (il correspond au message de détail joué à l'appelé).
+
+Il suffit ensuite de lancer le test unitaire correspondant, en utilisant la commande 
+
+\begin{lstlisting}
+    mvn test -Dtest=gateway.ValidationTestAsterisk
+\end{lstlisting}
+
+\paragraph{Comportement attendu\\}
+
+Les numéros de la liste sont appelés en boucle jusqu'à ce qu'un appelé confirme la réception du message en entrant le code spécifié dans \texttt{code}. \\
+A chaque fois, il est accueilli avec un message de bienvenue, doit écouter le message d'avertissement, entrer le code et a droit à un certain nombre d'erreurs de code (tel que précisé dans la configuration).
+
+\subsection{Test d'un appel avec \emph{trigger}}
+
+Pour vérifier le fonctionnement de la réception des \emph{triggers} et des appels correspondant, il suffit de passer un paramètre à l'application :
+
+\begin{lstlisting}
+    java -jar AlarmePrecoce.jar --testcalls
+\end{lstlisting}
+
+\paragraph{Comportement attendu\\}
+
+Deux \emph{triggers} sont ajoutés à la pile. Ce sont respectivement ceux écrits (et émis) par \texttt{TriggerV2Sender3} et \texttt{TriggerV2Sender2}.
+
+Les appels sont passés aux listes correspondantes (ou, si elles n'existent pas, à la liste par défaut), tant que personne ne confirme la réception du message.
+
+Les appels sont passés de manière synchrone : le premier \emph{trigger} est traité jusqu'à confirmation de la réception, puis le second. Les appels ne sont pas passés en parallèle pour les deux \emph{triggers}.
+
+\paragraph{Déroulement et résultat\\} 
+
+\textbf{Succès} On ajoute deux triggers depuis la page de test sur WebObs, les appels sont bien émis l'un après l'autre jusqu'à validation par l'utilisateur.
+
+\subsection{Non-démarrage en cas d'identifiants Asterisk invalides}
+
+\paragraph{Motivation\\}
+
+L'initialisation de l'application est écrite de façon à vérifier les identifiants de l'Asterisk Manager Interface au démarrage. Si ceux-ci sont incorrects, l'application ne démarre pas.
+
+\paragraph{Scénario\\}
+
+\begin{itemize}
+    \item Modifier le fichier de configuration \texttt{earlywarning.xml} et modifier les champs \texttt{ami\_user} et \texttt{ami\_password} de façon à les rendre incorrects ;
+    \item Démarrer l'application EarlyWarning.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+L'application ne démarre pas et affiche un message d'erreur.
+
+\begin{verbatim}
+FATAL [main] 2018-07-16 10:59:05,605 - fr.ipgp.earlywarning.utilities.ConfigurationValidator
+    ValidationException on parameter 'gateway.asterisk.settings': 
+    Asterisk Manager Interface credentials are incorrect.
+\end{verbatim}
+
+\paragraph{Déroulement\\}
+
+On modifie le fichier de configuration afin d'entrer volontairement des identifiants AMI faux. On redémarre l'application, celle-ci refuse de s'initialiser avec le message attendu.
+
+\pagebreak
+\section{Tests de la passerelle Charon}
+
+\paragraph{Motivation\\}
+
+Le système de \emph{failover} utilise une passerelle Charon, alarme anti-intrusion de l'observatoire. On souhaite pouvoir tester le bon fonctionnement de celle-ci. 
+
+\paragraph{Scénario\\}
+
+Pour tester le bon fonctionnement, il faut modifier le fichier de configuration, entrée \texttt{gateway} $ \rightarrow $ \texttt{active} et de remplacer \texttt{asterisk} par \texttt{charon}.
+
+On peut ensuite utiliser l'option \texttt{--testcalls} afin d'émettre deux appels de test.
+
+\paragraph{Comportement attendu\\}
+
+L'application démarre et appelle deux fois le numéro de téléphone d'astreinte, en donnant un message d'avertissement générique (\emph{Veuillez vous rendre sur WebObs...}), jusqu'à confirmation de la part de la personne d'astreinte.
+
+\paragraph{Remarque} après ce test, il faut redémarrer l'application EarlyWarning après modification du fichier de configuration afin qu'elle utilise à nouveau la passerelle Asterisk.
+
+\paragraph{Déroulement\\}
+
+Après émission d'un \emph{trigger} par l'interface WebObs, l'application Alarme Précoce communique comme prévu avec le module Charon afin de lui faire émettre deux appels à la suite. Une fois les deux appels émis, l'application continue à fonctionner normalement.
+
+\pagebreak
+\section{Tests du système de \textit{failover} utilisant la passerelle Charon} 
+
+\paragraph{Motivation\\}
+
+Il est possible, pour des raisons matérielles, que la passerelle utilisée par le serveur Asterisk soit inaccessible, ou que celle-ci ne puissent pas émettre les appels comme prévu. \\
+Le système de \emph{failover} vise à minimiser le risque lié à ces problèmes en prévoyant une deuxième passerelle téléphonique : celle de l'alarme anti-intrusion de l'observatoire. \\
+Celle-ci offre moins de possibilités que la passerelle Asterisk, mais est toujours accessible.
+
+\paragraph{Remarque} La fonctionnalité de validation de la configuration est faite pour empêcher le démarrage de l'application EarlyWarning en cas de serveur Asterisk inaccessible. Afin d'effectuer ces tests, il faut donc changer le comportement du validateur en passant le paramètre \texttt{--novalidate}.\\
+
+\paragraph{Scénario A : pas de liaison Asterisk $\longleftrightarrow$ passerelle AudioGuides\\}
+
+\begin{itemize}
+    \item Débrancher le câble Ethernet de la passerelle AudioGuides ;
+    \item Lancer un des tests de la passerelle Asterisk, le plus simple étant d'utiliser l'option \texttt{--testcalls}.
+\end{itemize}
+
+\paragraph{Scénario B : pas de liaison passerelle AudioGuides $\longleftrightarrow$ réseau téléphonique\\}
+
+\begin{itemize}
+    \item Débrancher le câble téléphonique de la passerelle AudioGuides ;
+    \item Lancer un des tests de la passerelle Asterisk, le plus simple étant d'utiliser l'option \texttt{--testcalls}.
+\end{itemize}
+
+\paragraph{Scénario C : serveur Asterisk indisponible pour des raisons logicielles\\}
+
+\begin{itemize}
+    \item Arrêter Asterisk en utilisant \texttt{pkill -9 asterisk}
+    \item Lancer un des tests de la passerelle Asterisk, le plus simple étant d'utiliser l'option \texttt{--testcalls}
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+L'application EarlyWarning tente d'émettre l'appel en utilisant la passerelle Asterisk, qui répond avec une erreur. Au bout d'un certain nombre d'essais (tel que précisé dans le code), elle abandonne et remplace sa passerelle Asterisk par une instance de la passerelle Charon. \\
+Elle recommence alors son cycle d'appels avec la nouvelle plate-forme, jusqu'à confirmation d'un opérateur.\\
+Lorsque le problème concernant la passerelle Asterisk (matériel ou logiciel) est résolu, l'application utiliser à nouveau la passerelle par défaut.
+
+\paragraph{Déroulement\\} 
+
+On effectue les trois tests proposés.\\
+
+\textbf{(A) Succès} Après émission d'appels via l'interface WebObs, l'application tente d'émettre les appels en utilisant Asterisk, mais reçoit des erreurs de sa part, et passe donc les appels grâce à la passerelle Charon. Lorsque la connexion est rétablie, l'application utilise à nouveau la passerelle Asterisk.\\
+
+\textbf{(B) Succès} Après émission d'appels via l'interface WebObs, l'application tente d'émettre les appels en utilisant Asterisk, mais reçoit des erreurs de sa part, et bascule vers la passerelle Charon. Lorsque la connexion est rétablie, l'application utilise à nouveau la passerelle Asterisk.\\
+
+\textbf{(C) Succès} Après émission d'appels via l'interface WebObs, l'application tente d'émettre les appels en utilisant Asterisk, mais reçoit des erreurs de sa part, et bascule vers la passerelle Charon. Lorsque le service Asterisk est redémarré, l'application utilise à nouveau la passerelle Asterisk.
+
+\pagebreak
+\section{Tests du système haute-disponibilité}
+
+\subsection{Introduction}
+
+Avant d'effectuer ces tests, le système haute-disponibilité doit être configuré, avec une instance principale et une instance secondaire. 
+
+\subsection{Test de l'unicité de l'appel dans le cas normal}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer EarlyWarning sur les deux serveurs ;
+    \item Émettre un \emph{trigger} ;
+    \item Suivre la procédure d'appel standard.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Les deux instances reçoivent le \emph{trigger} (vérifier dans les journaux), mais l'instance secondaire envoie une requête à l'instance principale qui lui répond ; l'instance secondaire n'émet donc aucun appel (ou e-mail, SMS, \emph{etc.}).
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} L'instance secondaire a vérifié l'existence de la première, a reçu une réponse positive et n'a pas émis d'appel.
+
+\subsection{Test de l'utilisation de l'instance secondaire si la première est indisponible}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer EarlyWarning sur les deux serveurs ;
+    \item Arrêter EarlyWarning sur le serveur principal ;
+    \item Émettre un trigger ;
+    \item Suivre la procédure d'appel standard.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Lors de la réception du \emph{trigger} par l'instance secondaire, elle vérifie la présence de l'instance principale, qui ne répond pas (le serveur refuse la connexion). L'instance secondaire prend donc la responsabilité de passer l'appel et d'émettre les autres alertes (e-mails, SMS, \emph{etc.}). 
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} L'instance secondaire a bien appelé les numéros de sa liste d'appel.
+
+\subsection{Test du basculement vers l'instance principale en cas de redémarrage}
+
+\textit{Ce test peut être effectué directement après le précédent, on est alors dans un cas où l'instance principale a été indisponible et où on la redémarre.}
+
+\paragraph{Scénario}
+
+\textit{Après le test précédent...}
+
+\begin{itemize}
+    \item Redémarrer l'instance principale (\texttt{systemctl start earlywarning.service}) ;
+    \item Émettre un \emph{trigger} ;
+    \item Suivre la procédure d'appel standard.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Les deux instances reçoivent le \emph{trigger}, l'instance secondaire vérifie à nouveau la présence de l'instance principale qui, cette fois, lui répond. L'instance secondaire arrête le traitement du \emph{trigger}, il n'est traité que par l'instance principale qui effectue le traitement attendu.
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} L'instance secondaire a bien vérifié la présence de l'instance principale, qui lui a répondu par l'affirmative. Elle a arrêté le traitement du \emph{trigger} ; l'instance principale a quant à elle suivi la procédure prévue.
+\pagebreak
+\section{Tests des différents scénarios d'appel possibles}
+
+\subsection{Introduction}
+
+Avant d'effectuer ces tests, il convient de régler les listes d'appel correspondantes aux appels émis par les testeurs de \emph{triggers} par l'interface Web et d'y ajouter au moins deux numéros, afin de pouvoir vérifier le fonctionnement "en boucle".
+
+\subsection{Déroulement normal}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer EarlyWarning avec l'option \texttt{--testcalls} ;
+    \item Attendre que l'appel soit émis ;
+    \item Répondre au téléphone dès que possible ;
+    \item Écouter le message de bienvenue et le valider avec le code donné ;
+    \item Écouter le message d'avertissement et le confirmer avec le code de confirmation ;
+    \item Raccrocher.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+L'appel est émis, le message de bienvenue est joué, la confirmation du message de bienvenue fonctionne, le message d'avertissement est joué, la confirmation du message d'avertissement par l'entrée du code fonctionne. Une fois le message validé, aucun autre appel n'est émis pour ce \emph{trigger}.
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} Le trigger est émis par WebObs, l'appel se déroule comme prévu et l'application continue à fonctionner.
+
+\subsection{Pas de réponse du premier appelé, appels en boucle}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer EarlyWarning avec l'option \texttt{--testcalls} ;
+    \item Attendre que l'appel soit émis ;
+    \item Ne pas répondre au téléphone ;
+    \item Attendre que le deuxième appel soit émis ;
+    \item Ne pas répondre au téléphone ;
+    \item Attendre que le troisième appel soit émis ;
+    \item Décrocher et valider le message.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+L'appel est émis et sonne pendant un certain temps (tel que réglé dans la configuration). Au bout de ce temps, un appel est émis vers le deuxième numéro de téléphone de la liste.\\
+L'appel est émis vers le deuxième numéro de téléphone, puis est raccroché.\\
+(Dans le cas où la liste ne comporte que deux numéros de téléphone,) un troisième appel est émis vers le premier numéro de téléphone. En décrochant, le scénario du déroulement normal fonctionne.
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} Le trigger est émis par WebObs, les deux premiers numéros sont appelés puis abandonnés, lors de la validation du troisième, l'application arrête d'appeler et continue à fonctionner normalement.
+
+\subsection{Appel raccroché avant l'entrée du code}
+
+\paragraph{Scénario}
+
+\begin{itemize}
+    \item Démarrer EarlyWarning avec l'option \texttt{--testcalls} ;
+    \item Attendre que l'appel soit émis ;
+    \item Décrocher dès que possible ;
+    \item Confirmer le message de bienvenue ;
+    \item Ecouter ou raccrocher pendant le message d'avertissement, dans tous les cas raccrocher avant l'entrée complète du code.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Lors du raccrochage, les appels continuent d'être émis dans l'ordre de la liste d'appel, comme dans le scénario \emph{Pas de réponse du premier appelé, appels en boucle}.
+
+\paragraph{Déroulement\\}
+
+\textbf{Succès} Après l'émission d'un trigger via WebObs, on laisse les téléphones sonner. Au bout de la liste, c'est à nouveau le premier numéro qui est appelé. 
+
+\section{Tests du service}
+
+\subsection{Démarrage automatique}
+
+\paragraph{Scénario\\}
+
+\begin{itemize}
+    \item Redémarrer le serveur.
+\end{itemize}
+
+\paragraph{Comportement attendu\\}
+
+Lors du redémarrage, Asterisk et l'application Alarme Précoce sont automatiquement démarrés. 
+
+Pour le vérifier :
+
+\begin{verbatim}
+    > systemctl status earlywarning.service
+
+      earlywarning.service - Alarme Precoce de l'OVPF
+      Loaded: loaded (/etc/systemd/system/earlywarning.service; enabled; vendor preset: enabled)
+      Active: active (running) since Wed 2018-07-25 11:08:01 UTC; 5s ago
+    Main PID: 6594 (bash)
+       Tasks: 16 (limit: 4915)
+      CGroup: /system.slice/earlywarning.service
+           |- 6594 /bin/bash /root/Alarme/EarlyWarning.sh
+           |- 6595 java -jar EarlyWarning.jar
+\end{verbatim}
+
+\paragraph{Déroulement\\} Après redémarrage du serveur (\texttt{reboot}), le service est correctement démarré. 
+
+\end{document}

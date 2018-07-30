@@ -1,6 +1,6 @@
 # AlarmePrecoce
 
-Le principe général du système d’alarme précoce est de déclencher des appels téléphoniques vocaux interactifs et de diffuser des messages d’alertes par différents modes de communication (SMS, e-mail) en fonction d’un certain nombre de déclencheurs (triggers).
+Le principe général du système d’alarme précoce est de déclencher des appels téléphoniques vocaux interactifs et de diffuser des messages d’alertes par différents modes de communication (SMS, e-mail) en fonction d’un certain nombre de déclencheurs (*triggers*).
 
 Un déclencheur peut être une sismicité importante, le dépassement de valeurs de seuil (RSAM1 par exemple), une panne matérielle, logicielle ou électrique, etc.
 
@@ -8,15 +8,11 @@ Les déclencheurs sont créés par des logiciels spécifiques, hébergées
 
 Lorsqu’un déclencheur est émis, le système d’alarme précoce l’analyse. Il en tire un certain nombre d’informations :
 
-— L’annuaire à utiliser pour les appels ; 
-
-— La séquence de confirmation ;
-
-— La priorité du message ;
-
-— Le message en lui-même ;
-
-— etc.
+* L’annuaire à utiliser pour les appels ; 
+* La séquence de confirmation ;
+* La priorité du message ;
+* Le message en lui-même ;
+* *etc.*
 
 Commence ensuite une phase d’appel. Celle-ci se base sur la liste d’appel contenant un nombre illimité de numéros de téléphone. Le système d’alarme commence par le premier contact de la liste et initie l’appel.
 
