@@ -47,6 +47,12 @@ package:
 	mv EarlyWarning.jar target
 	mv Javadoc target
 
+mvninstall:
+	mvn install:install-file -Dfile=EarlyWarning.jar -DgroupId=fr.ipgp -DartifactId=earlywarning -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true
+
+hrun:
+	java -jar EarlyWarning.jar
+
 clean:
 	rm -rf target
 
