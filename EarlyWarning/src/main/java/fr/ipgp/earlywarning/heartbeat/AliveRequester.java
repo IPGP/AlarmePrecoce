@@ -5,24 +5,55 @@ import fr.ipgp.earlywarning.EarlyWarning;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The class used by backup instances to send "Are you alive?" requests to the main instance. <br />
+ * <i>Implements the Singleton design pattern.</i>
+ *
+ * @author Thomas Kowalski
+ */
 public class AliveRequester {
-    private static Map<String, AliveRequester> instances = new HashMap<>();
-    String host;
-    int port;
+    /**
+     * There is a unique instance of the <code>Requester</code> for each main instance, that are stored in a Map:
+     * <code><br />
+     * {<br/>
+     * 1.1.1.1 : &lt;AliveRequester instance for 1.1.1.1&gt;<br />
+     * 2.2.2.2 : &lt;AliveRequester instance for 2.2.2.2&gt;<br />
+     * ...<br />
+     * }
+     * </code>
+     */
+    private static final Map<String, AliveRequester> instances = new HashMap<>();
 
+    /**
+     * The host to which send requests.
+     */
+    final String host;
+
+    /**
+     * The port to use for this host.
+     */
+    final int port;
+
+    /**
+     * Valued constructor with the instance-to-request host name and the port to use.
+     * @param host the instance's host name
+     * @param port the port to use for TCP connections
+     */
     private AliveRequester(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
+    /**
+     * Returns the {@link AliveRequester} for a given host.
+     * @param host the distant instance's host name
+     * @param port the port to use for TCP connections to the distant instance
+     * @return
+     */
     public static AliveRequester getInstance(String host, int port) {
         String key = host + ":" + port;
         if (instances.containsKey(key))
@@ -33,13 +64,24 @@ public class AliveRequester {
         return newInstance;
     }
 
+    /**
+     * Determines whether or not an instance is alive.
+     * @return <code>true</code> if the distant instance is alive and responding, <code>false</code> otherwise.
+     */
     public boolean getOnline() {
         AliveState response = getState();
         return response == AliveState.Alive;
     }
 
+    /**
+     * Determines a more detailed state than <code>getOnline</code>. See {@link AliveState}.
+     * @return an {@link AliveState} corresponding to the distant instance's state.
+     */
     public AliveState getState() {
+        // The TCP socket to use
         Socket s;
+
+        // Try and connect to the distant instance.
         try {
             s = new Socket(host, port);
         } catch (IOException ex) {
@@ -52,8 +94,11 @@ public class AliveRequester {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        AliveRequest req = new AliveRequest(getLocalIP());
 
+        // Build an AliveRequest object to send
+        AliveRequest req = new AliveRequest(getLocalInstanceDescription());
+
+        // Try and bind the IO streams
         ObjectOutputStream out;
         ObjectInputStream in;
         try {
@@ -64,6 +109,7 @@ public class AliveRequester {
             return AliveState.CantConnect;
         }
 
+        // Send the AliveRequest
         try {
             out.writeObject(req);
             out.flush();
@@ -72,6 +118,7 @@ public class AliveRequester {
             return AliveState.CantWrite;
         }
 
+        // Try and receive the distant instance's response (in the form of an AliveResponse object)
         AliveResponse resp;
         try {
             resp = (AliveResponse) in.readObject();
@@ -87,17 +134,35 @@ public class AliveRequester {
         return AliveState.Alive;
     }
 
-    private String getLocalIP() {
-        InetAddress inetAddress;
+    /**
+     * Returns the machine's IP on the network.
+     * @return the machine's IP on the network in the form of a {@link String}.
+     */
+    private String getLocalInstanceDescription() {
+        // The default String to return in case of an exception
+        String DEFAULT = "EarlyWarning [unknown address]";
+
+        // Localhost, used to determine hostname
+        InetAddress localhost;
         try {
-            inetAddress = InetAddress.getLocalHost();
+            localhost = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            return "EarlyWarning [unknown IP]";
+            return DEFAULT;
         }
 
-        String name = inetAddress.getHostName().trim();
-        String ip = inetAddress.getHostAddress();
+        // Get the hostname
+        String name = localhost.getHostName().trim();
 
+        // Get the machine's IP on the network preferred outbound network (ping Google's DNS)
+        String ip;
+        try (final DatagramSocket socket = new DatagramSocket()) {
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            ip = socket.getLocalAddress().getHostAddress();
+        } catch (SocketException | UnknownHostException e) {
+            return DEFAULT;
+        }
+
+        // If the hostname is empty, don't use it in the description
         if (!name.equalsIgnoreCase(""))
             return "EarlyWarning on " + name + " (" + ip + ")";
         else

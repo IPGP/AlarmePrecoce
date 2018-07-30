@@ -91,8 +91,7 @@ public class EarlyWarning {
             if (arg.equalsIgnoreCase("--novalidation")) {
                 EarlyWarning.appLogger.warn("Due to the risks it exposes the application to, the --novalidation argument cannot be used anymore.");
                 // options.validateConfiguration = false;
-            }
-            else if (arg.equalsIgnoreCase("--searchresources"))
+            } else if (arg.equalsIgnoreCase("--searchresources"))
                 options.searchResources = true;
         }
 
