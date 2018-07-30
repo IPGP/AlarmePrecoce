@@ -16,7 +16,7 @@ import org.asteriskjava.fastagi.*;
  * <b>What does it do?</b>
  * <ul>
  * <li>Immediately answer the call (for now, we cannot detect when the callee actually answers)</li>
- * <li>Plays a "welcome" sound in a loop until the callee enters "11" on his dial pad</li>
+ * <li>Plays a "welcome" sound in a loop until the callee enters "*" on his dial pad</li>
  * <li>Plays an adequate sound, depending on the situation</li>
  * <li>Asks for a confirmation code</li>
  * <li>While the confirmation code is incorrect and the {@link CallOriginator} tells the script the user can carry on trying, it keeps asking for the code</li>
@@ -133,12 +133,12 @@ class AlertCallScript extends BaseAgiScript {
                     // Notify the OnConnectedListener, if it's available
                     onConnectedListener.onConnected();
 
-                if (data.startsWith("11"))
-                    // If the user has entered 11 (Acknowledge welcome message),
+                if (data.startsWith("*"))
+                    // If the user has entered * (Acknowledge welcome message),
                     // stop playing the welcome message
                     break;
                 else
-                    EarlyWarning.appLogger.debug("Callee entered '" + data + "' != '11'");
+                    EarlyWarning.appLogger.debug("Callee entered '" + data + "' != '*'");
             }
 
             EarlyWarning.appLogger.debug("Playing adequate sound (ID: '" + warningMessage + "', maps to: '" + mapper.getNameOrDefault(warningMessage) + "')");
