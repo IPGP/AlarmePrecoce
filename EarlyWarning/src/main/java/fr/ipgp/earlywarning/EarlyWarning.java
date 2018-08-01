@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
-
 /**
  * Entry point for the application
  * <ul>
@@ -41,7 +39,7 @@ import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
  */
 public class EarlyWarning {
     public static final Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-    private static final String CONFIGURATION_PATH = "resources/earlywarning.xml";
+    private static final String CONFIGURATION_PATH = "configuration/earlywarning.xml";
     public static XMLConfiguration configuration;
 
     /**
@@ -60,7 +58,7 @@ public class EarlyWarning {
         checkUniqueness();
 
         // Read the configuration (and verify its validity, unless the user asked not to)
-        readConfiguration(options.validateConfiguration);
+        readConfiguration(options.validateConfiguration, options.configurationPath);
 
         // Now really start the app
         appLogger.debug("Entering application.");
@@ -91,48 +89,12 @@ public class EarlyWarning {
             if (arg.equalsIgnoreCase("--novalidation")) {
                 EarlyWarning.appLogger.warn("Due to the risks it exposes the application to, the --novalidation argument cannot be used anymore.");
                 // options.validateConfiguration = false;
-            } else if (arg.equalsIgnoreCase("--searchresources"))
-                options.searchResources = true;
+            } else if (arg.startsWith("--configuration=")) {
+                options.configurationPath = arg.split("=")[1];
+            }
         }
-
-        if (options.searchResources)
-            findWorkingDirectory();
 
         return options;
-    }
-
-    private static void findWorkingDirectory() {
-        File root = null;
-        String path = "../../";
-        try {
-            root = new File(path).getCanonicalFile();
-            path = root.getCanonicalPath();
-        } catch (IOException e) {
-            appLogger.fatal("Trying to search in incorrect path.");
-            System.exit(-1);
-        }
-
-        File configFile = null;
-        try {
-            configFile = FileSearch.searchForFile(root, "earlywarning.xml");
-        } catch (FileNotFoundException e) {
-            appLogger.fatal("Could not locate configuration file in '" + path + "'");
-            System.exit(-1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-
-        String workingDir = null;
-        try {
-            workingDir = configFile.getParentFile().getParentFile().getCanonicalPath() + "/";
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-
-        appLogger.info("Setting working directory to '" + workingDir + "'");
-        System.setProperty("user.dir", workingDir);
     }
 
     /**
@@ -192,14 +154,23 @@ public class EarlyWarning {
     }
 
     /**
-     * Reads the XML configuration file (<code>resources/earlywarning.xml</code>) and creates a {@link XMLConfiguration} object.
+     * Reads the XML configuration file and creates a {@link XMLConfiguration} object.
      * The application logs a fatal error and exits if the configuration file does not exist.
+     *
+     * @param validate          whether or not the configuration should be validated
+     * @param configurationPath the path for the XML configuration file
      */
-    private static void readConfiguration(boolean validate) {
+    private static void readConfiguration(boolean validate, String configurationPath) {
+        File f = new File(configurationPath);
+        if (!f.isFile()) {
+            appLogger.fatal("Cannot find configuration file at '" + configurationPath + "'");
+            System.exit(-1);
+        }
+
         try {
-            configuration = new XMLConfiguration(buildPath(CONFIGURATION_PATH));
+            configuration = new XMLConfiguration(configurationPath);
         } catch (ConfigurationException e) {
-            appLogger.fatal("Could not read configuration at '" + CONFIGURATION_PATH + "'");
+            appLogger.fatal("Could not read configuration at '" + configurationPath + "'");
             System.exit(-1);
         }
 
@@ -215,7 +186,7 @@ public class EarlyWarning {
      * Configures Log4J
      */
     private static void setLogger() {
-        PropertyConfigurator.configure(buildPath("resources/log4j.properties"));
+        PropertyConfigurator.configure("resources/log4j.properties");
     }
 
     /**
@@ -309,11 +280,14 @@ public class EarlyWarning {
      * A structure for pre-initialization settings
      */
     private static class PreInitOptions {
-        public boolean searchResources = false;
         /**
          * Whether or not the configuration validity should be verified upon reading
          */
         boolean validateConfiguration = true;
+        /**
+         * A custom configuration path
+         */
+        String configurationPath = CONFIGURATION_PATH;
     }
 
     /**

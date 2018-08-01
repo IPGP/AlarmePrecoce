@@ -34,6 +34,11 @@ public class Contact {
         this.priority = priority;
     }
 
+    public Contact(String name, String phone)
+    {
+        this(name, phone, false);
+    }
+
     /**
      * JSON Deserializer
      *

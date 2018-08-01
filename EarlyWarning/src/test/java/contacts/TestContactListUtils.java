@@ -20,7 +20,7 @@ import static fr.ipgp.earlywarning.utilities.FileSearch.searchForFile;
 
 
 /**
- * Tests for the {@link ContactListMapper} and the {@link ContactListBuilder}
+ * Tests for the {@link ContactListMapper}, the {@link ContactListBuilder} and the {@link ContactListComparer}
  *
  * @author Thomas Kowalski
  */
@@ -57,9 +57,12 @@ public class TestContactListUtils {
     }
 
     @AfterClass
-    public static void tearDown() {
-        File testsDir = new File(testsRoot + "/tests");
-        testsDir.deleteOnExit();
+    public static void tearDown() throws IOException {
+        File testsDir = new File(testsRoot.getCanonicalPath() + "/tests");
+        if (!testsDir.delete()) {
+            System.err.println("Cannot delete test directory now.");
+            testsDir.deleteOnExit();
+        }
     }
 
     /**
@@ -119,6 +122,43 @@ public class TestContactListUtils {
     public void testNonExistentMap() throws NoSuchListException, ContactListBuilder.UnimplementedContactListTypeException {
         Random rand = new Random();
         ContactListMapper.getInstance().getList("List<" + String.valueOf(rand.nextInt()) + ">");
+    }
+
+    @Test
+    public void testContactListComparer() throws IOException {
+        Random rand = new Random();
+        String a = String.valueOf(rand.nextInt());
+        String b = String.valueOf(rand.nextInt());
+
+        JSONContactList listA = new JSONContactList(testsRoot.getCanonicalPath() + "/tests/test-" + a + ".json");
+        JSONContactList listB = new JSONContactList(testsRoot.getCanonicalPath() + "/tests/test-" + b + ".json");
+
+        Assert.assertFalse(listA.equals(listB));
+
+        // This should be true: they are not the same JSONContactList, but have the same contacts
+        Assert.assertTrue(ContactListComparer.equals(listA, listB));
+
+        // Compare with null
+        Assert.assertFalse(listA.equals(null));
+        Assert.assertFalse(ContactListComparer.equals(listA, null));
+        Assert.assertTrue(ContactListComparer.equals(null, null));
+
+        listB = new JSONContactList(testsRoot.getCanonicalPath() + "/tests/test-" + a + ".json");
+
+        Assert.assertTrue(listA.equals(listB));
+        Assert.assertTrue(ContactListComparer.equals(listA, listB));
+
+        Contact c1 = new Contact("Thomas", "1234");
+        Contact c2 = new Contact("Philippe", "1243");
+
+        listA.addContact(c1);
+        listA.addContact(c2);
+
+        listB.addContact(c2);
+        listB.addContact(c1);
+
+        Assert.assertTrue(listA.equals(listB));
+        Assert.assertTrue(ContactListComparer.equals(listA, listB));
     }
 
 }

@@ -90,5 +90,4 @@ public interface ContactList {
 
     @Override
     boolean equals(Object o);
-
 }

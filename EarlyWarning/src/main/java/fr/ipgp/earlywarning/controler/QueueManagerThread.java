@@ -163,7 +163,7 @@ public class QueueManagerThread extends Thread {
                 // Use the gateway to originate calls
                 CallLoopResult result = gateway.callTillConfirm(trig);
 
-                if (result == CallLoopResult.Error) {
+                if (result != CallLoopResult.Confirmed) {
                     if (useFailover) {
                         failoverTriggered = true;
                         EarlyWarning.appLogger.info("Default gateway '" + gateway.getSettingsQualifier() + "' could not originate call. Using failover system.");

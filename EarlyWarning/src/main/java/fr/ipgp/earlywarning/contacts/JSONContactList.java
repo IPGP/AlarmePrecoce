@@ -1,5 +1,6 @@
 package fr.ipgp.earlywarning.contacts;
 
+import fr.ipgp.earlywarning.EarlyWarning;
 import org.apache.commons.lang.NullArgumentException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,6 +36,8 @@ public class JSONContactList implements ContactList {
      * @throws IOException if the file cannot be read and written
      */
     public JSONContactList(String path) throws IOException {
+        EarlyWarning.appLogger.debug("Initializing JSONContactList from '" + path + "'");
+
         contacts = new ArrayList<>();
         callList = new ArrayList<>();
 
@@ -316,16 +319,37 @@ public class JSONContactList implements ContactList {
                 c.priority = false;
     }
 
+    /**
+     * Compares equality with an object.
+     *
+     * @param o the object to compare
+     * @return <code>true</code> if <code>o</code> equals <code>this</code>
+     */
     public boolean equals(Object o) {
         if (o == null)
             return false;
-        if (o.getClass() != this.getClass())
-            return false;
-        else
-            return equals((JSONContactList) o);
+
+        if (o instanceof JSONContactList)
+            return equals((JSONContactList)o);
+
+        if (o instanceof ContactList)
+            return ContactListComparer.equals(this, (ContactList) o);
+
+        return false;
     }
 
-    public boolean equals(JSONContactList o) {
-        return o.file.equals(file);
+    /**
+     * Determines equality with another {@link JSONContactList}.
+     *
+     * @param o the {@link JSONContactList} to compare
+     * @return <code>true</code> if both {@link JSONContactList}s use the same file, <code>false</code> otherwise
+     */
+    private boolean equals(JSONContactList o) {
+        try {
+            return file.getCanonicalFile().equals(o.file.getCanonicalFile());
+        } catch (IOException e) {
+            EarlyWarning.appLogger.error("Couldn't determine canonical path to compare JSONContactList '" + file.getAbsolutePath() + "' to '" + o.file.getAbsolutePath() + "'");
+            return false;
+        }
     }
 }

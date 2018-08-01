@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static fr.ipgp.earlywarning.utilities.PathUtilities.buildPath;
-
 /**
  * A basic Web server used to maintain and update the call priority list for the Early Warning Alarm.<br />
  * It uses a {@link HttpServer}
@@ -219,7 +217,7 @@ public class ContactListManagerServer {
                 }
             }
 
-            File f = new File(buildPath(path));
+            File f = new File(path);
             if (f.isFile()) {
                 t.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 

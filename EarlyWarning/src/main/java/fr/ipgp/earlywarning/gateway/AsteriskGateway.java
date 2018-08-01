@@ -123,11 +123,6 @@ public class AsteriskGateway implements Gateway {
             if (!iterator.hasNext())
                 iterator = numbers.iterator();
 
-            if (!iterator.hasNext()) {
-                EarlyWarning.appLogger.error("No numbers in requested call list. Calling again with default call list.");
-                return callTillConfirm(ContactListMapper.getInstance().getDefaultList(), warningMessageFile, confirmCode);
-            }
-
             String toCall = iterator.next();
             EarlyWarning.appLogger.info("Calling " + toCall);
 
@@ -168,7 +163,17 @@ public class AsteriskGateway implements Gateway {
         for (Contact c : contacts)
             numbers.add(c.phone);
 
-        return callTillConfirm(numbers, warningMessageFile, confirmCode);
+        if (numbers.size() > 0)
+            return callTillConfirm(numbers, warningMessageFile, confirmCode);
+
+        if (!ContactListMapper.getInstance().getDefaultList().equals(list)) {
+            EarlyWarning.appLogger.error("No numbers in requested call list. Calling again with default call list.");
+            return callTillConfirm(ContactListMapper.getInstance().getDefaultList(), warningMessageFile, confirmCode);
+        } else {
+            EarlyWarning.appLogger.fatal("Default call list is empty. No call can be originated.");
+            return CallLoopResult.EmptyDefaultList;
+        }
+
     }
 
     /**
@@ -194,5 +199,28 @@ public class AsteriskGateway implements Gateway {
 
     public String getSettingsQualifier() {
         return "asterisk";
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == null)
+            return false;
+
+        if (o == this)
+            return true;
+
+        if (o instanceof Gateway)
+            return equals((Gateway)o);
+
+        return false;
+    }
+
+    private boolean equals(Gateway g)
+    {
+        if (!g.getSettingsQualifier().equals(getSettingsQualifier()))
+            return false;
+
+        return true;
     }
 }

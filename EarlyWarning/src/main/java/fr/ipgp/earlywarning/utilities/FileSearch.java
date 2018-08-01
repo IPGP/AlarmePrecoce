@@ -44,6 +44,32 @@ public class FileSearch {
         throw new FileNotFoundException();
     }
 
+    public static File searchForDirectory(File root, String name) throws IOException {
+        if (root == null)
+            throw new FileNotFoundException();
+
+        File[] files = root.listFiles();
+        if (files == null)
+            throw new FileNotFoundException();
+
+        for (File f : files)
+            if (f.isDirectory() && (!f.equals(root)))
+                if (f.getName().equals(name))
+                    return f.getCanonicalFile();
+
+        for (File f : files)
+            if (f.isDirectory() && (!f.equals(root))) {
+                try {
+                    File result = searchForDirectory(f, name);
+                    return result.getCanonicalFile();
+                } catch (FileNotFoundException ignored) {
+
+                }
+            }
+
+        throw new FileNotFoundException();
+    }
+
     public static File searchForFile(String name) throws IOException {
         return searchForFile(new File("."), name);
     }
