@@ -1,0 +1,7 @@
+configuration/
+asterisk/
+Makefile
+run.sh
+bash.sh
+Dockerfile
+**/.gitkeep
