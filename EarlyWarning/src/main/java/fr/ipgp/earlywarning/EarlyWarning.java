@@ -5,14 +5,12 @@
 package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.contacts.ContactListManagerServer;
-import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.heartbeat.HeartbeatServerThread;
 import fr.ipgp.earlywarning.test.TriggerV2Sender2;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
-import fr.ipgp.earlywarning.utilities.FileSearch;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
@@ -65,7 +63,6 @@ public class EarlyWarning {
 
         // Create and start the main threads
         startEarlyWarningThread();
-        startDataBaseHeartBeatThread();
         startContactsServer();
         startFailoverManager();
 
@@ -229,16 +226,6 @@ public class EarlyWarning {
         } catch (IOException ex) {
             appLogger.fatal("Fatal error: I/O exception: " + ex.getMessage() + ". Exiting application.");
             System.exit(1);
-        }
-    }
-
-    /**
-     * Starts the {@link DataBaseHeartBeatThread}.
-     */
-    private static void startDataBaseHeartBeatThread() {
-        if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-            Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
-            dataBaseHeartBeatThread.start();
         }
     }
 
