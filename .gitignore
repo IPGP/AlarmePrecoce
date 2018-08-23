@@ -116,3 +116,4 @@ java/tests
 EarlyWarning/src/main/resources/contacts/*
 
 EarlyWarning/src/main/tests/*
+/bin/
