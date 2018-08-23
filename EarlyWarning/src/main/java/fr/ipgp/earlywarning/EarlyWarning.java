@@ -69,9 +69,6 @@ public class EarlyWarning {
         startContactsServer();
         startFailoverManager();
 
-        // Create the GUI for compatible platforms
-        createGui();
-
         // Parse post-initialization arguments
         parseArgsPostInit(args);
     }
@@ -259,21 +256,6 @@ public class EarlyWarning {
             heartbeatServerThread.start();
         } else
             appLogger.info("Current instance is failover, not starting heartbeat server.");
-    }
-
-    /**
-     * Create GUI
-     */
-    @SuppressWarnings("EmptyMethod")
-    private static void createGui() {
-        // TODO: fix this in a future version
-        //        try {
-        //            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
-        //            fileCallListControler.displayView();
-        //        } catch (HeadlessException ignored)
-        //        {
-        //            appLogger.info("Running in headless mode.");
-        //        }
     }
 
     /**
