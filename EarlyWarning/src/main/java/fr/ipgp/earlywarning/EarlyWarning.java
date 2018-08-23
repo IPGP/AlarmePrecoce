@@ -5,14 +5,12 @@
 package fr.ipgp.earlywarning;
 
 import fr.ipgp.earlywarning.contacts.ContactListManagerServer;
-import fr.ipgp.earlywarning.controler.DataBaseHeartBeatThread;
 import fr.ipgp.earlywarning.controler.EarlyWarningThread;
 import fr.ipgp.earlywarning.heartbeat.HeartbeatServerThread;
 import fr.ipgp.earlywarning.test.TriggerV2Sender2;
 import fr.ipgp.earlywarning.test.TriggerV2Sender3;
 import fr.ipgp.earlywarning.utilities.CommonUtilities;
 import fr.ipgp.earlywarning.utilities.ConfigurationValidator;
-import fr.ipgp.earlywarning.utilities.FileSearch;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
@@ -65,12 +63,8 @@ public class EarlyWarning {
 
         // Create and start the main threads
         startEarlyWarningThread();
-        startDataBaseHeartBeatThread();
         startContactsServer();
         startFailoverManager();
-
-        // Create the GUI for compatible platforms
-        createGui();
 
         // Parse post-initialization arguments
         parseArgsPostInit(args);
@@ -235,16 +229,6 @@ public class EarlyWarning {
         }
     }
 
-    /**
-     * Starts the {@link DataBaseHeartBeatThread}.
-     */
-    private static void startDataBaseHeartBeatThread() {
-        if (configuration.getBoolean("heartbeat.use_heartbeat")) {
-            Thread dataBaseHeartBeatThread = DataBaseHeartBeatThread.getInstance();
-            dataBaseHeartBeatThread.start();
-        }
-    }
-
     private static void startFailoverManager() {
         if (!configuration.getBoolean("failover.is_failover")) {
             int port = configuration.getInt("failover.heartbeat_port");
@@ -259,21 +243,6 @@ public class EarlyWarning {
             heartbeatServerThread.start();
         } else
             appLogger.info("Current instance is failover, not starting heartbeat server.");
-    }
-
-    /**
-     * Create GUI
-     */
-    @SuppressWarnings("EmptyMethod")
-    private static void createGui() {
-        // TODO: fix this in a future version
-        //        try {
-        //            FileCallListControler fileCallListControler = new FileCallListControler(defaultContactList, fileCallLists);
-        //            fileCallListControler.displayView();
-        //        } catch (HeadlessException ignored)
-        //        {
-        //            appLogger.info("Running in headless mode.");
-        //        }
     }
 
     /**

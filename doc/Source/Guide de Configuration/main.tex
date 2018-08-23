@@ -684,40 +684,6 @@ Pour chaque noeud \texttt{contact}, le seul paramètre, \texttt{email}, correspo
 \end{lstlisting}
 
 \pagebreak
-\section{Audio et port série (\emph{audioserial})}
-
-La section \texttt{audioserial} comprend une sous-section : \texttt{serial} et cinq paramètres.
-
-\begin{description}
-    \item[use\_audioserial] permet d'activer ou désactiver la fonction Audio et port série. La valeur par défaut est \texttt{true} (activé) ;
-    \item[delay] correspond au délai (en secondes) entre l'envoi du texte sur le port série et le début de la lecture du fichier audio. La valeur par défaut est \texttt{10} ;
-    \item[message] correspond au préfixe du message qui sera envoyé sur le port série. La valeur par défaut est \texttt{Message d'alerte...} ;
-    \item[begin\_commands] Chemin du fichier binaire qui permet de configurer la radio connectée éventuellement au port série. Le contenu du fichier sera envoyé à l'ouverture du port série. La valeur par défaut est \texttt{resources/beginCMD} ;
-    \item[end\_commands] Chemin du fichier binaire qui permet de configurer la radio connectée éventuellement au port série. Le contenu du fichier sera envoyé après l'envoi du message texte sur le port série. La valeur par défaut est \texttt{resources/endCMD}.
-\end{description}
-
-La sous-section \texttt{serial} permet de configurer le port série.
-
-\begin{description}
-    \item[port] correspond au nom du port série. La valeur par défaut est \texttt{COM1} ;
-    \item[speed] correspond à la vitesse (en bauds) du port série. La valeur par défaut est \texttt{9600}.
-\end{description}
-
-\begin{lstlisting}[language=xml,name=Aperçu de la section audioserial]
-<audioserial>
-    <use_audioserial>true</use_audioserial>
-    <serial>
-        <port>COM1</port>
-        <speed>9600</speed>
-    </serial>
-    <delay>10</delay>
-    <message>Message d'alerte de l'Observatoire...</message>
-    <begin_commands>resources/beginCMD</begin_commands>
-    <end_commands>resources/endCMD</end_commands>
-</audioserial>
-\end{lstlisting}
-
-\pagebreak
 \section{Redondance et système haute-disponibilité (\emph{failover})}
 
 Dans le cas de l'installation d'un système redondant (plusieurs instances de l'application fonctionnant en parallèle sur le réseau), la configuration doit être mise à jour pour utiliser cette fonctionnalité.\\ 

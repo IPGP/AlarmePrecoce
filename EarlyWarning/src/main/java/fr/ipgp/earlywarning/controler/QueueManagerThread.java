@@ -5,7 +5,6 @@
 package fr.ipgp.earlywarning.controler;
 
 import fr.ipgp.earlywarning.EarlyWarning;
-import fr.ipgp.earlywarning.audio.AudioSerialMessage;
 import fr.ipgp.earlywarning.contacts.ContactListBuilder;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.contacts.NoSuchListException;
@@ -38,10 +37,8 @@ public class QueueManagerThread extends Thread {
     private String resourcesPath;
     private MailerThread mailerThread;
     private SMSThread smsThread;
-    private AudioSerialMessage audioSerialMessage;
     private boolean useMail;
     private boolean useSMS;
-    private boolean useSound;
     private int retry;
     private boolean useFailover = false;
     private boolean failoverTriggered = false;
@@ -119,13 +116,6 @@ public class QueueManagerThread extends Thread {
         this.useSMS = useSMS;
     }
 
-    /**
-     * @param useSound the useSound to set
-     */
-    public void setUseSound(boolean useSound) {
-        this.useSound = useSound;
-    }
-
     @SuppressWarnings("InfiniteLoopStatement")
     public void run() {
         EarlyWarning.appLogger.debug("Thread creation");
@@ -135,8 +125,6 @@ public class QueueManagerThread extends Thread {
         configureMailerThread();
 
         configureSMSThread();
-
-        configureAudioSerialMessage();
 
         configureFailover();
 
@@ -195,17 +183,6 @@ public class QueueManagerThread extends Thread {
                     }
                 }
 
-                if (useSound) {
-                    audioSerialMessage.sendMessage(trig, resourcesPath);
-                    while (audioSerialMessage.isPlaying()) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            EarlyWarning.appLogger.error("Thread.sleep was interrupted.");
-                        }
-                    }
-                }
-
                 try {
                     Thread.sleep(30000);
                 } catch (InterruptedException ex) {
@@ -251,21 +228,6 @@ public class QueueManagerThread extends Thread {
         if (useSMS) {
             smsThread = SMSThread.getInstance(this);
             smsThread.start();
-        }
-    }
-
-    private void configureAudioSerialMessage() {
-        try {
-            useSound = EarlyWarning.configuration.getBoolean("audioserial.use_audioserial");
-        } catch (ConversionException ce) {
-            EarlyWarning.appLogger.fatal("audioserial.use_audioserial has a wrong value in configuration file: check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
-            useSound = false;
-        } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("audioserial.use_audioserial is missing in configuration file: check audioserial section of earlywarning.xml configuration file. Audio/serial support disabled.");
-            useSound = false;
-        }
-        if (useSound) {
-            audioSerialMessage = AudioSerialMessage.getInstance(this);
         }
     }
 
