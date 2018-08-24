@@ -8,7 +8,7 @@ Un déclencheur peut être une sismicité importante, le dépassement de val
 
 Les déclencheurs sont créés par des logiciels spécifiques, hébergées sur des serveurs informatiques. Les déclencheurs transitent via le réseau informatique.
 
-[Fonctionnement général](https://raw.githubusercontent.com/IPGP/AlarmePrecoce/master/doc/Fonctionnement_General.png "Fonctionnement général")
+[Fonctionnement général](doc/Fonctionnement_General.png "Fonctionnement général")
 
 
 Lorsqu’un déclencheur est émis, le système d’alarme précoce l’analyse. Il en tire un certain nombre d’informations :
@@ -219,7 +219,7 @@ La modification doit se faire à travers l’interface Web. Pour ce faire :
 * Lancer l’application EarlyWarning ;
 * Se rendre avec un navigateur Web à l’adresse http://<adresse du serveur EarlyWarning>:<port> (le port par défaut est 6001).
 
-[Interface](https://github.com/IPGP/AlarmePrecoce/doc/Interface_Appels.png "Interface")
+[Interface](doc/Interface_Appels.png "Interface")
 
 ### Introduction
 L’interface Web se décompose en deux colonnes.
