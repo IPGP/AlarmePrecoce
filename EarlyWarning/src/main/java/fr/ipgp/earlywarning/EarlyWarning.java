@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 public class EarlyWarning {
     public static final Logger appLogger = Logger.getLogger(EarlyWarning.class.getName());
-    private static final String CONFIGURATION_PATH = "configuration/earlywarning.xml";
+    private static final String CONFIGURATION_PATH = "resources/earlywarning.xml";
     public static XMLConfiguration configuration;
 
     /**
