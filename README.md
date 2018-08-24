@@ -8,7 +8,7 @@ Un déclencheur peut être une sismicité importante, le dépassement de val
 
 Les déclencheurs sont créés par des logiciels spécifiques, hébergées sur des serveurs informatiques. Les déclencheurs transitent via le réseau informatique.
 
-[Fonctionnement général](https://github.com/IPGP/AlarmePrecoce/doc/Fonctionnement_General.png "Fonctionnement général")
+[Fonctionnement général](https://raw.githubusercontent.com/IPGP/AlarmePrecoce/master/doc/Fonctionnement_General.png "Fonctionnement général")
 
 
 Lorsqu’un déclencheur est émis, le système d’alarme précoce l’analyse. Il en tire un certain nombre d’informations :
