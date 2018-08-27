@@ -1,3 +1,6 @@
+DESTDIR = /opt/AlarmePrecoce
+USER = sysop
+
 default: help
 
 help:
@@ -9,6 +12,8 @@ help:
 	@echo "    javadoc  : Generates the Javadoc for the project"
 	@echo "    package  : Run the packaging routine and cleans the compiled, unpackaged files"
 	@echo "    clean    : Cleans the compiled files"
+	@echo "    install  : Install the packaged file and resources into DESTDIR"
+	@echo "    uninstall: Removes DESTDIR"
 	@echo ""
 
 test:
@@ -55,6 +60,21 @@ hrun:
 
 clean:
 	rm -rf target
+
+.PHONY: install
+install:
+	mkdir -p $(DESTDIR)/resources/www
+	mkdir -p $(DESTDIR)/resources/contacts
+	chown $(USER) $(DESTDIR)/resources/contacts
+	install -m 755 ./target/resources/EarlyWarning.sh $(DESTDIR)
+	install -m 644 ./target/EarlyWarning.jar $(DESTDIR)
+	install -m 644 ./target/resources/earlywarning.xml ./target/resources/log4j.properties $(DESTDIR)/resources
+	install -m 644 ./target/resources/www/Sortable.min.js ./target/resources/www/index.html $(DESTDIR)/resources/www
+
+.PHONY: uninstall
+uninstall:
+	rm -rf $(DESTDIR)
+
 
 # Aliases
 

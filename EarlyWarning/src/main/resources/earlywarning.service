@@ -1,11 +1,7 @@
-# Service de l'AlarmePrecoce de l'OVPF
-# A compléter puis copier dans /etc/systemd/system/
-# Demarrage : systemctl start earlywarning.service
-# Arrêt     : systemctl stop earlywarning.service
-# Etat      : systemctl status earlywarning.service
+# Service AlarmePrecoce
 
 [Unit]
-Description=Alarme Precoce
+Description=AlarmePrecoce
 After=syslog.target
 After=network.target
 
