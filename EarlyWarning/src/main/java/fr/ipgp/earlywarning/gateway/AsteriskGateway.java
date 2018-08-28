@@ -8,6 +8,8 @@ import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
+
+import org.apache.commons.configuration.ConversionException;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
 
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.*;
 
@@ -101,6 +104,16 @@ public class AsteriskGateway implements Gateway {
         // Assert: there is at least one enabled contact
         assert iterator.hasNext();
 
+        int originateTrials = 0;
+        // Retries before failover default value
+        int retriesBeforeFailover = 5;
+        try {
+        	retriesBeforeFailover = EarlyWarning.configuration.getInt("gateway.failover_retries");
+        } catch (ConversionException ex) {
+        	EarlyWarning.appLogger.error("gateway.failover_retries has a wrong value in configuration file: check gateway section of earlywarning.xml configuration file. Using default.");
+        } catch (NoSuchElementException ex) {
+        	EarlyWarning.appLogger.error("gateway.failover_retries is missing in configuration file: check gateway section of earlywarning.xml configuration file. Using default.");
+        }
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
@@ -132,8 +145,15 @@ public class AsteriskGateway implements Gateway {
                 // An exception has occurred
                 result = CallOriginator.CallResult.Error;
 
-            if (result == CallOriginator.CallResult.Error)
-                EarlyWarning.appLogger.error("Error while originating call. Retrying.");
+            if (result == CallOriginator.CallResult.Error) {
+                originateTrials++;
+                if (originateTrials >= retriesBeforeFailover) {
+                    EarlyWarning.appLogger.error("could not originate call after " + originateTrials + " retries. Using failover system.");
+                    return CallLoopResult.Error;
+                } else {
+                	EarlyWarning.appLogger.error("Error while originating call. Retrying.");
+                }
+            }
         } while (result != CorrectCode);
 
         return CallLoopResult.Confirmed;
