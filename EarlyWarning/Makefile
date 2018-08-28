@@ -65,11 +65,11 @@ clean:
 install:
 	mkdir -p $(DESTDIR)/resources/www
 	mkdir -p $(DESTDIR)/resources/contacts
-	chown $(USER) $(DESTDIR)/resources/contacts
 	install -m 755 ./target/resources/EarlyWarning.sh $(DESTDIR)
 	install -m 644 ./target/EarlyWarning.jar $(DESTDIR)
 	install -m 644 ./target/resources/earlywarning.xml ./target/resources/log4j.properties $(DESTDIR)/resources
 	install -m 644 ./target/resources/www/Sortable.min.js ./target/resources/www/index.html $(DESTDIR)/resources/www
+	chown -R $(USER) $(DESTDIR)
 
 .PHONY: uninstall
 uninstall:
