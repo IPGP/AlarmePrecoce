@@ -150,7 +150,7 @@ class AlertCallScript extends BaseAgiScript {
             // action will be our loop variable for the retry-give up mechanism.
             CallOriginator.CallAction action = CallOriginator.CallAction.Retry;
 
-            // Asks for a confirmation code (that ends with #)
+            // Asks for a confirmation code
             String code = null;
             try {
                 code = getData(mapper.getName("login"), 5 * SECOND, maxCodeLength);

@@ -101,24 +101,14 @@ public class AsteriskGateway implements Gateway {
         // Assert: there is at least one enabled contact
         assert iterator.hasNext();
 
-        int originateTrials = 0;
-        @SuppressWarnings("UnusedAssignment") int retriesBeforeFailover = numbers.size();
-        retriesBeforeFailover = 2;
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
-                if (originateTrials >= retriesBeforeFailover) {
-                    EarlyWarning.appLogger.error("could not originate call after " + originateTrials + " retries. Using failover system.");
-
-                    return CallLoopResult.Error;
-                }
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException ignored) {
                 }
             }
-
-            originateTrials++;
 
             if (!iterator.hasNext())
                 iterator = numbers.iterator();
