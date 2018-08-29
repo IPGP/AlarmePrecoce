@@ -21,7 +21,7 @@ Lorsqu’un déclencheur est émis, le système d’alarme précoce l’anal
 
 Commence ensuite une phase d’appel. Celle-ci se base sur la liste d’appel contenant un nombre illimité de numéros de téléphone. Le système d’alarme commence par le premier contact de la liste et initie l’appel.
 
-[Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)
+![Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)
 
 L’appel émis est vocal et interactif. Le message pré-enregistré est énoncé et la personne appelée doit saisir une séquence de confirmation (suite de numéros à saisir sur le clavier de son téléphone) pour valider la réception du message.
 
@@ -221,7 +221,7 @@ La modification doit se faire à travers l’interface Web. Pour ce faire :
 * Lancer l’application EarlyWarning ;
 * Se rendre avec un navigateur Web à l’adresse http://<adresse du serveur EarlyWarning>:<port> (le port par défaut est 6001).
 
-[Interface](./doc/Interface_Appels.png?raw=true)
+![Interface](./doc/Interface_Appels.png?raw=true)
 
 ### Introduction
 L’interface Web se décompose en deux colonnes.

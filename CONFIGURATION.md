@@ -126,7 +126,7 @@ Cependant, ces noms de sons ne sont que des identifiants, et le son à jouer lo
 
 Il faut donc faire un lien entre les identifiants de son (par exemple, sismicite) et les sons correspondants (par exemple, sismicite_importante.gsm).
 
-C'est aussi dans cette section qu'on précise les sons à jouer pour les différentes étapes de la phase d'appel (cf. [Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)). Les sons à définir **obligatoirement** sont "welcome", "login", "default", "giveup", "retry" et "bye" (cf. exemple ci-dessous).
+C'est aussi dans cette section qu'on précise les sons à jouer pour les différentes étapes de la phase d'appel (cf. ![Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)). Les sons à définir **obligatoirement** sont "welcome", "login", "default", "giveup", "retry" et "bye" (cf. exemple ci-dessous).
 
 * id : l'identifiant du son (qui sera utilisé par les triggers)
 * asterisk : l'identifiant du son asterisk (cf. plus haut)
