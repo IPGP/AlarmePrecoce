@@ -99,6 +99,7 @@
       <retries>3</retries>
       <ring_timeout>30000</ring_timeout>
       <agi_server_host>localhost</agi_server_host>
+      <outbond_call_channel>pstn-out</outbond_call_channel>
       <!-- These values can be edited in /etc/asterisk/manager.conf -->
       <settings>
         <ami_host>localhost</ami_host>

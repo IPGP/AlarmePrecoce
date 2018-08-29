@@ -228,10 +228,11 @@ public class CallOriginator implements ManagerEventListener {
      * Used to factor the channel name generation.
      *
      * @param number the phone number to call
-     * @return the channel name to use: "SIP/pstn-out/[number]
+     * @return the channel name to use: "SIP/outbond_call_channel/[number]
      */
     private String getChannelName(String number) {
-        return "SIP/pstn-out/" + number;
+    	String outbondCallChannel = EarlyWarning.configuration.getString("outbond_call_channel");
+        return "SIP/" + outbondCallChannel + "/" + number;
     }
 
     /**
@@ -279,7 +280,8 @@ public class CallOriginator implements ManagerEventListener {
         originateAction.setExten(number);
         originateAction.setTimeout(new Long(10000));
         originateAction.setApplication("AGI");
-        originateAction.setData("agi://localhost/alertcall.agi");
+        String agiServerHost = EarlyWarning.configuration.getString("agi_server_host");
+        originateAction.setData("agi://" + agiServerHost + "/alertcall.agi");
         return originateAction;
     }
 

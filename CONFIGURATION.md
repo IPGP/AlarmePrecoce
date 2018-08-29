@@ -47,6 +47,7 @@ Sous-section asterisk
 * retries : Correspond au nombre d’essais auquel a le droit l’opérateur lorsqu’il entre le code
 * ring_timeout : Correspond au temps (en millisecondes) pendant lequel le téléphone doit sonner avant de passer à l’opérateur suivant
 * agi_server_host : Correspond à l’adresse du serveur AGI local. Dans le cas de l’implémentation par défaut, c’est l’adresse IP de la machine exécutant l’application Alarme Précoce (par défaut : localhost).
+* outbond_call_channel : Correspond au canal Asterisk pour les appels sortant (défini dans le sip.conf).
 
 Sous-section settings
 
@@ -69,6 +70,7 @@ Sous section charon
     <retries>3</retries>
     <ring_timeout>15000</ring_timeout>
     <agi_server_host>localhost</agi_server_host>
+    <outbond_call_channel>pstn-out</outbond_call_channel>
     <settings>
       <ami_host>IP DU SERVEUR ASTERISK</ami_host>
       <ami_port>PORT AMI</ami_port>

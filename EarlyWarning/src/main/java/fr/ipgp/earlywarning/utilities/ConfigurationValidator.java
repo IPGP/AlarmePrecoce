@@ -137,6 +137,7 @@ public class ConfigurationValidator {
         EarlyWarning.appLogger.info("------------------------------------");
         EarlyWarning.appLogger.info("Verifying configuration.");
         try {
+        	validateNetwork();
             validateContactsServer();
             validateSounds();
             validateGatewaySettings();
@@ -158,6 +159,17 @@ public class ConfigurationValidator {
         }
 
         EarlyWarning.appLogger.info("Configuration validation finished.");
+    }
+
+    private void validateNetwork() throws ValidationException {
+    	int networkPort;
+    	try {
+    		networkPort = configuration.getInt("network.port");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("network.port", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("network.port", "Value '" + configuration.getString("network.port") + "' cannot be converted to an integer.");
+        }
     }
 
     @SuppressWarnings("UnusedAssignment")
@@ -302,7 +314,16 @@ public class ConfigurationValidator {
      * @throws ValidationException if a configuration error is detected
      */
     private void validateGatewaySettings() throws ValidationException {
-        String activeGateway;
+    	int failoverRetries;
+    	try {
+    		failoverRetries = configuration.getInt("gateway.failover_retries");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("gateway.failover_retries", "Key not found.");
+        } catch (ConversionException ex) {
+            throw new ValidationException("gateway.failover_retries", "Value '" + configuration.getString("gateway.failover_retries") + "' cannot be converted to an integer.");
+        }
+
+    	String activeGateway;
         try {
             activeGateway = configuration.getString("gateway.active");
         } catch (NoSuchElementException ex) {
@@ -424,6 +445,14 @@ public class ConfigurationValidator {
             agiHost = configuration.getString("gateway.asterisk.agi_server_host");
         } catch (NoSuchElementException ex) {
             throw new ValidationException("gateway.asterisk.agi_server_host", "Key does not exist.");
+        }
+
+        String outbondCallChannel;
+        try {
+            //noinspection UnusedAssignment
+        	outbondCallChannel = configuration.getString("gateway.asterisk.outbond_call_channel");
+        } catch (NoSuchElementException ex) {
+            throw new ValidationException("gateway.asterisk.outbond_call_channel", "Key does not exist.");
         }
 
         String[] params = {"ami_host", "ami_port", "ami_user", "ami_password"};

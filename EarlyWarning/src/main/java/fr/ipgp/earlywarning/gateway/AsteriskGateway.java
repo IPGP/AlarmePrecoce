@@ -8,17 +8,12 @@ import fr.ipgp.earlywarning.contacts.ContactList;
 import fr.ipgp.earlywarning.contacts.ContactListMapper;
 import fr.ipgp.earlywarning.messages.WarningMessageMapper;
 import fr.ipgp.earlywarning.triggers.Trigger;
-
-import org.apache.commons.configuration.ConversionException;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import static fr.ipgp.earlywarning.asterisk.CallOriginator.CallResult.*;
 
 /**
@@ -48,20 +43,26 @@ public class AsteriskGateway implements Gateway {
      * The AMI password
      */
     private final String password;
+    /**
+     * The number of retries on errors before switching to failover
+     */
+    private final int retriesBeforeFailover;
 
     /**
      * Valued constructor with the necessary parameters to use an {@link AsteriskGateway}, which are the AMI information and credentials
      *
-     * @param host     the AMI host
-     * @param port     the AMI port
-     * @param username the AMI manager's name
-     * @param password the AMI manager's password
+     * @param host                  the AMI host
+     * @param port                  the AMI port
+     * @param username              the AMI manager's name
+     * @param password              the AMI manager's password
+     * @param retriesBeforeFailover the number of retries on errors before switching to failover
      */
-    private AsteriskGateway(String host, int port, String username, String password) {
+    private AsteriskGateway(String host, int port, String username, String password, int retriesBeforeFailover) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.retriesBeforeFailover = retriesBeforeFailover;
 
         server = new LocalAgiServer();
     }
@@ -71,10 +72,11 @@ public class AsteriskGateway implements Gateway {
      * @param port     the AMI port
      * @param username the AMI manager's name
      * @param password the AMI manager's password
+     * @param retriesBeforeFailover the number of retries on errors before switching to failover
      */
-    public static AsteriskGateway getInstance(String host, int port, String username, String password) {
+    public static AsteriskGateway getInstance(String host, int port, String username, String password, int retriesBeforeFailover) {
         if (uniqueInstance == null)
-            uniqueInstance = new AsteriskGateway(host, port, username, password);
+            uniqueInstance = new AsteriskGateway(host, port, username, password, retriesBeforeFailover);
 
         return uniqueInstance;
     }
@@ -106,14 +108,6 @@ public class AsteriskGateway implements Gateway {
 
         int originateTrials = 0;
         // Retries before failover default value
-        int retriesBeforeFailover = 5;
-        try {
-        	retriesBeforeFailover = EarlyWarning.configuration.getInt("gateway.failover_retries");
-        } catch (ConversionException ex) {
-        	EarlyWarning.appLogger.error("gateway.failover_retries has a wrong value in configuration file: check gateway section of earlywarning.xml configuration file. Using default.");
-        } catch (NoSuchElementException ex) {
-        	EarlyWarning.appLogger.error("gateway.failover_retries is missing in configuration file: check gateway section of earlywarning.xml configuration file. Using default.");
-        }
         CallOriginator.CallResult result = Initial;
         do {
             if (result != Initial) {
@@ -147,7 +141,7 @@ public class AsteriskGateway implements Gateway {
 
             if (result == CallOriginator.CallResult.Error) {
                 originateTrials++;
-                if (originateTrials >= retriesBeforeFailover) {
+                if (originateTrials >= this.retriesBeforeFailover) {
                     EarlyWarning.appLogger.error("could not originate call after " + originateTrials + " retries. Using failover system.");
                     return CallLoopResult.Error;
                 } else {

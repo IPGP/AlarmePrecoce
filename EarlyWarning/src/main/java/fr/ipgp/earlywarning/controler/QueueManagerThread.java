@@ -200,15 +200,7 @@ public class QueueManagerThread extends Thread {
     }
 
     private void configureMailerThread() {
-        try {
-            useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
-        } catch (ConversionException ex) {
-            EarlyWarning.appLogger.fatal("mail.use_mail has a wrong value in configuration file: check mail section of earlywarning.xml configuration file. Mail support disabled.");
-            useMail = false;
-        } catch (NoSuchElementException ex) {
-            EarlyWarning.appLogger.fatal("mail.use_mail is missing in configuration file: check mail section of earlywarning.xml configuration file. Mail support disabled.");
-            useMail = false;
-        }
+    	useMail = EarlyWarning.configuration.getBoolean("mail.use_mail");
         if (useMail) {
             mailerThread = MailerThread.getInstance(this);
             mailerThread.start();
@@ -274,8 +266,9 @@ public class QueueManagerThread extends Thread {
             int port = EarlyWarning.configuration.getInt("gateway.asterisk.settings.ami_port");
             String username = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_user");
             String password = EarlyWarning.configuration.getString("gateway.asterisk.settings.ami_password");
+            int retriesBeforeFailover = EarlyWarning.configuration.getInt("gateway.failover_retries");
 
-            gateway = AsteriskGateway.getInstance(host, port, username, password);
+            gateway = AsteriskGateway.getInstance(host, port, username, password, retriesBeforeFailover);
         } catch (ConversionException | NoSuchElementException ignored) {
         }
     }
