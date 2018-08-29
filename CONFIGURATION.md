@@ -116,7 +116,7 @@ Une liste de contacts se définit de la façon suivante, elle contient deux pa
 
 Les identifiants (ici, default et custom_list) sont ensuite utilisable dans les datagrammes des triggers.
 
-* *Remarque* : il doit toujours y avoir une liste default à utiliser lorsque la liste demandée par le trigger n’est pas disponible. Si aucune liste par défaut n’est donnée, EarlyWarning ne démarrera pas.
+* **Remarque** : il doit toujours y avoir une liste default à utiliser lorsque la liste demandée par le trigger n’est pas disponible. Si aucune liste par défaut n’est donnée, EarlyWarning ne démarrera pas.
 
 ## Configuration des correspondances entre noms de sons et noms de fichiers
 
@@ -126,36 +126,57 @@ Cependant, ces noms de sons ne sont que des identifiants, et le son à jouer lo
 
 Il faut donc faire un lien entre les identifiants de son (par exemple, sismicite) et les sons correspondants (par exemple, sismicite_importante.gsm).
 
+C'est aussi dans cette section qu'on précise les sons à jouer pour les différentes étapes de la phase d'appel (cf. [Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)). Les sons à définir **obligatoirement** sont "welcome", "login", "default", "giveup", "retry" et "bye" (cf. exemple ci-dessous).
+
 * id : l'identifiant du son (qui sera utilisé par les triggers)
 * asterisk : l'identifiant du son asterisk (cf. plus haut)
 * charon : port GPIO du module charon (-1 est utilisé si il n'y a pas de port GPIO prévu pour ce son).
 
 ```sh
-<sounds>
-  <sound>
-    <id>default</id>
-    <asterisk>warning</asterisk>
-    <charon>5</charon>
-  </sound>
-  <sound>
-    <id>welcome</id>
-    <asterisk>accueil</asterisk>
-    <charon>−1</charon>
-  </sound>
-  <sound>
-    <id>login</id>
-    <asterisk>demandecode</asterisk>
-    <charon>−1</charon>
-  </sound>
-  <sound>
-</sounds>
+  <sounds>
+    <sound>
+      <id>welcome</id>
+      <asterisk>accueil</asterisk>
+      <charon>-1</charon>
+    </sound>
+    <sound>
+      <id>login</id>
+      <asterisk>demandecode</asterisk>
+      <charon>-1</charon>
+    </sound>
+    <sound>
+      <id>default</id>
+      <asterisk>hello-world</asterisk>
+      <charon>5</charon>
+    </sound>
+    <sound>
+      <id>alerte1</id>
+      <asterisk>alerte1</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>bye</id>
+      <asterisk>merci</asterisk>
+      <charon>-1</charon>
+    </sound>
+    <sound>
+      <id>retry</id>
+      <asterisk>incorrect</asterisk>
+      <charon>-1</charon>
+    </sound>
+    <sound>
+      <id>giveup</id>
+      <asterisk>incorrect2</asterisk>
+      <charon>-1</charon>
+    </sound>
+  </sounds>
 ```
 
-*Attention* Toutes les passerelles doivent avoir un son d’avertissement par défaut. Il sera joué si un son particulier demandé par un trigger (par exemple, disque_plein) est indisponible.
+**Attention** Toutes les passerelles doivent avoir un son d’avertissement par défaut. Il sera joué si un son particulier demandé par un trigger (par exemple, disque_plein) est indisponible.
 
 Un son est dit indisponible qu’à la condition qu’aucun lien ne soit fait entre son identifiant et un fichier dans le fichier de configuration.
 
-*Remarque*, lors du démarrage, l’application EarlyWarning vérifie que toutes les passerelles existantes (c’est- à-dire l’ensemble des passerelles qui ont au moins une clé définie dans sounds) ont un son par défaut. Si ce n’est pas le cas, l’application refuse de démarrer.
+**Remarque**, lors du démarrage, l’application EarlyWarning vérifie que toutes les passerelles existantes (c’est- à-dire l’ensemble des passerelles qui ont au moins une clé définie dans sounds) ont un son par défaut. Si ce n’est pas le cas, l’application refuse de démarrer.
 De plus, elle émettra un avertissement (Warning) pour tous les sons configurés pour au moins une passerelle, mais pas pour toutes (dans l’exemple, un avertissement aurait été émis pour sismicite pour la passerelle voicent).
 
 ## Messagerie électronique (mail)

@@ -8,7 +8,7 @@ Un déclencheur peut être une sismicité importante, le dépassement de val
 
 Les déclencheurs sont créés par des logiciels spécifiques, hébergées sur des serveurs informatiques. Les déclencheurs transitent via le réseau informatique.
 
-[Fonctionnement général](doc/Fonctionnement_General.png "Fonctionnement général")
+![Fonctionnement général](./doc/Fonctionnement_General.png?raw=true)
 
 
 Lorsqu’un déclencheur est émis, le système d’alarme précoce l’analyse. Il en tire un certain nombre d’informations :
@@ -20,6 +20,8 @@ Lorsqu’un déclencheur est émis, le système d’alarme précoce l’anal
 * *etc.*
 
 Commence ensuite une phase d’appel. Celle-ci se base sur la liste d’appel contenant un nombre illimité de numéros de téléphone. Le système d’alarme commence par le premier contact de la liste et initie l’appel.
+
+[Diagramme d'activité de la phase d'appel](./doc/Diagramme_Activite.png?raw=true)
 
 L’appel émis est vocal et interactif. Le message pré-enregistré est énoncé et la personne appelée doit saisir une séquence de confirmation (suite de numéros à saisir sur le clavier de son téléphone) pour valider la réception du message.
 
@@ -103,7 +105,7 @@ Redémarrer Asterisk.
 
 Asterisk permet d’ajouter des sons correspondant à des messages personnalisés. Ces fichiers doivent être au format "gsm" et copiés dans le dossier /usr/share/asterisk/sounds
 
-*Attention*, après l'ajout de sons, un redémarrage d’Asterisk est nécessaire afin de les réindexer.
+**Attention**, après l'ajout de sons, un redémarrage d’Asterisk est nécessaire afin de les réindexer.
 
 Il est possible de convertir plusieurs fichiers "wav" en "gsm" grâce à l'utilitaire sox :
 
@@ -219,7 +221,7 @@ La modification doit se faire à travers l’interface Web. Pour ce faire :
 * Lancer l’application EarlyWarning ;
 * Se rendre avec un navigateur Web à l’adresse http://<adresse du serveur EarlyWarning>:<port> (le port par défaut est 6001).
 
-[Interface](doc/Interface_Appels.png "Interface")
+[Interface](./doc/Interface_Appels.png?raw=true)
 
 ### Introduction
 L’interface Web se décompose en deux colonnes.
@@ -275,7 +277,7 @@ N'hésitez pas à nous contacter si vous souhaitez participer au développement 
 ## Auteurs
 
 * **Patrice Boissier** - *Software engineer - OVPF/IPGP* - [PBoissier](https://github.com/PBoissier) - boissier@ipgp.fr
-* **Thomas Kowalski** - *Etudiant en informatique* - [](https://github.com/KowalskiThomas) - thom.kowa@gmail.com
+* **Thomas Kowalski** - *Etudiant en informatique* - [KowalskiThomas](https://github.com/KowalskiThomas) - thom.kowa@gmail.com
 
 ## License
 
