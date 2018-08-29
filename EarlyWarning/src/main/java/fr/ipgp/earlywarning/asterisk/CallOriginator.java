@@ -231,7 +231,7 @@ public class CallOriginator implements ManagerEventListener {
      * @return the channel name to use: "SIP/outbond_call_channel/[number]
      */
     private String getChannelName(String number) {
-    	String outbondCallChannel = EarlyWarning.configuration.getString("outbond_call_channel");
+    	String outbondCallChannel = EarlyWarning.configuration.getString("gateway.asterisk.outbond_call_channel");
         return "SIP/" + outbondCallChannel + "/" + number;
     }
 
