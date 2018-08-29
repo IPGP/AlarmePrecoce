@@ -280,7 +280,7 @@ public class CallOriginator implements ManagerEventListener {
         originateAction.setExten(number);
         originateAction.setTimeout(new Long(10000));
         originateAction.setApplication("AGI");
-        String agiServerHost = EarlyWarning.configuration.getString("agi_server_host");
+        String agiServerHost = EarlyWarning.configuration.getString("gateway.asterisk.agi_server_host");
         originateAction.setData("agi://" + agiServerHost + "/alertcall.agi");
         return originateAction;
     }
