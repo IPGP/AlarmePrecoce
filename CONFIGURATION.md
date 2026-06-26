@@ -79,7 +79,7 @@ Sous section charon
     </settings>
   </asterisk>
   <charon>
-    <host>195.83.188.220</host>
+    <host>192.168.2.5</host>
     <port>23</port>
     <timeout>60000</timeout>
   </charon>

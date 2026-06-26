@@ -81,7 +81,7 @@ my $chkconf = "$homeroot/conf/chkacc.cfg";
 my $smsfile = "$homeroot/message.sms";
 ##
 ## The telephonic alarm server host
-my $host = '195.83.188.10';
+my $host = '192.168.2.3';
 ##
 ## The telephonic alarm server UDP port
 my $port = 4445;

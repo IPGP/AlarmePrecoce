@@ -70,12 +70,11 @@ my $dbname = "smsd";
 #The MySQL table containing the messages
 my $dbtable = "outbox";
 
-my $dbhost = "195.83.190.51";
+my $dbhost = "192.168.2.5";
 my $dbport = "3306";
 
 # The phone number
-#my $phone = "0696278622"; # Astreinte phone
-my $phone = "0696289444"; # SR
+my $phone = "0692000000";
 
 print "$idpattern -----------------------------------------------------\n";
 print "$idpattern |                                                   |\n";
