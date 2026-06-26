@@ -66,14 +66,49 @@
       <charon>5</charon>
     </sound>
     <sound>
+      <id>generique</id>
+      <asterisk>generique</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>test</id>
+      <asterisk>test</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
       <id>sismicite</id>
       <asterisk>sismicite</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>jerk</id>
+      <asterisk>jerk</asterisk>
       <charon>3</charon>
     </sound>
     <sound>
       <id>rsam</id>
       <asterisk>rsam</asterisk>
       <charon>4</charon>
+    </sound>
+    <sound>
+      <id>pgamayotte</id>
+      <asterisk>pgamayotte</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>edf</id>
+      <asterisk>edf</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>pwtrigger</id>
+      <asterisk>pwtrigger</asterisk>
+      <charon>3</charon>
+    </sound>
+    <sound>
+      <id>pwtriggerpf</id>
+      <asterisk>pwtriggerpf</asterisk>
+      <charon>3</charon>
     </sound>
     <sound>
       <id>bye</id>
@@ -94,24 +129,24 @@
   <gateway>
     <failover_retries>3</failover_retries>
     <active>asterisk</active>
-    <failover_enabled>true</failover_enabled>
+    <failover_enabled>false</failover_enabled>
     <asterisk>
       <retries>3</retries>
       <ring_timeout>30000</ring_timeout>
-      <agi_server_host>localhost</agi_server_host>
+      <agi_server_host>127.0.0.1</agi_server_host>
       <outbond_call_channel>pstn-out</outbond_call_channel>
       <!-- These values can be edited in /etc/asterisk/manager.conf -->
       <settings>
-        <ami_host>localhost</ami_host>
+        <ami_host>127.0.0.1</ami_host>
         <ami_port>5038</ami_port>
-        <ami_user>user</ami_user>
-        <ami_password>password</ami_password>
+        <ami_user>earlywarning</ami_user>
+        <ami_password>ovpf</ami_password>
       </settings>
     </asterisk>
     <charon>
       <!-- The Charon I module's IP -->
       <!-- Since it's only a failover, default alert message, you don't need to configure the sounds for this gateway. -->
-      <host>192.168.1.1</host>
+      <host>192.168.2.6</host>
       <port>23</port>
       <timeout>60000</timeout>
     </charon>
@@ -126,8 +161,8 @@
     <duty_phone>262692000000</duty_phone>
   </sms>
   <failover>
-    <is_failover>true</is_failover>
-    <main>192.186.1.2</main>
+    <is_failover>false</is_failover>
+    <main>192.186.2.7</main>
     <heartbeat_port>6002</heartbeat_port>
   </failover>
 </earlywarning>
