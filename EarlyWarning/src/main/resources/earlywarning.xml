@@ -36,11 +36,11 @@
     <lists>
       <list>
         <id>tech</id>
-        <path>configuration/contacts/tech.json</path>
+        <path>resources/contacts/tech.json</path>
       </list>
       <list>
         <id>default</id>
-        <path>configuration/contacts/default.json</path>
+        <path>resources/contacts/default.json</path>
       </list>
     </lists>
   </contacts>
@@ -139,8 +139,8 @@
       <settings>
         <ami_host>127.0.0.1</ami_host>
         <ami_port>5038</ami_port>
-        <ami_user>earlywarning</ami_user>
-        <ami_password>ovpf</ami_password>
+        <ami_user>admin</ami_user>
+        <ami_password>ipgp</ami_password>
       </settings>
     </asterisk>
     <charon>

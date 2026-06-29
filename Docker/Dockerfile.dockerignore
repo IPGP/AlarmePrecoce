@@ -1,0 +1,5 @@
+.git
+**/target
+**/*.class
+Docker/asterisk/overrides
+Docker/configuration

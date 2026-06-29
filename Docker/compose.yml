@@ -1,0 +1,31 @@
+services:
+  earlywarning:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    image: earlywarning:latest
+    container_name: earlywarning
+    restart: unless-stopped
+    # for Linux only, uncomment this line and remove the ports section below
+    # network_mode: host    
+
+    ports:
+      - "4445:4445/udp"     # triggers
+      - "6001:6001/tcp"     # interface web
+      - "6002:6002/tcp"     # heartbeat
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "10000-10010:10000-10010/udp"
+
+    volumes:
+      - ./asterisk/overrides:/etc/asterisk-overrides:ro
+      - ./resources/contacts:/earlywarning/resources/contacts
+
+    environment:
+      - JAVA_OPTS=-Xms256m -Xmx512m
+
+    healthcheck:
+      test: ["CMD-SHELL", "asterisk -rx 'core show uptime' >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
