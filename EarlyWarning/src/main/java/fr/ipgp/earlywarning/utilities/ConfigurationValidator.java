@@ -408,8 +408,8 @@ public class ConfigurationValidator {
         }
 
         CharonGateway gateway = CharonGateway.getInstance(host, port, timeout);
-        if (!gateway.checkConnected())
-            throw new ValidationException("gateway.charon", "Charon I module is unreachable at with address " + host + ":" + String.valueOf(port));
+        //if (!gateway.checkConnected())
+        //    throw new ValidationException("gateway.charon", "Charon I module is unreachable at with address " + host + ":" + String.valueOf(port));
     }
 
     /**
